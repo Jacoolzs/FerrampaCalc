@@ -108,20 +108,48 @@ export function clearHistory() {
     }
 }
 
-// ─── Contact Form ───────────────────────────────────────────────────────────
-export function handleContactSubmit(form) {
+// ─── Contact Form (AJAX con FormSubmit) ──────────────────────────────────────
+export async function handleContactSubmit(form) {
     const btn = form.querySelector('button');
     const origText = btn.innerText;
+    
+    const name = form.querySelector('[name="name"]').value;
+    const email = form.querySelector('[name="email"]').value;
+    const message = form.querySelector('[name="message"]').value;
+
     btn.disabled = true;
     btn.innerText = 'ENVIANDO...';
 
-    // Simulación de envío
-    setTimeout(() => {
-        showToast('¡Mensaje enviado con éxito! Nos contactaremos pronto.', 'success');
-        form.reset();
+    try {
+        const response = await fetch("https://formsubmit.co/ajax/info.aduanasenlinea@gmail.com", {
+            method: "POST",
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                message: message,
+                _subject: `Nueva consulta de ImportCalc Pro: ${name}`
+            })
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+            showToast('¡Mensaje enviado con éxito! Nos contactaremos pronto.', 'success');
+            form.reset();
+        } else {
+            throw new Error('Error en la respuesta del servidor');
+        }
+    } catch (error) {
+        console.error("Error envío formulario:", error);
+        showToast('Hubo un error al enviar. Por favor, intente más tarde.', 'error');
+    } finally {
         btn.disabled = false;
         btn.innerText = origText;
-    }, 1500);
+    }
 }
 
 export function printPage() { window.print(); }
@@ -203,7 +231,7 @@ export function removeVehicle(id) {
     debouncedSave();
 }
 
-// ─── VIN decode (FIX 4: Timeout + Abort) ─────────────────────────────────────
+// ─── VIN decode (Robustez y Soporte Multiregión) ────────────────────────────
 export async function decodeVIN(vId) {
     const v = vehicles.find(x => x.id === vId);
     if (!v || !v.vin || v.vin.length < 17) return;
@@ -215,9 +243,26 @@ export async function decodeVIN(vId) {
     btn.innerHTML = `<span class="animate-spin inline-block w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full"></span>`;
     btn.disabled = true;
 
+    // Lógica Pre-API: Identificar origen por el primer dígito del VIN
+    const firstDigit = v.vin.charAt(0).toUpperCase();
+    
+    // Prefijos que califican para Tratado (0% Arancel sugerido):
+    // 1,4,5 = USA | 2 = Canadá | 3 = México | W = Alemania | S = UK | V = Francia/España | Z = Italia | Y = Suecia
+    const isCaftaUePrefix = ['1','2','3','4','5','W','S','V','Z','Y'].includes(firstDigit);
+    
+    // Prefijos de Asia (Suelen pagar 20% / 10%): J = Japón | K = Corea | L = China
+    const isAsianPrefix = ['J', 'K', 'L'].includes(firstDigit);
+
+    // Aplicar pre-selección de origen basada en el VIN (Mejora: Automático por Tratado)
+    if (isCaftaUePrefix) {
+        v.origen = 'cafta'; // EEUU / UE / CAFTA
+    } else if (isAsianPrefix) {
+        v.origen = 'otros';
+    }
+
     try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
 
         const response = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${v.vin}?format=json`, { signal: controller.signal });
         clearTimeout(timeoutId);
@@ -227,29 +272,94 @@ export async function decodeVIN(vId) {
         const data = await response.json();
         const res = data.Results?.[0];
 
-        if (res && res.Make && res.Make.trim() !== '') {
+        if (res && res.Make && res.Make.trim() !== '' && res.ModelYear) {
             v.name = `${res.Make} ${res.Model}`.trim();
             v.year = parseInt(res.ModelYear) || CURRENT_YEAR;
+            
             const fuel = (res.FuelTypePrimary || '').toLowerCase();
             v.engineType = (fuel.includes('electric') || fuel.includes('hybrid')) ? 'hybrid_electric' : 'gas';
-            const tr = ['UNITED STATES (USA)', 'MEXICO', 'CANADA', 'GERMANY', 'SPAIN', 'FRANCE', 'ITALY', 'BELGIUM', 'GUATEMALA', 'HONDURAS', 'EL SALVADOR', 'NICARAGUA', 'COSTA RICA'];
-            v.origen = tr.includes((res.PlantCountry || '').toUpperCase()) ? 'cafta' : 'otros';
+            
+            // Validación final con la respuesta de la API (si está disponible)
+            const plantCountry = (res.PlantCountry || '').toUpperCase();
+            const caftaCountries = ['UNITED STATES (USA)', 'MEXICO', 'CANADA', 'GERMANY', 'SPAIN', 'FRANCE', 'ITALY', 'BELGIUM', 'GUATEMALA', 'HONDURAS', 'EL SALVADOR', 'NICARAGUA', 'COSTA RICA', 'UNITED KINGDOM (UK)', 'SWEDEN'];
+            v.origen = caftaCountries.includes(plantCountry) ? 'cafta' : v.origen;
 
             renderVehicles();
             debouncedSave();
-            showToast(`VIN decodificado: ${v.name} ${v.year}`, 'success');
+            showToast(`VIN Decodificado: ${v.name} (${v.year})`, 'success');
         } else {
-            showToast('VIN no encontrado en la base de datos NHTSA.', 'warning');
+            // Caso: API no lo conoce (Europa/Japón), pero ya pre-seleccionamos el origen arriba
+            renderVehicles();
+            debouncedSave();
+            let msg = 'VIN no reconocido por base de datos USA.';
+            if (isAsianPrefix) msg += ' (Vehículo de origen Asiático).';
+            if (isCaftaUePrefix) msg += ' (Vehículo Europeo/Norteamericano detectado).';
+            showToast(`${msg} Complete marca y año manualmente.`, 'warning');
+            highlightManualFields(vId);
         }
     } catch (err) {
-        showToast(err.name === 'AbortError' ? 'La consulta tardó demasiado.' : 'No se pudo conectar con la API de NHTSA.', 'error');
+        renderVehicles();
+        showToast('Error de conexión. Se aplicó origen sugerido por VIN, rellene el resto.', 'error');
+        highlightManualFields(vId);
     } finally {
         btn.innerHTML = orig;
         btn.disabled = false;
     }
 }
 
-// ─── FIX 3: updateVehicleData (Optimización de renderizado) ──────────────────
+// Resalta visualmente los campos que requieren atención manual
+function highlightManualFields(vId) {
+    const fields = [`badge-year-${vId}`, `btn-vin-${vId}`]; // Podríamos añadir más si fuera necesario
+    // Animamos los selects para que el usuario sepa qué rellenar
+    const container = document.getElementById('vehicles-container');
+    if (container) {
+        const selects = container.querySelectorAll('select, input[type="number"]');
+        selects.forEach(el => {
+            if (el.closest('.vehicle-card')?.innerHTML.includes(`updateVehicleData(${vId}`)) {
+                el.classList.add('ring-2', 'ring-blue-400', 'animate-pulse');
+                setTimeout(() => el.classList.remove('ring-2', 'ring-blue-400', 'animate-pulse'), 4000);
+            }
+        });
+    }
+}
+
+// ─── Tasa de Cambio Automática ──────────────────────────────────────────────
+export async function toggleAutoTasa() {
+    const isAuto = document.getElementById('check-auto-tasa').checked;
+    const tasaInput = document.getElementById('global-tasa');
+
+    if (isAuto) {
+        tasaInput.disabled = true;
+        tasaInput.classList.add('opacity-50');
+        showToast('Obteniendo tasa actual...', 'info');
+
+        try {
+            // Usamos una API gratuita confiable para la tasa USD/DOP
+            const response = await fetch('https://open.er-api.com/v6/latest/USD');
+            const data = await response.json();
+            
+            if (data && data.rates && data.rates.DOP) {
+                // El Banco Central suele estar 0.5 - 1.0 por encima de las APIs globales (tasa venta)
+                // Ajustamos ligeramente para reflejar la realidad del mercado dominicano
+                const marketRate = (data.rates.DOP + 0.85).toFixed(2);
+                tasaInput.value = marketRate;
+                showToast(`Tasa actualizada: RD$ ${marketRate}`, 'success');
+                calculateAll();
+            } else {
+                throw new Error('Formato de datos inválido');
+            }
+        } catch (error) {
+            console.error('Error tasa:', error);
+            showToast('No se pudo obtener la tasa. Ingrese manualmente.', 'error');
+            document.getElementById('check-auto-tasa').checked = false;
+            tasaInput.disabled = false;
+            tasaInput.classList.remove('opacity-50');
+        }
+    } else {
+        tasaInput.disabled = false;
+        tasaInput.classList.remove('opacity-50');
+    }
+}
 export function updateVehicleData(id, field, value) {
     const v = vehicles.find(v => v.id === id);
     if (!v) return;
@@ -292,46 +402,46 @@ export function renderVehicles() {
         vehicles.forEach((v, index) => {
             const isOk = v.year >= IMPORT_LIMIT_YEAR;
             const card = document.createElement('div');
-            card.className = 'vehicle-card glass-card p-6 rounded-3xl border border-slate-200 shadow-sm transition-all text-left relative';
+            card.className = 'vehicle-card glass-card p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all text-left relative';
 
             // FIX 2: "otros" por vehículo cuando shared is OFF
             const perVehicleCosts = !sh ? `
-                <div class="grid grid-cols-3 gap-2 p-2 bg-slate-50 rounded-2xl text-left">
-                    <div><label class="text-[9px] font-bold text-slate-400">Seguro (USD)</label><input type="number" value="${v.seguro}" oninput="window.updateVehicleData(${v.id}, 'seguro', this.value)" class="w-full p-1.5 border border-slate-200 rounded-lg text-[11px] text-left"></div>
-                    <div><label class="text-[9px] font-bold text-slate-400">Flete (USD)</label><input type="number" value="${v.flete}" oninput="window.updateVehicleData(${v.id}, 'flete', this.value)" class="w-full p-1.5 border border-slate-200 rounded-lg text-[11px] text-left"></div>
-                    <div><label class="text-[9px] font-bold text-slate-400">Otros (USD)</label><input type="number" value="${v.otros}" oninput="window.updateVehicleData(${v.id}, 'otros', this.value)" class="w-full p-1.5 border border-slate-200 rounded-lg text-[11px] text-left"></div>
+                <div class="grid grid-cols-3 gap-2 p-2 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-left">
+                    <div><label class="text-[9px] font-bold text-slate-400">Seguro (USD)</label><input type="number" value="${v.seguro}" oninput="window.updateVehicleData(${v.id}, 'seguro', this.value)" class="w-full p-1.5 border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg text-[11px] text-left"></div>
+                    <div><label class="text-[9px] font-bold text-slate-400">Flete (USD)</label><input type="number" value="${v.flete}" oninput="window.updateVehicleData(${v.id}, 'flete', this.value)" class="w-full p-1.5 border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg text-[11px] text-left"></div>
+                    <div><label class="text-[9px] font-bold text-slate-400">Otros (USD)</label><input type="number" value="${v.otros}" oninput="window.updateVehicleData(${v.id}, 'otros', this.value)" class="w-full p-1.5 border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg text-[11px] text-left"></div>
                 </div>` : '';
 
             card.innerHTML = `
                 <div class="flex justify-between items-center mb-4">
-                    <div class="flex items-center gap-2 w-full text-left"><span class="bg-blue-600 text-white font-black px-2 py-1 rounded-md text-[9px] uppercase">V#${index + 1}</span><input type="text" value="${v.name}" oninput="window.updateVehicleData(${v.id}, 'name', this.value)" class="w-full bg-transparent border-b border-transparent hover:border-slate-200 focus:border-blue-500 outline-none font-bold text-slate-700 py-1 text-sm text-left"></div>
+                    <div class="flex items-center gap-2 w-full text-left"><span class="bg-blue-600 text-white font-black px-2 py-1 rounded-md text-[9px] uppercase">V#${index + 1}</span><input type="text" value="${v.name}" oninput="window.updateVehicleData(${v.id}, 'name', this.value)" class="w-full bg-transparent border-b border-transparent hover:border-slate-200 dark:hover:border-slate-700 focus:border-blue-500 outline-none font-bold text-slate-700 dark:text-slate-200 py-1 text-sm text-left"></div>
                     <div class="flex items-center gap-1">
-                        <button onclick="window.exportSinglePDF(${v.id})" class="p-2 text-red-500 hover:bg-red-50 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></button>
+                        <button onclick="window.exportSinglePDF(${v.id})" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></button>
                         <button onclick="window.removeVehicle(${v.id})" class="p-2 text-slate-300 hover:text-red-500 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
                     </div>
                 </div>
-                <div class="mb-6"><div class="flex items-center justify-between mb-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">VIN NUMBER (OPCIONAL)</label><button onclick="document.getElementById('tip-vin-info-${v.id}').classList.toggle('hidden')" class="bg-blue-100 text-blue-600 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black hover:bg-blue-600 hover:text-white transition-all shadow-sm">?</button></div><div class="flex gap-2 relative"><input type="text" value="${v.vin}" maxlength="17" oninput="window.updateVehicleData(${v.id}, 'vin', this.value.toUpperCase())" class="flex-1 p-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-[11px] outline-none uppercase focus:ring-1 focus:ring-blue-500"><button id="btn-vin-${v.id}" onclick="window.decodeVIN(${v.id})" class="${v.vin.length < 11 ? 'hidden' : ''} bg-blue-50 text-blue-700 px-2 rounded-xl border border-blue-100 font-bold text-[9px]">AUTO</button><div id="tip-vin-info-${v.id}" class="hidden mt-10 p-3 bg-blue-800 text-white rounded-xl text-[10px] leading-relaxed shadow-xl absolute z-[50] w-full border border-blue-400 text-left"><p class="font-bold mb-1 underline">Ayuda VIN:</p><p class="text-left">• Rellena: <span class="font-bold">País, Motor, Año y Arancel sugerido</span>.</p><p class="text-left">• <span class="text-amber-300 font-bold">No rellena</span>: Valor FOB ni Emisión CO2.</p><p class="mt-1 opacity-90 italic">Verifique que el nombre, motor y origen sean correctos.</p></div></div></div>
+                <div class="mb-6"><div class="flex items-center justify-between mb-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">VIN NUMBER (OPCIONAL)</label><button onclick="document.getElementById('tip-vin-info-${v.id}').classList.toggle('hidden')" class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black hover:bg-blue-600 hover:text-white transition-all shadow-sm">?</button></div><div class="flex gap-2 relative"><input type="text" value="${v.vin}" maxlength="17" oninput="window.updateVehicleData(${v.id}, 'vin', this.value.toUpperCase())" class="flex-1 p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono text-[11px] outline-none uppercase focus:ring-1 focus:ring-blue-500"><button id="btn-vin-${v.id}" onclick="window.decodeVIN(${v.id})" class="${v.vin.length < 11 ? 'hidden' : ''} bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2 rounded-xl border border-blue-100 dark:border-blue-800 font-bold text-[9px]">AUTO</button><div id="tip-vin-info-${v.id}" class="hidden mt-10 p-3 bg-blue-800 text-white rounded-xl text-[10px] leading-relaxed shadow-xl absolute z-[50] w-full border border-blue-400 text-left"><p class="font-bold mb-1 underline">Ayuda VIN:</p><p class="text-left">• Rellena: <span class="font-bold">País, Motor, Año y Arancel sugerido</span>.</p><p class="text-left">• <span class="text-amber-300 font-bold">No rellena</span>: Valor FOB ni Emisión CO2.</p><p class="mt-1 opacity-90 italic">Verifique que el nombre, motor y origen sean correctos.</p></div></div></div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-4">
-                        <div class="flex gap-4"><div class="flex-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">Año</label><input type="number" value="${v.year}" oninput="window.updateVehicleData(${v.id}, 'year', this.value)" class="w-full p-2 border border-slate-200 rounded-xl font-bold text-xs text-left"></div><div class="flex-1 self-end"><div id="badge-year-${v.id}" class="px-2 py-2 rounded-xl text-[8px] font-black uppercase text-center ${isOk ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700 animate-pulse'}">${isOk ? 'OK' : 'No Permitido'}</div></div></div>
-                        <div class="text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">FOB (USD)</label><input type="number" value="${v.fob}" oninput="window.updateVehicleData(${v.id}, 'fob', this.value)" class="w-full p-2.5 bg-white border border-slate-200 rounded-xl font-bold text-blue-600 text-sm outline-none focus:ring-1 focus:ring-blue-500"></div>
+                        <div class="flex gap-4"><div class="flex-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">Año</label><input type="number" value="${v.year}" oninput="window.updateVehicleData(${v.id}, 'year', this.value)" class="w-full p-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl font-bold text-xs text-left"></div><div class="flex-1 self-end"><div id="badge-year-${v.id}" class="px-2 py-2 rounded-xl text-[8px] font-black uppercase text-center ${isOk ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 animate-pulse'}">${isOk ? 'OK' : 'No Permitido'}</div></div></div>
+                        <div class="text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">FOB (USD)</label><input type="number" value="${v.fob}" oninput="window.updateVehicleData(${v.id}, 'fob', this.value)" class="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-blue-600 dark:text-blue-400 text-sm outline-none focus:ring-1 focus:ring-blue-500"></div>
                         ${perVehicleCosts}
                         <div class="grid grid-cols-1 gap-4">
-                            <div class="text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Origen</label><select onchange="window.updateVehicleData(${v.id}, 'origen', this.value)" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold cursor-pointer text-left"><option value="cafta" ${v.origen === 'cafta' ? 'selected' : ''}>EEUU / UE / CAFTA</option><option value="otros" ${v.origen === 'otros' ? 'selected' : ''}>Otros Orígenes</option></select></div>
+                            <div class="text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Origen</label><select onchange="window.updateVehicleData(${v.id}, 'origen', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold cursor-pointer text-left"><option value="cafta" ${v.origen === 'cafta' ? 'selected' : ''}>EEUU / UE / CAFTA</option><option value="otros" ${v.origen === 'otros' ? 'selected' : ''}>Otros Orígenes</option></select></div>
                             <div class="grid grid-cols-2 gap-4">
-                                <div class="flex-1 text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Motor</label><select onchange="window.updateVehicleData(${v.id}, 'engineType', this.value)" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold cursor-pointer text-left"><option value="gas" ${v.engineType === 'gas' ? 'selected' : ''}>Gasolina</option><option value="hybrid_electric" ${v.engineType === 'hybrid_electric' ? 'selected' : ''}>Híbrido / Eléctrico</option></select></div>
-                                <div class="flex-1 text-left"><div class="flex items-center justify-between mb-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">CO2</label><button onclick="document.getElementById('tip-co2-info-${v.id}').classList.toggle('hidden')" class="bg-blue-100 text-blue-600 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black">?</button></div><div class="relative"><select onchange="window.updateVehicleData(${v.id}, 'co2Pct', this.value)" class="w-full p-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-left"><option value="0.00" ${v.co2Pct == 0 ? 'selected' : ''}>0%</option><option value="0.01" ${v.co2Pct == 0.01 ? 'selected' : ''}>1%</option><option value="0.02" ${v.co2Pct == 0.02 ? 'selected' : ''}>2%</option><option value="0.03" ${v.co2Pct == 0.03 ? 'selected' : ''}>3%</option></select><div id="tip-co2-info-${v.id}" class="hidden mt-2 p-3 bg-blue-800 text-white rounded-xl text-[10px] leading-relaxed shadow-xl absolute z-[60] w-48 border border-blue-400 right-0"><p class="font-bold mb-1">Cargos CO2:</p><p class="text-left">• 120-220g: <span class="font-bold">1%</span></p><p class="text-left">• 220-380g: <span class="font-bold">2%</span></p><p class="text-left">• 380g+: <span class="font-bold">3%</span></p></div></div></div>
+                                <div class="flex-1 text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Motor</label><select onchange="window.updateVehicleData(${v.id}, 'engineType', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold cursor-pointer text-left"><option value="gas" ${v.engineType === 'gas' ? 'selected' : ''}>Gasolina</option><option value="hybrid_electric" ${v.engineType === 'hybrid_electric' ? 'selected' : ''}>Híbrido / Eléctrico</option></select></div>
+                                <div class="flex-1 text-left"><div class="flex items-center justify-between mb-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">CO2</label><button onclick="document.getElementById('tip-co2-info-${v.id}').classList.toggle('hidden')" class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black">?</button></div><div class="relative"><select onchange="window.updateVehicleData(${v.id}, 'co2Pct', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-left"><option value="0.00" ${v.co2Pct == 0 ? 'selected' : ''}>0%</option><option value="0.01" ${v.co2Pct == 0.01 ? 'selected' : ''}>1%</option><option value="0.02" ${v.co2Pct == 0.02 ? 'selected' : ''}>2%</option><option value="0.03" ${v.co2Pct == 0.03 ? 'selected' : ''}>3%</option></select><div id="tip-co2-info-${v.id}" class="hidden mt-2 p-3 bg-blue-800 text-white rounded-xl text-[10px] leading-relaxed shadow-xl absolute z-[60] w-48 border border-blue-400 right-0"><p class="font-bold mb-1">Cargos CO2:</p><p class="text-left">• 120-220g: <span class="font-bold">1%</span></p><p class="text-left">• 220-380g: <span class="font-bold">2%</span></p><p class="text-left">• 380g+: <span class="font-bold">3%</span></p></div></div></div>
                             </div>
                         </div>
                     </div>
-                    <div class="bg-blue-50 rounded-3xl p-5 flex flex-col justify-between border border-blue-100 h-full text-left">
+                    <div class="bg-blue-50 dark:bg-blue-900/20 rounded-3xl p-5 flex flex-col justify-between border border-blue-100 dark:border-blue-800 h-full text-left">
                         <div class="space-y-2 text-xs">
-                            <div class="flex justify-between text-slate-500 text-left"><span id="v-lbl-grav-${v.id}">Arancel:</span><span id="v-res-gravamen-${v.id}" class="text-slate-600 font-bold text-left">RD$ 0.00</span></div>
-                            <div class="flex justify-between text-slate-500 text-left"><span id="v-lbl-itbis-${v.id}">ITBIS:</span><span id="v-res-itbis-${v.id}" class="font-bold text-slate-600 text-left">RD$ 0.00</span></div>
-                            <div class="flex justify-between text-slate-500 text-left"><span><span class="font-bold text-slate-700">Serv. Aduana</span>:</span><span id="v-res-service-${v.id}" class="font-bold text-slate-500">RD$ 0.00</span></div>
-                            <div class="flex justify-between text-slate-500 text-left"><span id="v-lbl-placa-${v.id}">Placa:</span><span id="v-res-placa-${v.id}" class="font-bold text-blue-600 text-left">RD$ 0.00</span></div>
+                            <div class="flex justify-between text-slate-500 dark:text-slate-400 text-left"><span id="v-lbl-grav-${v.id}">Arancel:</span><span id="v-res-gravamen-${v.id}" class="text-slate-600 dark:text-slate-300 font-bold text-left">RD$ 0.00</span></div>
+                            <div class="flex justify-between text-slate-500 dark:text-slate-400 text-left"><span id="v-lbl-itbis-${v.id}">ITBIS:</span><span id="v-res-itbis-${v.id}" class="font-bold text-slate-600 dark:text-slate-300 text-left">RD$ 0.00</span></div>
+                            <div class="flex justify-between text-slate-500 dark:text-slate-400 text-left"><span><span class="font-bold text-slate-700 dark:text-slate-200">Serv. Aduana</span>:</span><span id="v-res-service-${v.id}" class="font-bold text-slate-500 dark:text-slate-400">RD$ 0.00</span></div>
+                            <div class="flex justify-between text-slate-500 dark:text-slate-400 text-left"><span id="v-lbl-placa-${v.id}">Placa:</span><span id="v-res-placa-${v.id}" class="font-bold text-blue-600 dark:text-blue-400 text-left">RD$ 0.00</span></div>
                         </div>
-                        <div class="mt-4 pt-4 border-t border-blue-100 flex justify-between items-baseline"><span class="text-[9px] font-black uppercase text-slate-400">Subtotal</span><span id="v-res-total-${v.id}" class="text-xl font-black text-blue-700 text-right">RD$ 0.00</span></div>
+                        <div class="mt-4 pt-4 border-t border-blue-100 dark:border-blue-800 flex justify-between items-baseline"><span class="text-[9px] font-black uppercase text-slate-400">Subtotal</span><span id="v-res-total-${v.id}" class="text-xl font-black text-blue-700 dark:text-blue-400 text-right">RD$ 0.00</span></div>
                     </div>
                 </div>
             `;
@@ -634,6 +744,7 @@ window.handleContactSubmit = handleContactSubmit;
 window.loadFromHistory = loadFromHistory;
 window.deleteHistoryItem = deleteHistoryItem;
 window.clearHistory = clearHistory;
+window.toggleAutoTasa = toggleAutoTasa;
 
 // ─── AdBlock Detector ───────────────────────────────────────────────────────
 function checkAdBlock() {

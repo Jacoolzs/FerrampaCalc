@@ -50,19 +50,7 @@ option { color: #334155; font-weight: normal; }
 .dark .btn-law { color: #60a5fa; background: #1e293b; }
 .dark .btn-law:hover { background: #2563eb; color: white; }
 
-/* Dark mode overrides for Tailwind-like classes that need more specific control */
-.dark .bg-white { background-color: #1e293b !important; }
-.dark .bg-slate-50 { background-color: #0f172a !important; }
-.dark .bg-blue-50 { background-color: #0f172a !important; border-color: #1e293b !important; }
-.dark .text-slate-900 { color: #f1f5f9 !important; }
-.dark .text-slate-800 { color: #e2e8f0 !important; }
-.dark .text-slate-700 { color: #cbd5e1 !important; }
-.dark .text-slate-600 { color: #94a3b8 !important; }
-.dark .text-slate-500 { color: #64748b !important; }
-.dark .border-slate-200 { border-color: #334155 !important; }
-.dark .border-slate-100 { border-color: #1e293b !important; }
-.dark input, .dark select { background-color: #0f172a !important; color: #f1f5f9 !important; border-color: #334155 !important; }
-.dark .text-blue-900 { color: #bfdbfe !important; }
+/* Dark mode overrides for Tailwind-like classes that need more specific control - REMOVED for native Tailwind support */
 
 /* Toast notification */
 .toast {
@@ -107,11 +95,31 @@ option { color: #334155; font-weight: normal; }
     canvas { max-width: 300px !important; margin: 0 auto; }
 }
 
+/* Soporte para cajas de información en modo oscuro */
+.dark .bg-amber-50 { background-color: rgba(251, 191, 36, 0.05) !important; border-color: rgba(251, 191, 36, 0.2) !important; }
+.dark .text-amber-800 { color: #fbbf24 !important; }
+.dark .text-amber-900, .dark .text-amber-900\/80 { color: #fef3c7 !important; }
+.dark .bg-blue-900 { background-color: #0f172a !important; border-color: #1e293b !important; }
+
+/* Ajustes de tipografía para las guías en modo oscuro */
+.dark .prose h1, .dark .prose h2, .dark .prose h3 { color: #f1f5f9 !important; }
+.dark .prose p, .dark .prose li { color: #cbd5e1 !important; }
+.dark .prose strong { color: #ffffff !important; }
+
 /* Animación para el botón Guía de Usuario */
 @keyframes pulse-nav {
-    0%, 100% { color: #ffffff; text-shadow: none; }
-    50% { color: #fde047; text-shadow: 0 0 8px rgba(253, 224, 71, 0.4); }
+    0%, 100% { color: #0f172a; text-shadow: none; }
+    50% { color: #eab308; text-shadow: 0 0 8px rgba(234, 179, 8, 0.3); }
 }
 .animate-pulse-nav {
     animation: pulse-nav 2.5s infinite ease-in-out;
+}
+
+/* Variante para modo oscuro para que no sea negro sobre negro */
+.dark .animate-pulse-nav {
+    animation: pulse-nav-dark 2.5s infinite ease-in-out;
+}
+@keyframes pulse-nav-dark {
+    0%, 100% { color: #ffffff; text-shadow: none; }
+    50% { color: #fde047; text-shadow: 0 0 8px rgba(253, 224, 71, 0.4); }
 }
