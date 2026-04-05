@@ -6,14 +6,15 @@
     <title>Ferrampa Logistics | Calculadora de Importación Vehicular 2026</title>
     <meta name="description" content="Calculadora gratuita de impuestos de importación para vehículos en RD. Incluye validación de VIN, Ley 04-07 y beneficios para híbridos/eléctricos.">
     <meta name="google-adsense-account" content="ca-pub-1035094221157757">
+    <link rel="icon" type="image/jpg" href="img/og-image.jpg">
     
     <!-- SEO Avanzado -->
-    <link rel="canonical" href="https://tudominio.com/" />
+    <link rel="canonical" href="https://ferrampalogistics.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Ferrampa Logistics | Calculadora de Impuestos RD" />
     <meta property="og:description" content="Calcula Arancel, ITBIS y Placa para importar vehículos a RD con datos actualizados 2026." />
-    <meta property="og:image" content="https://tudominio.com/img/og-image.jpg" />
-    <meta property="og:url" content="https://tudominio.com/" />
+    <meta property="og:image" content="https://ferrampalogistics.com/img/og-image.jpg" />
+    <meta property="og:url" content="https://ferrampalogistics.com/" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Frameworks y Fuentes -->
@@ -93,6 +94,7 @@
                 
                 <div class="hidden md:flex items-center gap-4 border-l border-blue-500 pl-6 h-8">
                     <button onclick="window.navigateTo('home')" class="text-sm font-bold hover:text-blue-200 transition-colors">Calculadora</button>
+                    <button onclick="window.navigateTo('guia')" class="text-sm font-bold hover:text-blue-200 transition-colors animate-pulse-nav">Guía de Usuario</button>
                     <button onclick="window.navigateTo('contacto')" class="text-sm font-bold hover:text-blue-200 transition-colors">Contáctanos</button>
                 </div>
             </div>
@@ -150,6 +152,16 @@
                                     <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                                 </label>
                             </div>
+                            <div class="flex items-center justify-between p-4 bg-amber-50 rounded-2xl border border-amber-100">
+                                <div class="text-left text-amber-900">
+                                    <p class="text-sm font-bold leading-tight">Modo Automático</p>
+                                    <p class="text-[10px] opacity-70">Seguro 2% | Flete 15%</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" id="check-auto" class="sr-only peer" onchange="window.handleUIChange()">
+                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
+                                </label>
+                            </div>
                             <div id="panel-shared-costs" class="space-y-4 pt-2">
                                 <div class="grid grid-cols-2 gap-3">
                                     <div><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Seguro Total (USD)</label><input type="number" id="g-seguro" value="100" class="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm"></div>
@@ -166,30 +178,37 @@
                     <!-- Resultados Globales Detallados -->
                     <section class="bg-slate-900 rounded-3xl p-7 text-white shadow-2xl space-y-6">
                         <div>
-                            <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-4 text-center">Resumen General</h2>
+                            <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 text-center">Resumen General</h2>
                             
-                            <!-- Contenedor para Gráfico -->
-                            <div class="mb-6 bg-slate-800/50 p-4 rounded-2xl">
-                                <canvas id="totalChart" width="200" height="200"></canvas>
-                            </div>
+                            <div class="space-y-4 text-[11px]">
+                                <!-- Encabezados de Moneda -->
+                                <div class="flex justify-between text-[9px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-800 pb-2">
+                                    <span>Concepto</span>
+                                    <div class="flex gap-8">
+                                        <span class="w-20 text-right">DOP</span>
+                                        <span class="w-20 text-right">USD</span>
+                                    </div>
+                                </div>
 
-                            <div class="space-y-3 text-sm">
-                                <div class="flex justify-between text-left"><span class="text-slate-400 text-xs uppercase"><span class="font-bold">Arancel</span> (Gravamen):</span><span id="total-arancel" class="font-bold">RD$ 0.00</span></div>
-                                <div class="flex justify-between text-left"><span class="text-slate-400 text-xs uppercase text-slate-500"><span class="font-bold">ITBIS</span>:</span><span id="total-itbis" class="font-bold">RD$ 0.00</span></div>
-                                <div class="flex justify-between text-left"><span class="text-slate-400 text-xs uppercase text-blue-300"><span class="font-bold">Primera Placa</span>:</span><span id="total-placa" class="font-bold text-blue-400">RD$ 0.00</span></div>
-                                <div class="flex justify-between text-left"><span class="text-slate-400 text-xs uppercase opacity-70"><span class="font-bold">Servicio Aduanero</span>:</span><span id="total-servicio" class="font-bold text-slate-300">RD$ 0.00</span></div>
-                                <div class="pt-2 flex justify-between items-baseline border-t border-slate-800">
-                                    <span class="text-xs font-black uppercase text-white tracking-widest">Gran Total</span>
-                                    <span id="res-total-global" class="text-3xl font-black text-green-400 leading-none">RD$ 0.00</span>
+                                <div class="flex justify-between items-center"><span class="text-slate-400 font-bold uppercase">Total FOB</span><div class="flex gap-8"><span id="g-fob-dop" class="w-20 text-right font-medium">RD$ 0</span><span id="g-fob-usd" class="w-20 text-right font-bold text-blue-400">$ 0</span></div></div>
+                                <div class="flex justify-between items-center"><span class="text-slate-400 font-bold uppercase">Seguro</span><div class="flex gap-8"><span id="g-seg-dop" class="w-20 text-right font-medium text-slate-500">RD$ 0</span><span id="g-seg-usd" class="w-20 text-right font-medium text-slate-500">$ 0</span></div></div>
+                                <div class="flex justify-between items-center"><span class="text-slate-400 font-bold uppercase">Flete</span><div class="flex gap-8"><span id="g-fle-dop" class="w-20 text-right font-medium text-slate-500">RD$ 0</span><span id="g-fle-usd" class="w-20 text-right font-medium text-slate-500">$ 0</span></div></div>
+                                <div class="flex justify-between items-center border-b border-slate-800 pb-3"><span class="text-slate-400 font-bold uppercase">Otros</span><div class="flex gap-8"><span id="g-otr-dop" class="w-20 text-right font-medium text-slate-500">RD$ 0</span><span id="g-otr-usd" class="w-20 text-right font-medium text-slate-500">$ 0</span></div></div>
+                                
+                                <div class="flex justify-between items-center bg-slate-800/30 p-2 rounded-lg border-b border-slate-800"><span class="text-blue-300 font-black uppercase">Total CIF</span><div class="flex gap-8"><span id="g-cif-dop" class="w-20 text-right font-black text-blue-300">RD$ 0</span><span id="g-cif-usd" class="w-20 text-right font-black text-blue-300">$ 0</span></div></div>
+                                
+                                <div class="pt-4 flex justify-between items-center">
+                                    <span class="text-xs font-black uppercase text-green-400 tracking-widest">Total Impuestos a Pagar</span>
+                                    <div class="flex flex-col items-end">
+                                        <span id="res-total-global" class="text-2xl font-black text-green-400 leading-none">RD$ 0</span>
+                                        <span id="res-total-usd" class="text-[10px] font-bold text-slate-500 mt-1">$ 0.00 USD</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="pt-4 border-t border-slate-800">
                             <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Acciones y Exportación:</p>
-                            <div class="grid grid-cols-2 gap-3">
-                                <button onclick="window.exportToPDF()" class="bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-bold transition-all active:scale-95 text-xs text-center">PDF</button>
-                                <button onclick="window.exportToExcel()" class="bg-green-700 hover:bg-green-800 text-white py-3 rounded-xl font-bold transition-all active:scale-95 text-xs text-center">EXCEL</button>
-                            </div>
+                            <button onclick="window.exportToPDF()" class="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-bold transition-all active:scale-95 text-xs text-center">GENERAR REPORTE PDF</button>
                         </div>
                     </section>
 
@@ -223,7 +242,7 @@
             </main>
 
             <!-- Sección de Blogs en Home -->
-            <section class="max-w-6xl mx-auto px-4 mt-16 mb-12 text-left">
+            <section class="max-w-6xl mx-auto px-4 mt-16 mb-24 text-left">
                 <h2 class="text-2xl font-black text-slate-800 mb-8 border-l-4 border-blue-600 pl-4">Guías y Noticias de Importación</h2>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <article class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col h-full text-left">
@@ -244,52 +263,6 @@
                         <p class="text-xs text-slate-500 mb-6 flex-grow text-left text-justify">Traer un Tesla o un Toyota Hybrid es ahora más barato que nunca gracias a la reducción del 50% en Arancel e ITBIS...</p>
                         <button onclick="window.navigateTo('blog-ley')" class="text-blue-600 text-xs font-bold hover:underline self-start">Ver beneficios →</button>
                     </article>
-                </div>
-            </section>
-
-            <!-- Guía de Términos -->
-            <section class="max-w-6xl mx-auto px-4 mt-12 mb-24 text-left">
-                <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
-                    <div class="flex items-center gap-3 mb-8 text-slate-800">
-                        <div class="bg-blue-100 p-2 rounded-xl text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" cy="17" x2="12.01" cy="17"/></svg></div>
-                        <h2 class="text-xl font-black tracking-tight">Guía de Términos y Variaciones</h2>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">1. Valor FOB</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Precio neto de compra en origen. No incluye transporte marítimo ni seguros.</p></div>
-                        <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">2. CIF (Base Imponible)</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Es la suma de <span class="font-bold text-slate-800 dark:text-slate-200">Costo + Seguro + Flete</span>. Aduanas usa este valor para aplicar todos los cargos.</p></div>
-                        <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2 text-left text-left">3. Gravamen Arancelario</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">• <span class="font-bold text-slate-800 dark:text-slate-200">0%:</span> Con tratado (CAFTA/UE).<br>• <span class="font-bold text-slate-800 dark:text-slate-200">20%:</span> Persona Física sin tratado.<br>• <span class="font-bold text-green-600">10%:</span> Dealer sin tratado.</p></div>
-                        
-                        <div>
-                            <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">4. ITBIS Reducido</h3>
-                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">9% para híbridos y eléctricos. 18% para motores de combustión tradicional.</p>
-                            <a href="https://dgii.gov.do/legislacion/reglamentos/Documents/2011/293-11.pdf" target="_blank" class="btn-law">Ver Ley ITBIS</a>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2 text-left">5. Impuesto Placa</h3>
-                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Registro inicial (Primera Placa). 17% estándar. 8.5% para incentivos ecológicos.</p>
-                            <a href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/557-05.pdf" target="_blank" class="btn-law">Ver Ley Placa</a>
-                        </div>
-                        
-                        <div>
-                            <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2 text-left">6. Emisión CO2</h3>
-                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Impuesto basado en contaminación ambiental. Los ecológicos pagan 0%.</p>
-                            <a href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/253-12.pdf" target="_blank" class="btn-law">Ver Ley CO2</a>
-                        </div>
-
-                        <div>
-                            <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2 text-left">7. Eléctricos / Híbridos</h3>
-                            <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Incentivo de la Ley 103-13 para la movilidad sostenible en el país.</p>
-                            <a href="https://dgii.gov.do/vehiculosMotor/legislacion/Documents/Ley103-13.pdf" target="_blank" class="btn-law">Ver Ley 103-13</a>
-                        </div>
-                        
-                        <div class="bg-amber-50 dark:bg-amber-900/20 p-5 rounded-2xl border border-amber-100 dark:border-amber-900/30 lg:col-span-2 text-left">
-                            <h3 class="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase mb-2">🛡️ ESCUDO LEGAL</h3>
-                            <p class="text-[10px] text-amber-900 dark:text-amber-200 leading-relaxed italic">
-                                Esta cotización es referencial basada en datos del usuario y la API de la NHTSA. Los valores definitivos de liquidación son determinados exclusivamente por la Dirección General de Aduanas (DGA).
-                            </p>
-                        </div>
-                    </div>
                 </div>
             </section>
         </div>
@@ -359,6 +332,102 @@
                 
                 <h2>¿Por qué los eléctricos pagan 0% de Arancel?</h2>
                 <p>Aunque la ley dice 50% de descuento, por decretos complementarios y tratados, la mayoría de autos 100% eléctricos están ingresando con un arancel real del 0% para fomentar la infraestructura de carga en el país.</p>
+            </main>
+        </div>
+
+        <!-- VISTA GUÍA DE USUARIO -->
+        <div id="view-guia" class="hidden">
+            <main class="max-w-5xl mx-auto px-4 mt-12 mb-24 text-left">
+                <button onclick="window.navigateTo('home')" class="text-blue-600 font-bold mb-12 flex items-center gap-2 transition-transform hover:-translate-x-1">← Ir a la calculadora</button>
+                
+                <h1 class="text-5xl font-black text-slate-900 mb-4">Manual de Usuario</h1>
+                <p class="text-xl text-slate-500 mb-12 text-left">Domina todas las funciones de ImportCalc Pro para tus importaciones.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
+                    <div class="space-y-6">
+                        <div class="bg-blue-600 text-white p-8 rounded-[2.5rem] shadow-xl shadow-blue-100">
+                            <h2 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                                <span class="bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center text-sm">01</span>
+                                Configuración Inicial
+                            </h2>
+                            <p class="text-sm opacity-90 leading-relaxed mb-4 text-justify">Defina el <span class="font-bold text-white">Tipo de Cliente</span>: Las Personas Físicas pagan un 20% de arancel, mientras que los Dealers certificados disfrutan de un 10%. Ajuste la <span class="font-bold text-white">Tasa del Dólar</span> según el mercado para obtener valores precisos en DOP.</p>
+                        </div>
+
+                        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
+                            <h2 class="text-2xl font-black text-slate-800 mb-4 flex items-center gap-3">
+                                <span class="bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center text-sm text-slate-500">02</span>
+                                Decodificación de VIN
+                            </h2>
+                            <p class="text-sm text-slate-500 leading-relaxed text-justify">Ingrese los 17 caracteres del VIN y presione <span class="text-blue-600 font-bold">AUTO</span>. El sistema rellenará automáticamente Marca, Modelo, Año, Motor y País de origen, detectando incentivos CAFTA o Ley 103-13 instantáneamente.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6 text-left">
+                        <div class="bg-amber-50 p-8 rounded-[2.5rem] border border-amber-100">
+                            <h2 class="text-2xl font-black text-amber-800 mb-4 flex items-center gap-3">
+                                <span class="bg-amber-200/50 w-8 h-8 rounded-lg flex items-center justify-center text-sm text-amber-700">03</span>
+                                Modo Automático Inteligente
+                            </h2>
+                            <div class="space-y-4">
+                                <p class="text-sm text-amber-900/80 leading-relaxed text-justify">Al activarlo, el sistema fija el <span class="font-bold">Seguro (2%)</span> y el <span class="font-bold">Flete (15%)</span> basado en el valor FOB. Este modo activa y bloquea automáticamente los "Gastos Compartidos" para simplificar su gestión.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl">
+                            <h2 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                                <span class="bg-white/10 w-8 h-8 rounded-lg flex items-center justify-center text-sm">04</span>
+                                Reportes Profesionales
+                            </h2>
+                            <p class="text-sm opacity-80 leading-relaxed mb-4 text-justify">El <span class="font-bold text-blue-400">Resumen General</span> muestra totales consolidados en DOP y USD. Al exportar a <span class="font-bold text-white">PDF</span>, obtendrá un reporte ejecutivo listo para trámites comerciales o proyecciones financieras.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guía de Términos Integrada -->
+                <section class="mt-16 text-left">
+                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
+                        <div class="flex items-center gap-3 mb-8 text-slate-800">
+                            <div class="bg-blue-100 p-2 rounded-xl text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" cy="17" x2="12.01" cy="17"/></svg></div>
+                            <h2 class="text-xl font-black tracking-tight">Guía de Términos y Variaciones</h2>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+                            <div><h3 class="text-sm font-bold text-blue-700 uppercase mb-2">1. Valor FOB</h3><p class="text-xs text-slate-600 leading-relaxed">Precio neto de compra en origen. No incluye transporte marítimo ni seguros.</p></div>
+                            <div><h3 class="text-sm font-bold text-blue-700 uppercase mb-2">2. CIF (Base Imponible)</h3><p class="text-xs text-slate-600 leading-relaxed">Es la suma de <span class="font-bold text-slate-800">Costo + Seguro + Flete</span>. Aduanas usa este valor para aplicar todos los cargos.</p></div>
+                            <div><h3 class="text-sm font-bold text-blue-700 uppercase mb-2">3. Gravamen Arancelario</h3><p class="text-xs text-slate-600 leading-relaxed text-left">• <span class="font-bold text-slate-800">0%:</span> Con tratado (CAFTA/UE).<br>• <span class="font-bold text-slate-800">20%:</span> Persona Física sin tratado.<br>• <span class="font-bold text-green-600">10%:</span> Dealer sin tratado.</p></div>
+                            
+                            <div>
+                                <h3 class="text-sm font-bold text-blue-700 uppercase mb-2">4. ITBIS Reducido</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed">9% para híbridos y eléctricos. 18% para motores de combustión tradicional.</p>
+                                <a href="https://dgii.gov.do/legislacion/reglamentos/Documents/2011/293-11.pdf" target="_blank" class="btn-law">Ver Ley ITBIS</a>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-sm font-bold text-blue-700 uppercase mb-2">5. Impuesto Placa</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed text-left">Registro inicial (Primera Placa). 17% estándar. 8.5% para incentivos ecológicos.</p>
+                                <a href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/557-05.pdf" target="_blank" class="btn-law">Ver Ley Placa</a>
+                            </div>
+                            
+                            <div>
+                                <h3 class="text-sm font-bold text-blue-700 uppercase mb-2">6. Emisión CO2</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed text-left">Impuesto basado en contaminación ambiental. Los ecológicos pagan 0%.</p>
+                                <a href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/253-12.pdf" target="_blank" class="btn-law">Ver Ley CO2</a>
+                            </div>
+
+                            <div>
+                                <h3 class="text-sm font-bold text-blue-700 uppercase mb-2">7. Eléctricos / Híbridos</h3>
+                                <p class="text-xs text-slate-600 leading-relaxed text-left">Incentivo de la Ley 103-13 para la movilidad sostenible en el país.</p>
+                                <a href="https://dgii.gov.do/vehiculosMotor/legislacion/Documents/Ley103-13.pdf" target="_blank" class="btn-law">Ver Ley 103-13</a>
+                            </div>
+                            
+                            <div class="bg-amber-50 p-5 rounded-2xl border border-amber-100 lg:col-span-2 text-left">
+                                <h3 class="text-xs font-bold text-amber-700 uppercase mb-2 text-left">🛡️ ESCUDO LEGAL</h3>
+                                <p class="text-[10px] text-amber-900 leading-relaxed italic text-left">
+                                    Esta cotización es referencial basada en datos del usuario y la API de la NHTSA. Los valores definitivos de liquidación son determinados exclusivamente por la Dirección General de Aduanas (DGA).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
             </main>
         </div>
 
@@ -485,7 +554,7 @@
             </div>
             <div>
                 <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Contacto Oficinas</h4>
-                <p class="text-xs leading-relaxed">República Dominicana<br>Email: info.aduanasenlinea@gmail.com<br>WhatsApp: +1 (809) 415-0116</p>
+                <p class="text-xs leading-relaxed">República Dominicana<br>Email: info.aduanasenlinea@gmail.com<br>WhatsApp: +1 (809) 415-0116<br>Desarrollado por: +1(849) 377-4436</p>
             </div>
         </div>
         <div class="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-center">

@@ -142,7 +142,7 @@ export function showToast(msg, type = 'info') {
 
 // ─── Navigation ─────────────────────────────────────────────────────────────
 export function navigateTo(pageId) {
-    const views = ['view-home', 'view-blog-guia', 'view-blog-subastas', 'view-blog-ley', 'view-contacto'];
+    const views = ['view-home', 'view-blog-guia', 'view-blog-subastas', 'view-blog-ley', 'view-contacto', 'view-guia'];
     const target = `view-${pageId}`;
     views.forEach(v => {
         const el = document.getElementById(v);
@@ -326,11 +326,10 @@ export function renderVehicles() {
                     </div>
                     <div class="bg-blue-50 rounded-3xl p-5 flex flex-col justify-between border border-blue-100 h-full text-left">
                         <div class="space-y-2 text-xs">
-                            <div class="flex justify-between text-slate-500"><span><span class="font-bold text-slate-700">CIF DOP</span>:</span><span id="v-res-cif-${v.id}" class="font-bold text-slate-900">RD$ 0.00</span></div>
                             <div class="flex justify-between text-slate-500 text-left"><span id="v-lbl-grav-${v.id}">Arancel:</span><span id="v-res-gravamen-${v.id}" class="text-slate-600 font-bold text-left">RD$ 0.00</span></div>
-                            <div class="flex justify-between text-slate-500 text-left"><span id="v-lbl-placa-${v.id}">Placa:</span><span id="v-res-placa-${v.id}" class="font-bold text-blue-600 text-left">RD$ 0.00</span></div>
                             <div class="flex justify-between text-slate-500 text-left"><span id="v-lbl-itbis-${v.id}">ITBIS:</span><span id="v-res-itbis-${v.id}" class="font-bold text-slate-600 text-left">RD$ 0.00</span></div>
                             <div class="flex justify-between text-slate-500 text-left"><span><span class="font-bold text-slate-700">Serv. Aduana</span>:</span><span id="v-res-service-${v.id}" class="font-bold text-slate-500">RD$ 0.00</span></div>
+                            <div class="flex justify-between text-slate-500 text-left"><span id="v-lbl-placa-${v.id}">Placa:</span><span id="v-res-placa-${v.id}" class="font-bold text-blue-600 text-left">RD$ 0.00</span></div>
                         </div>
                         <div class="mt-4 pt-4 border-t border-blue-100 flex justify-between items-baseline"><span class="text-[9px] font-black uppercase text-slate-400">Subtotal</span><span id="v-res-total-${v.id}" class="text-xl font-black text-blue-700 text-right">RD$ 0.00</span></div>
                     </div>
@@ -346,59 +345,124 @@ export function calculateAll() {
     const tEl = document.getElementById('global-tasa');
     const eEl = document.getElementById('entidad');
     const cEl = document.getElementById('check-shared');
-    if (!tEl || !eEl || !cEl) return;
+    const aEl = document.getElementById('check-auto');
+    if (!tEl || !eEl || !cEl || !aEl) return;
+
+    const isAuto = aEl.checked;
+    
+    // Si Modo Auto está activo, forzar Gastos Compartidos
+    if (isAuto) {
+        cEl.checked = true;
+        cEl.disabled = true; // Impedir que lo desactiven
+        const panel = document.getElementById('panel-shared-costs');
+        if (panel) panel.style.display = 'block';
+    } else {
+        cEl.disabled = false;
+    }
+
+    const totalFobAll = vehicles.reduce((acc, v) => acc + v.fob, 0);
+
+    // Bloquear/Actualizar Inputs Globales
+    const gS = document.getElementById('g-seguro');
+    const gF = document.getElementById('g-flete');
+    if (gS) {
+        if (isAuto) {
+            gS.value = (totalFobAll * 0.02).toFixed(2);
+            gS.disabled = true;
+            gS.classList.add('opacity-50', 'italic');
+        } else {
+            gS.disabled = false;
+            gS.classList.remove('opacity-50', 'italic');
+        }
+    }
+    if (gF) {
+        if (isAuto) {
+            gF.value = (totalFobAll * 0.15).toFixed(2);
+            gF.disabled = true;
+            gF.classList.add('opacity-50', 'italic');
+        } else {
+            gF.disabled = false;
+            gF.classList.remove('opacity-50', 'italic');
+        }
+    }
 
     const config = {
         tasa: parseFloat(tEl.value) || 60,
         entidad: eEl.value,
         isShared: cEl.checked,
         sharedCosts: {
-            seguro: parseFloat(document.getElementById('g-seguro')?.value || 100),
-            flete: parseFloat(document.getElementById('g-flete')?.value || 1200),
+            seguro: parseFloat(document.getElementById('g-seguro')?.value || 0),
+            flete: parseFloat(document.getElementById('g-flete')?.value || 0),
             otros: parseFloat(document.getElementById('g-otros')?.value || 0),
         },
-        totalVehicles: vehicles.length || 1
+        totalVehicles: vehicles.length || 1,
+        isAuto: isAuto
     };
 
-    let totalArancel = 0, totalITBIS = 0, totalPlaca = 0, totalServicio = 0;
+    let tAra = 0, tItb = 0, tPla = 0, tSer = 0, tFob = 0, tCif = 0, tSeg = 0, tFle = 0, tOtr = 0;
 
     vehicles.forEach(v => {
+        // En modo individual + automático, forzar 2% y 15%
+        if (isAuto && !config.isShared) {
+            v.seguro = v.fob * 0.02;
+            v.flete = v.fob * 0.15;
+        }
+
         const res = calcularImpuestosIndividual(v, config);
         v.results = res;
 
         const ue = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
         const ueh = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
 
-        ue(`v-res-cif-${v.id}`, formatDOP(res.cif));
         ue(`v-res-gravamen-${v.id}`, formatDOP(res.gravamen));
         ueh(`v-lbl-grav-${v.id}`, `<span class="font-bold text-slate-700">Arancel</span> (${(res.gravPct * 100).toFixed(1)}%):`);
-        ue(`v-res-placa-${v.id}`, formatDOP(res.placa));
-        ueh(`v-lbl-placa-${v.id}`, `<span class="font-bold text-slate-700">Placa</span> (${(res.placaPct * 100).toFixed(1)}%):`);
         ue(`v-res-itbis-${v.id}`, formatDOP(res.itbis));
         ueh(`v-lbl-itbis-${v.id}`, `<span class="font-bold text-slate-700">ITBIS</span> (${(res.itbisPct * 100).toFixed(0)}%):`);
         ue(`v-res-service-${v.id}`, formatDOP(res.service));
+        ue(`v-res-placa-${v.id}`, formatDOP(res.placa));
+        ueh(`v-lbl-placa-${v.id}`, `<span class="font-bold text-slate-700">Placa</span> (${(res.placaPct * 100).toFixed(1)}%):`);
         ue(`v-res-total-${v.id}`, formatDOP(res.subtotal));
 
-        totalArancel += res.gravamen; totalITBIS += res.itbis; totalPlaca += res.placa; totalServicio += res.service;
+        tAra += res.gravamen; tItb += res.itbis; tPla += res.placa; tSer += res.service;
+        tFob += v.fob; tCif += res.cif;
+        tSeg += res.seguroUSD; tFle += res.fleteUSD; tOtr += res.otrosUSD;
     });
 
-    const totalFinal = totalArancel + totalITBIS + totalPlaca + totalServicio;
-    const ug = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
-    ug('total-arancel', formatDOP(totalArancel)); ug('total-itbis', formatDOP(totalITBIS)); ug('total-placa', formatDOP(totalPlaca)); ug('total-servicio', formatDOP(totalServicio)); ug('res-total-global', formatDOP(totalFinal)); ug('nav-total', formatDOP(totalFinal));
+    const tasa = config.tasa;
+    const formatUSD = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
+    const u = (id, dop, usd) => {
+        const elD = document.getElementById(`${id}-dop`);
+        const elU = document.getElementById(`${id}-usd`);
+        if (elD) elD.innerText = formatDOP(dop).replace('DOP', '').trim();
+        if (elU) elU.innerText = formatUSD(usd).replace('USD', '').trim();
+    };
 
-    updateChart({ arancel: totalArancel, itbis: totalITBIS, placa: totalPlaca, servicio: totalServicio });
+    u('g-fob', tFob * tasa, tFob);
+    u('g-seg', tSeg * tasa, tSeg);
+    u('g-fle', tFle * tasa, tFle);
+    u('g-otr', tOtr * tasa, tOtr);
+    u('g-cif', tCif, tCif / tasa);
+
+    const totalFinal = tAra + tItb + tPla + tSer;
+    const ug = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
+    ug('res-total-global', formatDOP(totalFinal));
+    ug('res-total-usd', formatUSD(totalFinal / tasa));
+    ug('nav-total', formatDOP(totalFinal));
 }
 
 // ─── Export ──────────────────────────────────────────────────────────────────
 export function exportToPDF(vId = null) {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4'); // Orientación vertical para mejor lectura de resumen
+    const doc = new jsPDF('p', 'mm', 'a4'); // Orientación vertical
     const items = vId ? vehicles.filter(v => v.id === vId) : vehicles;
+    const tasa = parseFloat(document.getElementById('global-tasa')?.value || 60);
     
     if (!vId) {
         const total = items.reduce((acc, v) => acc + v.results.subtotal, 0);
         saveToHistory(total, items.length);
     }
+
+    const formatUSD = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
 
     // Encabezado
     doc.setFillColor(29, 78, 216);
@@ -410,39 +474,41 @@ export function exportToPDF(vId = null) {
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
     doc.text('Calculadora de Importación Vehicular 2026', 14, 28);
-    doc.text(`Fecha: ${new Date().toLocaleDateString()} | Tasa: RD$ ${document.getElementById('global-tasa')?.value || '60.00'}`, 14, 34);
+    doc.text(`Fecha: ${new Date().toLocaleDateString()} | Tasa: RD$ ${tasa.toFixed(2)}`, 14, 34);
 
-    // Cuadro de Resumen (Solo si hay varios o es el reporte general)
-    let currentY = 50;
-    
+    // Cálculos de Totales
     const tFob = items.reduce((acc, v) => acc + v.fob, 0);
-    const tSeguro = items.reduce((acc, v) => acc + (v.results.seguroUSD || 0), 0);
-    const tFlete = items.reduce((acc, v) => acc + (v.results.fleteUSD || 0), 0);
-    const tOtros = items.reduce((acc, v) => acc + (v.results.otrosUSD || 0), 0);
+    const tSeg = items.reduce((acc, v) => acc + (v.results.seguroUSD || 0), 0);
+    const tFle = items.reduce((acc, v) => acc + (v.results.fleteUSD || 0), 0);
+    const tOtr = items.reduce((acc, v) => acc + (v.results.otrosUSD || 0), 0);
     const tCIF = items.reduce((acc, v) => acc + v.results.cif, 0);
-    const tImpuestos = items.reduce((acc, v) => acc + (v.results.gravamen + v.results.itbis + v.results.placa), 0);
-    const tServicio = items.reduce((acc, v) => acc + v.results.service, 0);
-    const tGeneral = items.reduce((acc, v) => acc + v.results.subtotal, 0);
+    const tAra = items.reduce((acc, v) => acc + v.results.gravamen, 0);
+    const tItb = items.reduce((acc, v) => acc + v.results.itbis, 0);
+    const tSer = items.reduce((acc, v) => acc + v.results.service, 0);
+    const tPla = items.reduce((acc, v) => acc + v.results.placa, 0);
+    const tTotal = tAra + tItb + tSer + tPla;
 
+    let currentY = 50;
     doc.setTextColor(30, 41, 59);
     doc.setFontSize(14);
     doc.text('RESUMEN EJECUTIVO', 14, currentY);
     
+    // Tabla de Resumen Dividida (Izquierda: Logística | Derecha: Impuestos)
     doc.autoTable({
         startY: currentY + 5,
-        head: [['Concepto', 'Monto Total (DOP / USD)']],
+        head: [['GASTOS DEL VEHICULO (USD / DOP)', 'IMPUESTOS A PAGAR (DOP / USD)']],
         body: [
-            ['Total FOB Consolidado', `$${tFob.toLocaleString()} USD`],
-            ['Total Seguro', `$${tSeguro.toLocaleString()} USD`],
-            ['Total Flete', `$${tFlete.toLocaleString()} USD`],
-            ['Otros Gastos Globales', `$${tOtros.toLocaleString()} USD`],
-            ['BASE IMPONIBLE (CIF)', formatDOP(tCIF)],
-            ['TOTAL IMPUESTOS (Arancel + ITBIS + Placa)', formatDOP(tImpuestos)],
-            ['Tasa por Servicio Aduanero', formatDOP(tServicio)],
-            [{ content: 'GRAN TOTAL A PAGAR', styles: { fontStyle: 'bold', fillColor: [241, 245, 249] } }, { content: formatDOP(tGeneral), styles: { fontStyle: 'bold', fillColor: [241, 245, 249] } }]
+            [`Total FOB: ${formatUSD(tFob)} / ${formatDOP(tFob * tasa)}`, `Arancel: ${formatDOP(tAra)} / ${formatUSD(tAra / tasa)}`],
+            [`Seguro: ${formatUSD(tSeg)} / ${formatDOP(tSeg * tasa)}`, `ITBIS: ${formatDOP(tItb)} / ${formatUSD(tItb / tasa)}`],
+            [`Flete: ${formatUSD(tFle)} / ${formatDOP(tFle * tasa)}`, `Servicio Aduanero: ${formatDOP(tSer)} / ${formatUSD(tSer / tasa)}`],
+            [`Otros: ${formatUSD(tOtr)} / ${formatDOP(tOtr * tasa)}`, `Total Placa: ${formatDOP(tPla)} / ${formatUSD(tPla / tasa)}`],
+            [
+                { content: `TOTAL CIF: ${formatDOP(tCIF)} / ${formatUSD(tCIF / tasa)}`, styles: { fontStyle: 'bold', fillColor: [241, 245, 249] } },
+                { content: `TOTAL IMPUESTOS: ${formatDOP(tTotal)} / ${formatUSD(tTotal / tasa)}`, styles: { fontStyle: 'bold', fillColor: [241, 245, 249] } }
+            ]
         ],
         theme: 'grid',
-        styles: { fontSize: 9, cellPadding: 3 },
+        styles: { fontSize: 7.5, cellPadding: 3 },
         headStyles: { fillColor: [51, 65, 85] }
     });
 
@@ -455,7 +521,7 @@ export function exportToPDF(vId = null) {
     const detailData = items.map(v => [
         v.name,
         v.year,
-        `$${v.fob.toLocaleString()}`,
+        formatUSD(v.fob),
         formatDOP(v.results.gravamen),
         formatDOP(v.results.itbis),
         formatDOP(v.results.placa),
@@ -475,7 +541,7 @@ export function exportToPDF(vId = null) {
     const finalY = doc.lastAutoTable.finalY + 10;
     doc.setFontSize(8);
     doc.setTextColor(150);
-    doc.text('Nota: Estos valores son referenciales. La liquidación final es determinada por la DGA.', 14, finalY);
+    doc.text('Nota: Estos valores son referenciales basados en la tasa del día. La liquidación oficial es emitida por la DGA.', 14, finalY);
     doc.text('Generado por Ferrampa Logistics ImportCalc.', 14, finalY + 5);
 
     doc.save(`Cotizacion_Ferrampa_${vId ? 'Vehiculo' : 'General'}.pdf`);

@@ -106,3 +106,12 @@ option { color: #334155; font-weight: normal; }
     .lg:col-span-4, .lg:col-span-8 { width: 100% !important; margin-bottom: 20px; }
     canvas { max-width: 300px !important; margin: 0 auto; }
 }
+
+/* Animación para el botón Guía de Usuario */
+@keyframes pulse-nav {
+    0%, 100% { color: #ffffff; text-shadow: none; }
+    50% { color: #fde047; text-shadow: 0 0 8px rgba(253, 224, 71, 0.4); }
+}
+.animate-pulse-nav {
+    animation: pulse-nav 2.5s infinite ease-in-out;
+}
