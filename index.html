@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ferrampa Logistics | Calculadora de Importación Vehicular 2026</title>
-    <meta name="description" content="Calculadora gratuita de impuestos de importación para vehículos en RD. Incluye validación de VIN, Ley 04-07 y beneficios para híbridos/eléctricos.">
+    <title>Calculadora de Importación Vehicular RD 2026 | Ferrampa Logistics</title>
+    <meta name="description" content="Calcule los impuestos de importación de vehículos en República Dominicana (Arancel, ITBIS, Placa). Compatible con Ley 103-13 y DR-CAFTA.">
+    <meta name="keywords" content="calculadora aduana rd, impuestos vehiculos rd, importacion vehiculos republica dominicana, ley 103-13, cafta rd">
+    <link rel="canonical" href="https://ferrampalogistics.com/" />
     <meta name="google-adsense-account" content="ca-pub-1035094221157757">
     <link rel="icon" type="image/jpg" href="img/og-image.jpg">
     
-    <!-- SEO Avanzado -->
-    <link rel="canonical" href="https://ferrampalogistics.com/" />
+    <!-- Open Graph / SEO -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Ferrampa Logistics | Calculadora de Impuestos RD" />
-    <meta property="og:description" content="Calcula Arancel, ITBIS y Placa para importar vehículos a RD con datos actualizados 2026." />
+    <meta property="og:title" content="Calculadora de Importación Vehicular RD 2026" />
+    <meta property="og:description" content="Herramienta profesional para calcular impuestos de aduana en RD." />
     <meta property="og:image" content="https://ferrampalogistics.com/img/og-image.jpg" />
     <meta property="og:url" content="https://ferrampalogistics.com/" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -21,10 +22,24 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
-            darkMode: 'class'
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        // Puedes extender colores aquí si lo deseas
+                    }
+                }
+            }
         }
-        
-        // Aplicar modo oscuro antes de que el contenido cargue para evitar parpadeo
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script>
+        // Configuración inicial del tema oscuro
         if (localStorage.getItem('dark_mode') === 'true' || 
             (!('dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
@@ -32,315 +47,241 @@
             document.documentElement.classList.remove('dark');
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Librerías para Exportación y Gráficos -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Datos Estructurados JSON-LD -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Ferrampa Logistics ImportCalc",
-      "operatingSystem": "Web",
-      "applicationCategory": "BusinessApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      "description": "Calculadora gratuita de impuestos de importación para vehículos en República Dominicana. Incluye validación de VIN y Ley 103-13."
-    }
-    </script>
-
-    <!-- Estilos Personalizados -->
-    <link rel="stylesheet" href="css/styles.css">
 </head>
-<body class="bg-slate-50 min-h-screen text-slate-900 pb-12">
-
-    <!-- Toast -->
-    <div id="toast" class="toast" role="alert" aria-live="polite"></div>
-
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300">
+    <!-- Pantalla de Carga -->
     <div id="loading" class="loading-overlay">
-        <div class="flex flex-col items-center">
-            <div class="w-12 h-12 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-            <p class="mt-4 font-bold text-blue-800">Cargando aplicación...</p>
-        </div>
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mb-4"></div>
+        <p class="text-xs font-black uppercase tracking-widest text-slate-400">Iniciando ImportCalc Pro</p>
     </div>
 
-    <!-- Navbar -->
-    <nav class="bg-blue-700 text-white py-4 px-4 shadow-lg sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-6">
+    <!-- Toast de Notificaciones -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Navegación Principal -->
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
                 <div class="flex items-center gap-3 cursor-pointer" onclick="window.navigateTo('home')">
-                    <div class="bg-white p-1.5 rounded-lg text-blue-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+                    <div class="bg-blue-600 p-2.5 rounded-2xl shadow-lg shadow-blue-200 dark:shadow-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
                     </div>
                     <div>
                         <h1 class="text-xl font-bold leading-none">Ferrampa Logistics</h1>
-                        <div class="flex items-center gap-2 mt-1">
-                            <p class="text-[10px] text-blue-200 uppercase tracking-wider font-bold">Calculadora de impuestos</p>
-                            <div id="save-status" class="flex items-center gap-1 opacity-0 transition-opacity duration-300">
-                                <svg id="save-check" xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="hidden"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                                <span id="save-text" class="text-[9px] font-bold text-green-400 italic uppercase">Guardado</span>
-                            </div>
+                        <p class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-600">Calculadora de impuestos de vehiculos</p>
+                    </div>
+                </div>
+
+                <!-- Menú Desktop -->
+                <div class="hidden md:flex items-center gap-8">
+                    <button onclick="window.navigateTo('home')" class="text-sm font-bold hover:text-blue-600 transition-colors">Calculadora</button>
+                    <button onclick="window.navigateTo('guia')" class="text-sm font-bold hover:text-blue-200 transition-colors animate-pulse-nav">Guía de Usuario</button>
+                    <button onclick="window.navigateTo('contacto')" class="text-sm font-bold hover:text-blue-600 transition-colors">Contacto</button>
+                    <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+                    <button onclick="window.toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:scale-110 transition-transform">
+                        <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                </div>
+
+                <!-- Info Rápida Nav -->
+                <div id="nav-info-calc" class="flex items-center gap-4 bg-blue-900 text-white px-5 py-2.5 rounded-2xl shadow-xl shadow-blue-900/20">
+                    <div class="text-right">
+                        <div class="flex items-center justify-end gap-2 mb-1">
+                            <p class="text-[9px] text-blue-200 font-bold uppercase tracking-tighter leading-none">Tasa USD/DOP</p>
+                            <label class="relative inline-flex items-center cursor-pointer scale-75 origin-right">
+                                <input type="checkbox" id="check-auto-tasa" onchange="window.toggleAutoTasa()" class="sr-only peer">
+                                <div class="w-7 h-4 bg-blue-800/50 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-green-500"></div>
+                            </label>
+                        </div>
+                        <div class="flex items-center bg-blue-800/50 px-2 py-1 rounded-md">
+                            <span class="text-[8px] mr-1">RD$</span>
+                            <input type="number" id="global-tasa" value="60.00" step="0.05" class="bg-transparent font-black text-xs w-10 outline-none border-none text-white [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none">
                         </div>
                     </div>
-                </div>
-                
-                <div class="hidden md:flex items-center gap-4 border-l border-blue-500 pl-6 h-8">
-                    <button onclick="window.navigateTo('home')" class="text-sm font-bold hover:text-blue-200 transition-colors">Calculadora</button>
-                    <button onclick="window.navigateTo('guia')" class="text-sm font-bold hover:text-blue-200 transition-colors animate-pulse-nav">Guía de Usuario</button>
-                    <button onclick="window.navigateTo('contacto')" class="text-sm font-bold hover:text-blue-200 transition-colors">Contáctanos</button>
-                </div>
-            </div>
-
-            <div class="flex items-center gap-4">
-                <button onclick="window.toggleDarkMode()" class="p-2 rounded-xl bg-blue-800/50 hover:bg-blue-800 text-white transition-all shadow-sm flex items-center justify-center" title="Cambiar modo">
-                    <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                    <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                </button>
-                
-                <div id="nav-info-calc" class="flex items-center gap-6">
-                <div class="text-right">
-                    <p class="text-[9px] text-blue-200 font-bold uppercase tracking-tighter">Tasa USD/DOP</p>
-                    <div class="flex items-center bg-blue-800/50 px-2 py-1 rounded-md">
-                        <span class="text-xs mr-1 opacity-70">RD$</span>
-                        <input type="number" id="global-tasa" value="60.00" step="0.01" class="bg-transparent text-white font-bold w-12 outline-none text-center text-sm">
+                    <div class="h-8 w-px bg-blue-700/50"></div>
+                    <div class="text-right">
+                        <p class="text-[9px] text-blue-200 font-bold uppercase tracking-tighter text-xs">Total General</p>
+                        <p id="nav-total" class="text-lg font-black leading-none text-right">RD$ 0.00</p>
                     </div>
-                </div>
-                <div class="h-8 w-px bg-blue-500/50 hidden sm:block"></div>
-                <div class="text-right text-white">
-                    <p class="text-[9px] text-blue-200 font-bold uppercase tracking-tighter text-xs">Total General</p>
-                    <p id="nav-total" class="text-lg font-black leading-none text-right">RD$ 0.00</p>
                 </div>
             </div>
         </div>
     </nav>
 
-    <div id="app-viewport">
-        <!-- VISTA HOME -->
+    <div id="main-content">
+        <!-- VISTA CALCULADORA (HOME) -->
         <div id="view-home">
-            <div class="max-w-6xl mx-auto px-4 mt-6">
-                <div class="ad-placeholder"><span>Espacio Publicitario</span></div>
-            </div>
-
-            <main class="max-w-6xl mx-auto px-4 mt-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Columna Izquierda: Configuración -->
-                <div class="lg:col-span-4 space-y-6">
-                    <section class="glass-card p-6 rounded-3xl shadow-sm border border-slate-200">
-                        <h2 class="text-sm font-black text-slate-400 uppercase tracking-widest mb-6">Configuración</h2>
-                        <div class="space-y-5">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 mb-2 uppercase text-[10px]">Tipo de Cliente</label>
-                                <select id="entidad" onchange="window.handleUIChange()" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none font-medium text-sm transition-all cursor-pointer">
-                                    <option value="fisica">Persona Física</option>
-                                    <option value="dealer">Dealer</option>
-                                </select>
+            <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Columna Izquierda: Entradas -->
+                    <div class="lg:col-span-4 space-y-6 sticky top-28">
+                        <div class="glass-card p-8 rounded-[2.5rem] border border-slate-200 shadow-sm text-left">
+                            <div class="flex items-center justify-between mb-8">
+                                <h2 class="text-sm font-black uppercase tracking-widest text-slate-400">Configuración</h2>
+                                <span id="save-status" class="text-[9px] font-bold text-green-500 opacity-0 transition-opacity uppercase tracking-widest">Autoguardado ✓</span>
                             </div>
-                            <div class="flex items-center justify-between p-4 bg-blue-50 rounded-2xl border border-blue-100">
-                                <div class="text-left text-blue-900">
-                                    <p class="text-sm font-bold leading-tight">Gastos Compartidos</p>
-                                    <p class="text-[10px] opacity-70">Dividir flete/seguro</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="check-shared" class="sr-only peer" checked onchange="window.toggleSharedPanel()">
-                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                                </label>
-                            </div>
-                            <div class="flex items-center justify-between p-4 bg-amber-50 rounded-2xl border border-amber-100">
-                                <div class="text-left text-amber-900">
-                                    <p class="text-sm font-bold leading-tight">Modo Automático</p>
-                                    <p class="text-[10px] opacity-70">Seguro 2% | Flete 15%</p>
-                                </div>
-                                <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" id="check-auto" class="sr-only peer" onchange="window.handleUIChange()">
-                                    <div class="w-11 h-6 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500"></div>
-                                </label>
-                            </div>
-                            <div id="panel-shared-costs" class="space-y-4 pt-2">
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Seguro Total (USD)</label><input type="number" id="g-seguro" value="100" class="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm"></div>
-                                    <div><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Flete Total (USD)</label><input type="number" id="g-flete" value="1200" class="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm"></div>
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Otros Globales (USD)</label>
-                                    <input type="number" id="g-otros" value="0" class="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-500 text-sm">
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Resultados Globales Detallados -->
-                    <section class="bg-slate-900 rounded-3xl p-7 text-white shadow-2xl space-y-6">
-                        <div>
-                            <h2 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6 text-center">Resumen General</h2>
                             
-                            <div class="space-y-4 text-[11px]">
-                                <!-- Encabezados de Moneda -->
-                                <div class="flex justify-between text-[9px] font-black text-slate-500 uppercase tracking-widest border-b border-slate-800 pb-2">
-                                    <span>Concepto</span>
-                                    <div class="flex gap-8">
-                                        <span class="w-20 text-right">DOP</span>
-                                        <span class="w-20 text-right">USD</span>
+                            <div class="space-y-6">
+                                <div class="text-left">
+                                    <label class="block text-[10px] font-bold text-slate-400 mb-2 uppercase">Tipo de Importador</label>
+                                    <select id="entidad" onchange="window.handleUIChange()" class="w-full p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl font-bold text-sm outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer appearance-none text-left">
+                                        <option value="fisica">Persona Física (20% Arancel)</option>
+                                        <option value="dealer">Dealer Certificado (10% Arancel)</option>
+                                    </select>
+                                </div>
+
+                                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-[2rem] border border-blue-100 dark:border-blue-800 text-left">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div>
+                                            <h3 class="font-black text-blue-900 dark:text-blue-100 text-xs uppercase tracking-tight">Modo Automático</h3>
+                                            <p class="text-[9px] text-blue-600 dark:text-blue-400 font-bold">Seguro 2% | Flete 15%</p>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="check-auto" checked onchange="window.handleUIChange()" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                        </label>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <h3 class="font-black text-slate-700 dark:text-slate-300 text-xs uppercase tracking-tight">Gastos Compartidos</h3>
+                                            <p class="text-[9px] text-slate-400 font-bold">Dividir costos logísticos</p>
+                                        </div>
+                                        <label class="relative inline-flex items-center cursor-pointer">
+                                            <input type="checkbox" id="check-shared" checked onchange="window.toggleSharedPanel()" class="sr-only peer">
+                                            <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-slate-600"></div>
+                                        </label>
                                     </div>
                                 </div>
 
-                                <div class="flex justify-between items-center"><span class="text-slate-400 font-bold uppercase">Total FOB</span><div class="flex gap-8"><span id="g-fob-dop" class="w-20 text-right font-medium">RD$ 0</span><span id="g-fob-usd" class="w-20 text-right font-bold text-blue-400">$ 0</span></div></div>
-                                <div class="flex justify-between items-center"><span class="text-slate-400 font-bold uppercase">Seguro</span><div class="flex gap-8"><span id="g-seg-dop" class="w-20 text-right font-medium text-slate-500">RD$ 0</span><span id="g-seg-usd" class="w-20 text-right font-medium text-slate-500">$ 0</span></div></div>
-                                <div class="flex justify-between items-center"><span class="text-slate-400 font-bold uppercase">Flete</span><div class="flex gap-8"><span id="g-fle-dop" class="w-20 text-right font-medium text-slate-500">RD$ 0</span><span id="g-fle-usd" class="w-20 text-right font-medium text-slate-500">$ 0</span></div></div>
-                                <div class="flex justify-between items-center border-b border-slate-800 pb-3"><span class="text-slate-400 font-bold uppercase">Otros</span><div class="flex gap-8"><span id="g-otr-dop" class="w-20 text-right font-medium text-slate-500">RD$ 0</span><span id="g-otr-usd" class="w-20 text-right font-medium text-slate-500">$ 0</span></div></div>
-                                
-                                <div class="flex justify-between items-center bg-slate-800/30 p-2 rounded-lg border-b border-slate-800"><span class="text-blue-300 font-black uppercase">Total CIF</span><div class="flex gap-8"><span id="g-cif-dop" class="w-20 text-right font-black text-blue-300">RD$ 0</span><span id="g-cif-usd" class="w-20 text-right font-black text-blue-300">$ 0</span></div></div>
-                                
-                                <div class="pt-4 flex justify-between items-center">
-                                    <span class="text-xs font-black uppercase text-green-400 tracking-widest">Total Impuestos a Pagar</span>
-                                    <div class="flex flex-col items-end">
-                                        <span id="res-total-global" class="text-2xl font-black text-green-400 leading-none">RD$ 0</span>
-                                        <span id="res-total-usd" class="text-[10px] font-bold text-slate-500 mt-1">$ 0.00 USD</span>
+                                <!-- Panel Gastos Compartidos -->
+                                <div id="panel-shared-costs" class="space-y-4 pt-4 border-t border-slate-100 dark:border-slate-800 text-left">
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="text-left">
+                                            <label class="block text-[9px] font-bold text-slate-400 mb-1 uppercase">Seguro Global (USD)</label>
+                                            <input type="number" id="g-seguro" value="100" class="w-full p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-xs text-left">
+                                        </div>
+                                        <div class="text-left">
+                                            <label class="block text-[9px] font-bold text-slate-400 mb-1 uppercase">Flete Global (USD)</label>
+                                            <input type="number" id="g-flete" value="1200" class="w-full p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-xs text-left">
+                                        </div>
+                                    </div>
+                                    <div class="text-left">
+                                        <label class="block text-[9px] font-bold text-slate-400 mb-1 uppercase">Otros Gastos (USD)</label>
+                                        <input type="number" id="g-otros" value="0" class="w-full p-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-xs text-left">
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="pt-4 border-t border-slate-800">
-                            <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-4">Acciones y Exportación:</p>
-                            <button onclick="window.exportToPDF()" class="w-full bg-red-500 hover:bg-red-600 text-white py-3 rounded-xl font-bold transition-all active:scale-95 text-xs text-center">GENERAR REPORTE PDF</button>
-                        </div>
-                    </section>
 
-                    <!-- Historial Local -->
-                    <section class="glass-card p-6 rounded-3xl shadow-sm border border-slate-200">
-                        <div class="flex justify-between items-center mb-6">
-                            <h2 class="text-xs font-black text-slate-400 uppercase tracking-widest">Historial Reciente</h2>
-                            <button onclick="window.clearHistory()" class="text-[9px] font-bold text-red-500 uppercase hover:underline">Limpiar</button>
+                            <button onclick="window.addVehicle()" class="w-full mt-8 bg-slate-900 dark:bg-white dark:text-slate-900 text-white py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-slate-200 dark:shadow-none flex items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                Agregar Vehículo
+                            </button>
                         </div>
-                        <div id="history-container" class="space-y-3 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
-                            <p class="text-[10px] text-slate-400 italic text-center py-4">No hay cálculos recientes.</p>
-                        </div>
-                    </section>
-                </div>
 
-                <!-- Columna Derecha: Vehículos -->
-                <div class="lg:col-span-8 space-y-6">
-                    <div class="flex justify-between items-center px-2">
-                        <h2 class="text-xl font-black text-slate-800">Cálculo por Vehículo</h2>
-                        <button onclick="window.addVehicle()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-2xl font-bold flex items-center gap-2 transition-all shadow-lg active:scale-95">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                            Agregar Vehículo
-                        </button>
+                        <!-- Mini Historial -->
+                        <div class="glass-card p-6 rounded-[2.5rem] border border-slate-200 shadow-sm text-left">
+                            <div class="flex items-center justify-between mb-4 text-left">
+                                <h3 class="text-[10px] font-black uppercase tracking-widest text-slate-400 text-left">Cálculos Recientes</h3>
+                                <button onclick="window.clearHistory()" class="text-[9px] font-bold text-red-400 hover:text-red-600 uppercase tracking-tight">Limpiar</button>
+                            </div>
+                            <div id="history-container" class="space-y-3 max-h-48 overflow-y-auto custom-scrollbar pr-2 text-left">
+                                <!-- Items de historial vía JS -->
+                            </div>
+                        </div>
+
+                        <!-- Espacio para Anuncio Lateral -->
+                        <div class="ad-placeholder">
+                            <span>Anuncio AdSense</span>
+                        </div>
                     </div>
-                    <div id="vehicles-container" class="space-y-4"></div>
-                    <div id="empty-state" class="hidden py-12 text-center border-2 border-dashed border-slate-200 rounded-3xl italic text-slate-400">Sin vehículos registrados.</div>
+
+                    <!-- Columna Central: Lista de Vehículos y Resultados -->
+                    <div class="lg:col-span-8 space-y-8">
+                        
+                        <!-- Resumen Global -->
+                        <div class="bg-white dark:bg-slate-900 p-8 rounded-[3rem] shadow-sm border border-slate-200 dark:border-slate-800 text-left relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-600/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+                            
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative z-10">
+                                <div class="text-left">
+                                    <p class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 mb-2">Total Consolidado</p>
+                                    <h2 id="res-total-global" class="text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-1">RD$ 0.00</h2>
+                                    <p id="res-total-usd" class="text-lg font-bold text-slate-400">$ 0.00 USD</p>
+                                </div>
+                                
+                                <div class="flex gap-2 w-full md:w-auto text-left">
+                                    <button onclick="window.exportToPDF()" class="w-full md:w-auto bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all flex items-center justify-center gap-2 shadow-lg shadow-red-200 dark:shadow-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                                        Generar Reporte
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 md:grid-cols-5 gap-6 mt-10 pt-8 border-t border-slate-100 dark:border-slate-800 text-left">
+                                <div class="text-left"><p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Total FOB</p><p id="g-fob-usd" class="text-sm font-black text-slate-700 dark:text-slate-200 leading-none">$ 0.00</p><p id="g-fob-dop" class="text-[9px] font-bold text-slate-400 mt-1">RD$ 0.00</p></div>
+                                <div class="text-left"><p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Seguro</p><p id="g-seg-usd" class="text-sm font-black text-slate-700 dark:text-slate-200 leading-none">$ 0.00</p><p id="g-seg-dop" class="text-[9px] font-bold text-slate-400 mt-1">RD$ 0.00</p></div>
+                                <div class="text-left"><p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Flete</p><p id="g-fle-usd" class="text-sm font-black text-slate-700 dark:text-slate-200 leading-none">$ 0.00</p><p id="g-fle-dop" class="text-[9px] font-bold text-slate-400 mt-1">RD$ 0.00</p></div>
+                                <div class="text-left"><p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Otros</p><p id="g-otr-usd" class="text-sm font-black text-slate-700 dark:text-slate-200 leading-none">$ 0.00</p><p id="g-otr-dop" class="text-[9px] font-bold text-slate-400 mt-1">RD$ 0.00</p></div>
+                                <div class="text-left bg-blue-50 dark:bg-blue-900/20 p-3 rounded-2xl border border-blue-100 dark:border-blue-800"><p class="text-[9px] font-bold text-blue-600 uppercase mb-1">Base CIF</p><p id="g-cif-dop" class="text-sm font-black text-blue-700 dark:text-blue-400 leading-none">RD$ 0.00</p><p id="g-cif-usd" class="text-[9px] font-bold text-blue-400 mt-1">$ 0.00 USD</p></div>
+                            </div>
+                        </div>
+
+                        <!-- Contenedor de Vehículos -->
+                        <div id="vehicles-container" class="space-y-6 text-left">
+                            <!-- Tarjetas vía JS -->
+                        </div>
+
+                        <!-- Estado Vacío -->
+                        <div id="empty-state" class="hidden py-20 text-center glass-card rounded-[3rem] border-2 border-dashed border-slate-200 dark:border-slate-800">
+                            <div class="bg-slate-100 dark:bg-slate-800 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="2.5"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><line x1="9" y1="15" x2="15" y2="15"></line></svg>
+                            </div>
+                            <h3 class="text-xl font-black text-slate-400 uppercase tracking-widest">No hay vehículos</h3>
+                            <p class="text-slate-400 text-sm mt-2">Agregue su primer vehículo para comenzar el cálculo.</p>
+                        </div>
+
+                        <!-- Sección de Blog/Guías (Visualización en Tarjetas) -->
+                        <section class="mt-20 text-left">
+                            <div class="flex items-center justify-between mb-8 text-left">
+                                <h2 class="text-xs font-black uppercase tracking-[0.3em] text-slate-400">Recursos y Guías</h2>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                                <a href="guia-importacion-2026.html" class="group bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 hover:border-blue-500 transition-all shadow-sm">
+                                    <div class="bg-blue-50 dark:bg-blue-900/20 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                                    </div>
+                                    <h4 class="font-bold text-slate-800 dark:text-slate-200 mb-2">Guía 2026: Cómo importar</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">Pasos, leyes y requisitos actualizados para este año.</p>
+                                </a>
+                                <a href="guia-subastas-usa.html" class="group bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 hover:border-blue-500 transition-all shadow-sm">
+                                    <div class="bg-blue-50 dark:bg-blue-900/20 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" cy="16"></line></svg>
+                                    </div>
+                                    <h4 class="font-bold text-slate-800 dark:text-slate-200 mb-2">Subastas USA: Copart e IAAI</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">Secretos para comprar sin riesgos en patios americanos.</p>
+                                </a>
+                                <a href="guia-ley-103-13.html" class="group bg-white dark:bg-slate-900 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 hover:border-blue-500 transition-all shadow-sm">
+                                    <div class="bg-blue-50 dark:bg-blue-900/20 text-blue-600 w-10 h-10 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"></path><path d="M2 17l10 5 10-5"></path><path d="M2 12l10 5 10-5"></path></svg>
+                                    </div>
+                                    <h4 class="font-bold text-slate-800 dark:text-slate-200 mb-2">Ley 103-13: Incentivos Eco</h4>
+                                    <p class="text-xs text-slate-400 leading-relaxed">Ahorra el 50% de impuestos en híbridos y eléctricos.</p>
+                                </a>
+                            </div>
+                        </section>
+                    </div>
                 </div>
             </main>
-
-            <!-- Sección de Blogs en Home -->
-            <section class="max-w-6xl mx-auto px-4 mt-16 mb-24 text-left">
-                <h2 class="text-2xl font-black text-slate-800 mb-8 border-l-4 border-blue-600 pl-4">Guías y Noticias de Importación</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <article class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col h-full text-left">
-                        <span class="text-[10px] font-black text-blue-600 uppercase mb-2 tracking-widest">Guía 2026</span>
-                        <h3 class="font-bold text-lg mb-3 text-slate-800 leading-tight">¿Cómo importar un vehículo desde EE. UU. a RD este año?</h3>
-                        <p class="text-xs text-slate-500 mb-6 flex-grow text-justify">Descubre la hoja de ruta completa para este 2026: desde la selección del título correcto hasta el despacho final en el puerto dominicano...</p>
-                        <button onclick="window.navigateTo('blog-guia')" class="text-blue-600 text-xs font-bold hover:underline self-start">Leer guía completa →</button>
-                    </article>
-                    <article class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col h-full text-left">
-                        <span class="text-[10px] font-black text-green-600 uppercase mb-2 tracking-widest">Subastas</span>
-                        <h3 class="font-bold text-lg mb-3 text-slate-800 leading-tight">Comprar en Copart o IAAI: Lo que nadie te dice</h3>
-                        <p class="text-xs text-slate-500 mb-6 flex-grow text-justify">Las subastas esconden cargos que pueden arruinar tu negocio. Aprende a calcular "Auction Fees" y a evitar títulos fraudulentos...</p>
-                        <button onclick="window.navigateTo('blog-subastas')" class="text-blue-600 text-xs font-bold hover:underline self-start">Revelar secretos →</button>
-                    </article>
-                    <article class="bg-white p-6 rounded-3xl shadow-sm border border-slate-200 flex flex-col h-full text-left">
-                        <span class="text-[10px] font-black text-amber-600 uppercase mb-2 tracking-widest text-left">Incentivos Eco</span>
-                        <h3 class="font-bold text-lg mb-3 text-slate-800 leading-tight text-left">Ley 103-13: Nuevos descuentos en ITBIS</h3>
-                        <p class="text-xs text-slate-500 mb-6 flex-grow text-left text-justify">Traer un Tesla o un Toyota Hybrid es ahora más barato que nunca gracias a la reducción del 50% en Arancel e ITBIS...</p>
-                        <button onclick="window.navigateTo('blog-ley')" class="text-blue-600 text-xs font-bold hover:underline self-start">Ver beneficios →</button>
-                    </article>
-                </div>
-            </section>
         </div>
 
-        <!-- BLOG 1 (GUÍA 2026) -->
-        <div id="view-blog-guia" class="hidden">
-            <main class="max-w-4xl mx-auto px-4 mt-12 text-left prose pb-24">
-                <button onclick="window.navigateTo('home')" class="text-blue-600 font-bold mb-8 flex items-center gap-2 transition-transform hover:-translate-x-1">← Volver a la calculadora</button>
-                <h1>Guía 2026: Cómo Importar tu Vehículo desde EE. UU. a RD</h1>
-                <div class="ad-box h-24 my-8">PUBLICIDAD: SEGUROS DE CARGA MARÍTIMA</div>
-                <p>Importar un vehículo es un proceso estratégico. En este 2026, la Dirección General de Aduanas (DGA) ha reforzado los sistemas digitales, facilitando el pre-despacho, pero manteniendo los controles físicos tradicionales.</p>
-                
-                <h2>Pilar 1: La Regla de los 5 Años (Ley 04-07)</h2>
-                <p>República Dominicana prohíbe la importación de vehículos de pasajeros con más de cinco años de fabricación. Para este año corriente (2026), el año límite permitido es el <strong>2021</strong>. Intentar importar un vehículo 2020 o anterior resultará en la incautación inmediata del mismo en el puerto sin posibilidad de reembolso.</p>
-                
-                <h2>Pilar 2: Métodos de Envío (Logística)</h2>
-                <p>Dependiendo de tu presupuesto y del valor del vehículo, tienes dos opciones:</p>
-                <ul>
-                    <li><strong>RoRo (Roll-on/Roll-off):</strong> Es el método más barato. El auto sube al barco rodando. Es ideal para vehículos utilitarios. Los puertos de salida principales son Miami y Jacksonville.</li>
-                    <li><strong>Contenedor:</strong> El vehículo viaja en una caja cerrada. Recomendado para autos de lujo, clásicos permitidos o híbridos/eléctricos de alto costo, ya que evita daños por salitre y manipulación externa.</li>
-                </ul>
-
-                <h2>Pilar 3: Documentación Vital</h2>
-                <p>No embarques un vehículo sin tener en mano el <strong>Title</strong> original (Título de Propiedad) debidamente firmado. Además, necesitarás el Bill of Lading (BL) que emite la naviera y la factura de compra comercial. Si el vehículo es fabricado en EE. UU., asegúrate de obtener el <strong>Certificado de Origen</strong> para aplicar el 0% de Arancel bajo el tratado DR-CAFTA.</p>
-
-                <div class="bg-blue-700 text-white p-10 rounded-[3rem] mt-12 shadow-2xl">
-                    <h3 class="!text-white text-2xl font-bold mb-2 text-left">¿Quieres saber cuánto pagarás de impuestos?</h3>
-                    <p class="!text-white opacity-90 mb-6 text-left">Nuestra herramienta calcula Arancel, Placa e ITBIS aplicando los descuentos de la Ley 103-13 para modelos ecológicos.</p>
-                    <button onclick="window.navigateTo('home')" class="bg-white !text-blue-700 px-8 py-3 rounded-2xl font-bold uppercase tracking-widest text-sm text-left">Ir a la Calculadora Ahora</button>
-                </div>
-            </main>
-        </div>
-
-        <!-- BLOG 2 (SUBASTAS) -->
-        <div id="view-blog-subastas" class="hidden">
-            <main class="max-w-4xl mx-auto px-4 mt-12 text-left prose pb-24">
-                <button onclick="window.navigateTo('home')" class="text-blue-600 font-bold mb-8 flex items-center gap-2">← Volver</button>
-                <h1>Subastas en EE. UU.: Copart, IAAI y lo que nadie te dice</h1>
-                <div class="ad-box h-24 my-8">PUBLICIDAD: ASESORES DE SUBASTA</div>
-                <p>Comprar en subasta parece fácil: pujas, ganas y traes el auto. Sin embargo, hay costos invisibles que pueden convertir un "ofertón" en una pérdida de dinero.</p>
-                
-                <h2>Las Comisiones de la Casa (Buyer Fees)</h2>
-                <p>Si el martillo cae en $6,000 USD, tu factura final de Copart o IAAI será de unos $7,100 USD. Las subastas cobran cargos de procesamiento, uso de plataforma online y cargos por sacar el auto del patio (Gate Fees). Siempre suma un 15% adicional al precio que ves en pantalla para tener tu costo real en EE. UU.</p>
-                
-                <h2>Run & Drive: Una etiqueta peligrosa</h2>
-                <p>Muchos compradores se confían de la etiqueta "Run & Drive". En términos de subasta, esto solo significa que el auto pudo moverse un metro hacia adelante y un metro hacia atrás cuando llegó al patio. No garantiza que el motor no esté "quemado" o que la transmisión no falle después de 5 minutos de uso. Siempre invierte $35 USD en un reporte de historial antes de ofertar.</p>
-                
-                <h2>Títulos Flood (Inundados)</h2>
-                <p>En el Caribe, los autos con historial de inundación (Flood) son una bomba de tiempo. La humedad extrema de RD activará fallos eléctricos permanentes en sensores y computadoras (ECU) que fueron sumergidas. Evita a toda costa los títulos marcados con agua, incluso si el auto arranca bien.</p>
-            </main>
-        </div>
-
-        <!-- BLOG 3 (LEY 103-13) -->
-        <div id="view-blog-ley" class="hidden">
-            <main class="max-w-4xl mx-auto px-4 mt-12 text-left prose pb-24">
-                <button onclick="window.navigateTo('home')" class="text-blue-600 font-bold mb-8 flex items-center gap-2">← Volver</button>
-                <h1>Ley 103-13: El Incentivo Maestro para Vehículos Eco</h1>
-                <p>República Dominicana busca renovar su parque vehicular con tecnologías limpias a través de agresivos incentivos fiscales.</p>
-                
-                <h2>Reducción del 50% en todo</h2>
-                <p>La Ley 103-13 otorga beneficios que pocas veces se ven en otros países. Si el vehículo es certificado como híbrido o eléctrico por el fabricante:</p>
-                <ul>
-                    <li><strong>ITBIS:</strong> Paga solo el 9% (la mitad del 18% normal).</li>
-                    <li><strong>Arancel:</strong> Reducción al 10% (o incluso 5% si el importador tiene categoría Dealer).</li>
-                    <li><strong>Primera Placa:</strong> Reducción al 8.5% del valor CIF.</li>
-                </ul>
-                
-                <h2>¿Por qué los eléctricos pagan 0% de Arancel?</h2>
-                <p>Aunque la ley dice 50% de descuento, por decretos complementarios y tratados, la mayoría de autos 100% eléctricos están ingresando con un arancel real del 0% para fomentar la infraestructura de carga en el país.</p>
-            </main>
-        </div>
-
-        <!-- VISTA GUÍA DE USUARIO -->
+        <!-- VISTA GUÍA DE USUARIO (MANTENIDA EN INDEX POR SER FUNCIONAL A LA APP) -->
         <div id="view-guia" class="hidden">
             <main class="max-w-5xl mx-auto px-4 mt-12 mb-24 text-left">
                 <button onclick="window.navigateTo('home')" class="text-blue-600 font-bold mb-12 flex items-center gap-2 transition-transform hover:-translate-x-1">← Ir a la calculadora</button>
                 
-                <h1 class="text-5xl font-black text-slate-900 mb-4">Manual de Usuario</h1>
+                <h1 class="text-5xl font-black text-slate-900 dark:text-white mb-4">Manual de Usuario</h1>
                 <p class="text-xl text-slate-500 mb-12 text-left">Domina todas las funciones de ImportCalc Pro para tus importaciones.</p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
@@ -353,23 +294,23 @@
                             <p class="text-sm opacity-90 leading-relaxed mb-4 text-justify">Defina el <span class="font-bold text-white">Tipo de Cliente</span>: Las Personas Físicas pagan un 20% de arancel, mientras que los Dealers certificados disfrutan de un 10%. Ajuste la <span class="font-bold text-white">Tasa del Dólar</span> según el mercado para obtener valores precisos en DOP.</p>
                         </div>
 
-                        <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm">
-                            <h2 class="text-2xl font-black text-slate-800 mb-4 flex items-center gap-3">
-                                <span class="bg-slate-100 w-8 h-8 rounded-lg flex items-center justify-center text-sm text-slate-500">02</span>
+                        <div class="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-700 shadow-sm">
+                            <h2 class="text-2xl font-black text-slate-800 dark:text-white mb-4 flex items-center gap-3">
+                                <span class="bg-slate-100 dark:bg-slate-700 w-8 h-8 rounded-lg flex items-center justify-center text-sm text-slate-500">02</span>
                                 Decodificación de VIN
                             </h2>
-                            <p class="text-sm text-slate-500 leading-relaxed text-justify">Ingrese los 17 caracteres del VIN y presione <span class="text-blue-600 font-bold">AUTO</span>. El sistema rellenará automáticamente Marca, Modelo, Año, Motor y País de origen, detectando incentivos CAFTA o Ley 103-13 instantáneamente.</p>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed text-justify">Ingrese los 17 caracteres del VIN y presione <span class="text-blue-600 font-bold">AUTO</span>. El sistema rellenará automáticamente Marca, Modelo, Año, Motor y País de origen, detectando incentivos CAFTA o Ley 103-13 instantáneamente.</p>
                         </div>
                     </div>
 
                     <div class="space-y-6 text-left">
-                        <div class="bg-amber-50 p-8 rounded-[2.5rem] border border-amber-100">
-                            <h2 class="text-2xl font-black text-amber-800 mb-4 flex items-center gap-3">
+                        <div class="bg-amber-50 dark:bg-amber-900/10 p-8 rounded-[2.5rem] border border-amber-100 dark:border-amber-900/30">
+                            <h2 class="text-2xl font-black text-amber-800 dark:text-amber-400 mb-4 flex items-center gap-3">
                                 <span class="bg-amber-200/50 w-8 h-8 rounded-lg flex items-center justify-center text-sm text-amber-700">03</span>
                                 Modo Automático Inteligente
                             </h2>
                             <div class="space-y-4">
-                                <p class="text-sm text-amber-900/80 leading-relaxed text-justify">Al activarlo, el sistema fija el <span class="font-bold">Seguro (2%)</span> y el <span class="font-bold">Flete (15%)</span> basado en el valor FOB. Este modo activa y bloquea automáticamente los "Gastos Compartidos" para simplificar su gestión.</p>
+                                <p class="text-sm text-amber-900/80 dark:text-amber-200/60 leading-relaxed text-justify">Al activarlo, el sistema fija el <span class="font-bold">Seguro (2%)</span> y el <span class="font-bold">Flete (15%)</span> basado en el valor FOB. Este modo activa y bloquea automáticamente los "Gastos Compartidos" para simplificar su gestión.</p>
                             </div>
                         </div>
 
@@ -385,43 +326,43 @@
 
                 <!-- Guía de Términos Integrada -->
                 <section class="mt-16 text-left">
-                    <div class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200">
-                        <div class="flex items-center gap-3 mb-8 text-slate-800">
-                            <div class="bg-blue-100 p-2 rounded-xl text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" cy="17" x2="12.01" cy="17"/></svg></div>
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-800">
+                        <div class="flex items-center gap-3 mb-8 text-slate-800 dark:text-white">
+                            <div class="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-xl text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" cy="17" x2="12.01" cy="17"/></svg></div>
                             <h2 class="text-xl font-black tracking-tight">Guía de Términos y Variaciones</h2>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
-                            <div><h3 class="text-sm font-bold text-blue-700 uppercase mb-2">1. Valor FOB</h3><p class="text-xs text-slate-600 leading-relaxed">Precio neto de compra en origen. No incluye transporte marítimo ni seguros.</p></div>
-                            <div><h3 class="text-sm font-bold text-blue-700 uppercase mb-2">2. CIF (Base Imponible)</h3><p class="text-xs text-slate-600 leading-relaxed">Es la suma de <span class="font-bold text-slate-800">Costo + Seguro + Flete</span>. Aduanas usa este valor para aplicar todos los cargos.</p></div>
-                            <div><h3 class="text-sm font-bold text-blue-700 uppercase mb-2">3. Gravamen Arancelario</h3><p class="text-xs text-slate-600 leading-relaxed text-left">• <span class="font-bold text-slate-800">0%:</span> Con tratado (CAFTA/UE).<br>• <span class="font-bold text-slate-800">20%:</span> Persona Física sin tratado.<br>• <span class="font-bold text-green-600">10%:</span> Dealer sin tratado.</p></div>
+                            <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">1. Valor FOB</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Precio neto de compra en origen. No incluye transporte marítimo ni seguros.</p></div>
+                            <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">2. CIF (Base Imponible)</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Es la suma de <span class="font-bold text-slate-800 dark:text-slate-200">Costo + Seguro + Flete</span>. Aduanas usa este valor para aplicar todos los cargos.</p></div>
+                            <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">3. Gravamen Arancelario</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-left">• <span class="font-bold text-slate-800 dark:text-slate-200">0%:</span> Con tratado (CAFTA/UE).<br>• <span class="font-bold text-slate-800 dark:text-slate-200">20%:</span> Persona Física sin tratado.<br>• <span class="font-bold text-green-600">10%:</span> Dealer sin tratado.</p></div>
                             
                             <div>
-                                <h3 class="text-sm font-bold text-blue-700 uppercase mb-2">4. ITBIS Reducido</h3>
-                                <p class="text-xs text-slate-600 leading-relaxed">9% para híbridos y eléctricos. 18% para motores de combustión tradicional.</p>
+                                <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">4. ITBIS Reducido</h3>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">9% para híbridos y eléctricos. 18% para motores de combustión tradicional.</p>
                                 <a href="https://dgii.gov.do/legislacion/reglamentos/Documents/2011/293-11.pdf" target="_blank" class="btn-law">Ver Ley ITBIS</a>
                             </div>
                             
                             <div>
-                                <h3 class="text-sm font-bold text-blue-700 uppercase mb-2">5. Impuesto Placa</h3>
-                                <p class="text-xs text-slate-600 leading-relaxed text-left">Registro inicial (Primera Placa). 17% estándar. 8.5% para incentivos ecológicos.</p>
+                                <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">5. Impuesto Placa</h3>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-left">Registro inicial (Primera Placa). 17% estándar. 8.5% para incentivos ecológicos.</p>
                                 <a href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/557-05.pdf" target="_blank" class="btn-law">Ver Ley Placa</a>
                             </div>
                             
                             <div>
-                                <h3 class="text-sm font-bold text-blue-700 uppercase mb-2">6. Emisión CO2</h3>
-                                <p class="text-xs text-slate-600 leading-relaxed text-left">Impuesto basado en contaminación ambiental. Los ecológicos pagan 0%.</p>
+                                <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">6. Emisión CO2</h3>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-left">Impuesto basado en contaminación ambiental. Los ecológicos pagan 0%.</p>
                                 <a href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/253-12.pdf" target="_blank" class="btn-law">Ver Ley CO2</a>
                             </div>
 
                             <div>
-                                <h3 class="text-sm font-bold text-blue-700 uppercase mb-2">7. Eléctricos / Híbridos</h3>
-                                <p class="text-xs text-slate-600 leading-relaxed text-left">Incentivo de la Ley 103-13 para la movilidad sostenible en el país.</p>
+                                <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">7. Eléctricos / Híbridos</h3>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-left">Incentivo de la Ley 103-13 para la movilidad sostenible en el país.</p>
                                 <a href="https://dgii.gov.do/vehiculosMotor/legislacion/Documents/Ley103-13.pdf" target="_blank" class="btn-law">Ver Ley 103-13</a>
                             </div>
                             
-                            <div class="bg-amber-50 p-5 rounded-2xl border border-amber-100 lg:col-span-2 text-left">
-                                <h3 class="text-xs font-bold text-amber-700 uppercase mb-2 text-left">🛡️ ESCUDO LEGAL</h3>
-                                <p class="text-[10px] text-amber-900 leading-relaxed italic text-left">
+                            <div class="bg-amber-50 dark:bg-amber-900/10 p-5 rounded-2xl border border-amber-100 dark:border-amber-900/30 lg:col-span-2 text-left">
+                                <h3 class="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase mb-2 text-left">🛡️ ESCUDO LEGAL</h3>
+                                <p class="text-[10px] text-amber-900 dark:text-amber-200/60 leading-relaxed italic text-left">
                                     Esta cotización es referencial basada en datos del usuario y la API de la NHTSA. Los valores definitivos de liquidación son determinados exclusivamente por la Dirección General de Aduanas (DGA).
                                 </p>
                             </div>
@@ -439,39 +380,39 @@
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start text-left">
                     <!-- Columna Izquierda -->
                     <div class="lg:col-span-7">
-                        <h1 class="text-5xl font-black text-slate-900 mb-6">Estamos aquí para ayudarte.</h1>
-                        <p class="text-xl text-slate-500 leading-relaxed mb-12">
+                        <h1 class="text-5xl font-black text-slate-900 dark:text-white mb-6">Estamos aquí para ayudarte.</h1>
+                        <p class="text-xl text-slate-500 dark:text-slate-400 leading-relaxed mb-12">
                             ImportCalc Pro es el centro de información líder en transparencia para la importación vehicular en República Dominicana. Nuestra plataforma combina datos técnicos con las leyes tributarias más recientes.
                         </p>
 
                         <div>
-                            <h2 class="text-3xl font-black text-slate-900 mb-8">Nuestros Servicios</h2>
+                            <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-8">Nuestros Servicios</h2>
                             <div class="space-y-6 text-left mb-16">
-                                <p class="text-slate-600"><span class="font-bold text-slate-800">Gestiones aduanales:</span> Asesoría y manejo experto de trámites ante la Dirección General de Aduanas (DGA) para asegurar una importación fluida y legal.</p>
-                                <p class="text-slate-600"><span class="font-bold text-slate-800">Transporte de cargas:</span> Logística integral para el movimiento de sus mercancías y vehículos, garantizando integridad y puntualidad en cada entrega.</p>
-                                <p class="text-slate-600"><span class="font-bold text-slate-800">Servicios de transporte privado:</span> Soluciones de movilidad exclusiva y segura para traslados personales o corporativos en todo el territorio nacional.</p>
+                                <p class="text-slate-600 dark:text-slate-400"><span class="font-bold text-slate-800 dark:text-slate-200">Gestiones aduanales:</span> Asesoría y manejo experto de trámites ante la Dirección General de Aduanas (DGA) para asegurar una importación fluida y legal.</p>
+                                <p class="text-slate-600 dark:text-slate-400"><span class="font-bold text-slate-800 dark:text-slate-200">Transporte de cargas:</span> Logística integral para el movimiento de sus mercancías y vehículos, garantizando integridad y puntualidad en cada entrega.</p>
+                                <p class="text-slate-600 dark:text-slate-400"><span class="font-bold text-slate-800 dark:text-slate-200">Servicios de transporte privado:</span> Soluciones de movilidad exclusiva y segura para traslados personales o corporativos en todo el territorio nacional.</p>
                             </div>
                         </div>
 
                         <!-- Formulario de Contacto Directo -->
-                        <div class="bg-white p-10 rounded-[3rem] shadow-sm border border-slate-100 mb-16">
-                            <h2 class="text-3xl font-black text-slate-900 mb-8">Envíanos un mensaje</h2>
+                        <div class="bg-white dark:bg-slate-900 p-10 rounded-[3rem] shadow-sm border border-slate-100 dark:border-slate-800 mb-16">
+                            <h2 class="text-3xl font-black text-slate-900 dark:text-white mb-8">Envíanos un mensaje</h2>
                             <form onsubmit="event.preventDefault(); window.handleContactSubmit(this);" class="space-y-6">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
                                     <div>
                                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Nombre Completo</label>
-                                        <input type="text" required name="name" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-medium text-sm">
+                                        <input type="text" required name="name" class="w-full p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-medium text-sm">
                                     </div>
                                     <div>
                                         <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Correo Electrónico</label>
-                                        <input type="email" required name="email" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-medium text-sm">
+                                        <input type="email" required name="email" class="w-full p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-medium text-sm">
                                     </div>
                                 </div>
                                 <div class="text-left">
                                     <label class="block text-[10px] font-bold text-slate-400 uppercase mb-2">Mensaje / Consulta</label>
-                                    <textarea required name="message" rows="4" class="w-full p-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-medium resize-none text-sm"></textarea>
+                                    <textarea required name="message" rows="4" class="w-full p-4 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl outline-none focus:ring-2 focus:ring-blue-500 font-medium resize-none text-sm"></textarea>
                                 </div>
-                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-sm transition-all active:scale-95 shadow-lg shadow-blue-200">
+                                <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-sm transition-all active:scale-95 shadow-lg shadow-blue-200 dark:shadow-none">
                                     Enviar Mensaje Directo
                                 </button>
                             </form>
@@ -500,27 +441,24 @@
 
                         <!-- Tarjetas de Contacto -->
                         <div class="space-y-4">
-                            <!-- Correo -->
-                            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 text-left flex items-center justify-between gap-4">
+                            <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 text-left flex items-center justify-between gap-4">
                                 <div class="flex items-center gap-4">
-                                    <div class="bg-blue-100 w-10 h-10 rounded-xl flex items-center justify-center text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
-                                    <div><p class="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Email</p><p class="text-xs font-bold text-slate-700">info.aduanasenlinea@gmail.com</p></div>
+                                    <div class="bg-blue-100 dark:bg-blue-900/30 w-10 h-10 rounded-xl flex items-center justify-center text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></div>
+                                    <div><p class="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Email</p><p class="text-xs font-bold text-slate-700 dark:text-slate-200">info.aduanasenlinea@gmail.com</p></div>
                                 </div>
                                 <a href="mailto:info.aduanasenlinea@gmail.com" class="bg-blue-600 text-white p-2 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg></a>
                             </div>
-                            <!-- WhatsApp -->
-                            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 text-left flex items-center justify-between gap-4">
+                            <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 text-left flex items-center justify-between gap-4">
                                 <div class="flex items-center gap-4">
-                                    <div class="bg-green-100 w-10 h-10 rounded-xl flex items-center justify-center text-green-600"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
-                                    <div><p class="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">WhatsApp</p><p class="text-xs font-bold text-slate-700">+1 (809) 415-0116</p></div>
+                                    <div class="bg-green-100 dark:bg-green-900/30 w-10 h-10 rounded-xl flex items-center justify-center text-green-600"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+                                    <div><p class="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">WhatsApp</p><p class="text-xs font-bold text-slate-700 dark:text-slate-200">+1 (809) 415-0116</p></div>
                                 </div>
                                 <a href="https://wa.me/18094150116" target="_blank" class="bg-green-600 text-white p-2 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></a>
                             </div>
-                            <!-- Instagram -->
-                            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100 text-left flex items-center justify-between gap-4">
+                            <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-100 dark:border-slate-800 text-left flex items-center justify-between gap-4">
                                 <div class="flex items-center gap-4">
-                                    <div class="bg-pink-100 w-10 h-10 rounded-xl flex items-center justify-center text-pink-600"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
-                                    <div><p class="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Instagram</p><p class="text-xs font-bold text-slate-700">@ferrampalogistics</p></div>
+                                    <div class="bg-pink-100 dark:bg-pink-900/30 w-10 h-10 rounded-xl flex items-center justify-center text-pink-600"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></div>
+                                    <div><p class="text-[10px] font-bold text-slate-400 uppercase leading-none mb-1">Instagram</p><p class="text-xs font-bold text-slate-700 dark:text-slate-200">@ferrampalogistics</p></div>
                                 </div>
                                 <a href="https://www.instagram.com/ferrampalogistics/" target="_blank" class="bg-pink-600 text-white p-2 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
                             </div>
@@ -554,7 +492,7 @@
             </div>
             <div>
                 <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Contacto Oficinas</h4>
-                <p class="text-xs leading-relaxed">República Dominicana<br>Email: info.aduanasenlinea@gmail.com<br>WhatsApp: +1 (809) 415-0116<br>Desarrollado por: +1(849) 377-4436</p>
+                <p class="text-xs leading-relaxed">República Dominicana<br>Email: info.aduanasenlinea@gmail.com<br>WhatsApp: +1 (809) 415-0116<br>Desarrollado por: +1 (849) 377-4436</p>
             </div>
         </div>
         <div class="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-center">
@@ -572,7 +510,7 @@
     <div id="adblock-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[10000] hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 max-w-md w-full rounded-[2.5rem] p-10 shadow-2xl text-center border border-slate-100 dark:border-slate-700">
             <div class="bg-amber-100 dark:bg-amber-900/30 w-16 h-16 rounded-3xl flex items-center justify-center text-amber-600 mx-auto mb-6">
-                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" cy="17"/></svg>
             </div>
             <h3 class="text-2xl font-black text-slate-900 dark:text-white mb-4 leading-tight">¡Hola! Detectamos un bloqueador de anuncios.</h3>
             <p class="text-sm text-slate-500 dark:text-slate-400 mb-8 leading-relaxed">
