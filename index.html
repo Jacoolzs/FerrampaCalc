@@ -63,12 +63,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <div class="flex items-center gap-3 cursor-pointer" onclick="window.navigateTo('home')">
-                    <div class="bg-blue-600 p-2.5 rounded-2xl shadow-lg shadow-blue-200 dark:shadow-none">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                    <div class="bg-blue-600 p-2 rounded-xl md:rounded-2xl shadow-lg shadow-blue-200 dark:shadow-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold leading-none">Ferrampa Logistics</h1>
-                        <p class="text-[9px] font-black uppercase tracking-[0.2em] text-blue-600">Calculadora de impuestos de vehiculos</p>
+                        <h1 class="text-lg md:text-xl font-bold leading-none">Ferrampa</h1>
+                        <p class="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-blue-600">ImportCalc Pro</p>
                     </div>
                 </div>
 
@@ -84,8 +84,19 @@
                     </button>
                 </div>
 
-                <!-- Info Rápida Nav -->
-                <div id="nav-info-calc" class="flex items-center gap-4 bg-blue-900 text-white px-5 py-2.5 rounded-2xl shadow-xl shadow-blue-900/20">
+                <!-- Controles Móvil (Hamburguesa + Dark Mode) -->
+                <div class="flex md:hidden items-center gap-2">
+                    <button onclick="window.toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800">
+                        <svg id="sun-icon-mobile" class="hidden" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg id="moon-icon-mobile" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="p-2.5 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                </div>
+
+                <!-- Info Rápida Nav (Desktop) -->
+                <div id="nav-info-calc" class="hidden md:flex items-center gap-4 bg-blue-900 text-white px-5 py-2.5 rounded-2xl shadow-xl shadow-blue-900/20">
                     <div class="text-right">
                         <div class="flex items-center justify-end gap-2 mb-1">
                             <p class="text-[9px] text-blue-200 font-bold uppercase tracking-tighter leading-none">Tasa USD/DOP</p>
@@ -107,6 +118,28 @@
                 </div>
             </div>
         </div>
+
+        <!-- Menú Móvil Desplegable -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-6 space-y-4">
+            <button onclick="window.navigateTo('home'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Calculadora</button>
+            <button onclick="window.navigateTo('guia'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Guía de Usuario</button>
+            <button onclick="window.navigateTo('contacto'); document.getElementById('mobile-menu').classList.add('hidden')" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Contacto</button>
+            
+            <!-- Barra Info en Menú Móvil -->
+            <div class="bg-blue-900 text-white p-4 rounded-2xl flex justify-between items-center">
+                <div>
+                    <p class="text-[8px] text-blue-200 font-black uppercase tracking-widest mb-1">Tasa Mercado</p>
+                    <div class="flex items-center gap-2">
+                        <span class="text-[10px] font-bold">RD$</span>
+                        <input type="number" id="global-tasa-mobile" value="60.00" class="bg-transparent font-black text-sm w-12 outline-none">
+                    </div>
+                </div>
+                <div class="text-right">
+                    <p class="text-[8px] text-blue-200 font-black uppercase tracking-widest mb-1">Total General</p>
+                    <p id="nav-total-mobile" class="text-lg font-black leading-none text-green-400">RD$ 0.00</p>
+                </div>
+            </div>
+        </div>
     </nav>
 
     <div id="main-content">
@@ -116,7 +149,7 @@
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                     
                     <!-- Columna Izquierda: Entradas -->
-                    <div class="lg:col-span-4 space-y-6 sticky top-28">
+                    <div class="lg:col-span-4 space-y-6 lg:sticky lg:top-28">
                         <div class="glass-card p-8 rounded-[2.5rem] border border-slate-200 shadow-sm text-left">
                             <div class="flex items-center justify-between mb-8">
                                 <h2 class="text-sm font-black uppercase tracking-widest text-slate-400">Configuración</h2>
@@ -178,6 +211,23 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
                                 Agregar Vehículo
                             </button>
+                        </div>
+
+                        <!-- Card de Donación (Estudiante) -->
+                        <div class="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/10 dark:to-orange-900/10 p-6 rounded-[2.5rem] border border-amber-100 dark:border-amber-800/50 text-left relative overflow-hidden group">
+                            <div class="absolute -right-4 -top-4 w-20 h-20 bg-amber-200/20 rounded-full blur-2xl group-hover:bg-amber-400/20 transition-colors"></div>
+                            <div class="relative z-10">
+                                <div class="flex items-center gap-3 mb-3">
+                                    <span class="text-2xl">🎓</span>
+                                    <h3 class="text-xs font-black uppercase tracking-widest text-amber-800 dark:text-amber-400 leading-tight">Apoya al Desarrollador</h3>
+                                </div>
+                                <p class="text-[11px] text-amber-900/70 dark:text-amber-200/60 leading-relaxed mb-4">
+                                    Soy un estudiante y mantengo esta herramienta gratis para ayudar a nuestra comunidad. Si te ahorré tiempo o dinero, ¡invítame a un café! ☕
+                                </p>
+                                <a href="https://paypal.me/orlandoamparoperalta" target="_blank" class="block w-full bg-amber-500 hover:bg-amber-600 text-white text-center py-3 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all shadow-lg shadow-amber-200 dark:shadow-none">
+                                    Invítame a un Café
+                                </a>
+                            </div>
                         </div>
 
                         <!-- Mini Historial -->
