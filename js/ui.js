@@ -131,7 +131,8 @@ export async function handleContactSubmit(form) {
                 name: name,
                 email: email,
                 message: message,
-                _subject: `Nueva consulta de ImportCalc Pro: ${name}`
+                _subject: `Nueva consulta de ImportCalc Pro: ${name}`,
+                _captcha: "false"
             })
         });
 
@@ -141,11 +142,12 @@ export async function handleContactSubmit(form) {
             showToast('¡Mensaje enviado con éxito! Nos contactaremos pronto.', 'success');
             form.reset();
         } else {
-            throw new Error('Error en la respuesta del servidor');
+            console.error("Error servidor FormSubmit:", result);
+            throw new Error(result.message || 'Error en la respuesta del servidor');
         }
     } catch (error) {
         console.error("Error envío formulario:", error);
-        showToast('Hubo un error al enviar. Por favor, intente más tarde.', 'error');
+        showToast(`Error: ${error.message || 'Intente más tarde'}`, 'error');
     } finally {
         btn.disabled = false;
         btn.innerText = origText;
