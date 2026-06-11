@@ -3,79 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guía Definitiva 2026: Cómo Importar Vehículos a RD (Paso a Paso)</title>
-    <meta name="description" content="Aprende los requisitos de Aduanas RD, la Regla de los 5 años y cómo ahorrar en impuestos de importación vehicular en 2026.">
+    <title>Guía Completa de Importación Vehicular RD 2026 | Ferrampa Logistics</title>
+    <meta name="description" content="Guía definitiva 2026 para importar vehículos a República Dominicana. Conozca la regla de los 5 años, impuestos (Arancel, ITBIS) y leyes de incentivo.">
     <link rel="canonical" href="https://ferrampalogistics.com/guia-importacion-2026.html" />
     <meta name="google-adsense-account" content="ca-pub-1035094221157757">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1035094221157757" crossorigin="anonymous"></script>
     <link rel="icon" type="image/jpg" href="img/og-image.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 
-    <!-- Schema.org JSON-LD -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Guía Definitiva 2026: Cómo Importar Vehículos a RD",
-      "description": "Requisitos, leyes y pasos para importar un vehículo a República Dominicana en 2026.",
-      "image": "https://ferrampalogistics.com/img/og-image.jpg",
-      "author": { "@type": "Organization", "name": "Ferrampa Logistics" },
-      "publisher": { "@type": "Organization", "name": "Ferrampa Logistics" },
-      "datePublished": "2026-04-01"
-    }
-    </script>
-
     <script>
-        if (localStorage.getItem('dark_mode') === 'true' || (!('dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (localStorage.getItem('dark_mode') === 'true' || 
+            (!('dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
+
+        function updateThemeIcons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            const sunIconMobile = document.getElementById('sun-icon-mobile');
+            const moonIconMobile = document.getElementById('moon-icon-mobile');
+            
+            if (sunIcon) sunIcon.classList.toggle('hidden', !isDark);
+            if (moonIcon) moonIcon.classList.toggle('hidden', isDark);
+            if (sunIconMobile) sunIconMobile.classList.toggle('hidden', !isDark);
+            if (moonIconMobile) moonIconMobile.classList.toggle('hidden', isDark);
+        }
+
         function toggleDarkMode() {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('dark_mode', isDark);
+            updateThemeIcons();
         }
+        window.toggleDarkMode = toggleDarkMode;
+
+        window.addEventListener('DOMContentLoaded', updateThemeIcons);
     </script>
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
-    <main class="max-w-4xl mx-auto px-4 mt-12 pb-24 text-left">
-        <div class="flex justify-between items-center mb-12">
-            <a href="index.html" class="text-blue-600 font-bold">← Volver a la calculadora</a>
-            <button onclick="toggleDarkMode()" class="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl">🌓</button>
-        </div>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300">
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex items-center gap-3 cursor-pointer">
+                    <div class="bg-blue-600 p-2 rounded-xl md:rounded-2xl shadow-lg shadow-blue-200 dark:shadow-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg md:text-xl font-bold leading-none">Ferrampa Logistics</h1>
+                        <p class="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-blue-600">Calculadora de Impuestos de Importacion</p>
+                    </div>
+                </a>
 
-        <article class="prose dark:prose-invert max-w-none">
-            <h1 class="text-4xl font-black mb-8">Cómo Importar Vehículos a RD en 2026</h1>
-            <p>La importación de vehículos en la República Dominicana está regida por leyes específicas que buscan modernizar el parque vehicular y proteger el medio ambiente.</p>
-            
-            <h2>1. La Regla de los 5 Años (Ley 04-07)</h2>
-            <p>Por ley, no se permite la importación de vehículos ligeros con más de <span class="font-bold">5 años de fabricación</span>. Para este año 2026, el año más antiguo permitido es el <span class="text-blue-600 font-bold">2021</span>.</p>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Calculadora</a>
+                    <a href="articulos.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Artículos</a>
+                    <a href="manual-usuario.html" class="text-sm font-bold hover:text-blue-200 transition-colors animate-pulse-nav">Guía de Usuario</a>
+                    <a href="contacto.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Contacto</a>
+                    <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+                    <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:scale-110 transition-transform">
+                        <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" cy="1" x2="12" y2="3"/><line x1="12" cy="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                </div>
 
-            <h2>2. Documentación Necesaria</h2>
-            <ul>
-                <li>Título original del vehículo (Sin gravámenes).</li>
-                <li>Factura comercial de compra.</li>
-                <li>Cédula o RNC del importador.</li>
-                <li>Bill of Lading (BL) o documento de embarque.</li>
-            </ul>
-
-            <h2>3. Impuestos a Pagar</h2>
-            <p>El costo total se basa en el valor <span class="font-bold">CIF (Costo, Seguro y Flete)</span> determinado por la DGA:</p>
-            <ul>
-                <li><span class="font-bold">Arancel:</span> 20% (Reducible a 0% con DR-CAFTA).</li>
-                <li><span class="font-bold">ITBIS:</span> 18%.</li>
-                <li><span class="font-bold">Primera Placa:</span> 17% del valor CIF.</li>
-                <li><span class="font-bold">CO2:</span> Basado en emisiones.</li>
-            </ul>
-        </article>
-
-        <section class="mt-20 border-t pt-12">
-            <h3 class="font-bold mb-6">Guías Relacionadas</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <a href="guia-subastas-usa.html" class="p-4 border rounded-xl hover:border-blue-500 transition-all">Subastas Copart e IAAI</a>
-                <a href="guia-ley-103-13.html" class="p-4 border rounded-xl hover:border-blue-500 transition-all">Ley 103-13: Incentivos Eco</a>
+                <div class="flex md:hidden items-center gap-2">
+                    <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800">
+                        <svg id="sun-icon-mobile" class="hidden" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" cy="1" x2="12" y2="3"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg id="moon-icon-mobile" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="p-2.5 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                </div>
             </div>
-        </section>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-6 space-y-4">
+            <a href="index.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Calculadora</a>
+            <a href="articulos.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Artículos</a>
+            <a href="manual-usuario.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Guía de Usuario</a>
+            <a href="contacto.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Contacto</a>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 mt-12 pb-24 text-left">
+        <a href="articulos.html" class="text-blue-600 font-bold mb-8 inline-flex items-center gap-2 transition-transform hover:-translate-x-1">← Volver a Artículos</a>
+        
+        <article class="prose dark:prose-invert max-w-none">
+            <header class="mb-16">
+                <h1 class="text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight">Guía Definitiva 2026: Cómo Importar un Vehículo a República Dominicana</h1>
+                <div class="flex items-center gap-4 text-sm text-slate-500 font-bold uppercase tracking-widest">
+                    <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full dark:bg-blue-900/30">Actualizado Junio 2026</span>
+                    <span>12 min de lectura</span>
+                </div>
+            </header>
+
+            <section class="space-y-8">
+                <p class="text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
+                    Importar un vehículo a la República Dominicana puede parecer un proceso complejo, pero con la información correcta, se convierte en una inversión estratégica. En esta guía, desglosamos cada requisito, ley y costo para que tu experiencia con la <strong>DGA (Dirección General de Aduanas)</strong> sea exitosa.
+                </p>
+
+                <div class="bg-blue-600 p-8 rounded-[2.5rem] shadow-xl not-prose">
+                    <h2 class="text-2xl font-bold mb-4 !text-white">La Regla de Oro: El Límite de los 5 Años</h2>
+                    <p class="text-sm leading-relaxed !text-white">
+                        Por ley, la República Dominicana prohíbe la importación de vehículos de motor con más de <span class="font-bold !text-white">cinco (5) años de fabricación</span>. Para este año 2026, esto significa que el vehículo más antiguo que puedes importar legalmente debe ser del año <span class="font-bold !text-white">2021</span>. 
+                    </p>
+                    <p class="text-xs mt-4 font-bold italic !text-white">*Nota: Para vehículos pesados y de carga, este límite se extiende a 15 años.</p>
+                </div>
+
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6 text-left">1. Documentación Obligatoria</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-left">Antes de embarcar el vehículo, asegúrate de tener los originales de:</p>
+                <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 list-none p-0 !pl-0">
+                    <li class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-start gap-3 !mb-0 not-prose">
+                        <span class="text-blue-600 font-bold">✓</span>
+                        <div><strong class="block text-slate-900 dark:text-white">Bill of Lading (B/L):</strong> <span class="text-slate-500 dark:text-slate-400 text-sm">El contrato de transporte marítimo.</span></div>
+                    </li>
+                    <li class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-start gap-3 !mb-0 not-prose">
+                        <span class="text-blue-600 font-bold">✓</span>
+                        <div><strong class="block text-slate-900 dark:text-white">Título de Propiedad:</strong> <span class="text-slate-500 dark:text-slate-400 text-sm">Original, debidamente endosado o a tu nombre.</span></div>
+                    </li>
+                    <li class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-start gap-3 !mb-0 not-prose">
+                        <span class="text-blue-600 font-bold">✓</span>
+                        <div><strong class="block text-slate-900 dark:text-white">Factura Comercial:</strong> <span class="text-slate-500 dark:text-slate-400 text-sm">Debe reflejar el valor real pagado (FOB).</span></div>
+                    </li>
+                    <li class="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 flex items-start gap-3 !mb-0 not-prose">
+                        <span class="text-blue-600 font-bold">✓</span>
+                        <div><strong class="block text-slate-900 dark:text-white">Certificado de Origen:</strong> <span class="text-slate-500 dark:text-slate-400 text-sm">Vital si planeas aplicar al DR-CAFTA (ahorro del 20%).</span></div>
+                    </li>
+                </ul>
+
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6 text-left">2. Estructura de Impuestos en RD</h2>
+                <p class="text-slate-600 dark:text-slate-400 text-left">Aduanas calcula los impuestos basándose en el valor <strong>CIF (Costo + Seguro + Flete)</strong>. Aquí los porcentajes estándar:</p>
+                
+                <div class="overflow-x-auto not-prose">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-200 dark:border-slate-800">
+                                <th class="py-4 font-black uppercase text-[10px] text-slate-400 tracking-widest">Impuesto</th>
+                                <th class="py-4 font-black uppercase text-[10px] text-slate-400 tracking-widest">Tasa Estándar</th>
+                                <th class="py-4 font-black uppercase text-[10px] text-slate-400 tracking-widest">Con Incentivo</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm">
+                            <tr class="border-b border-slate-100 dark:border-slate-800/50">
+                                <td class="py-4 font-bold text-slate-800 dark:text-slate-200">Arancel</td>
+                                <td class="py-4 text-slate-500">20%</td>
+                                <td class="py-4 text-green-600 font-bold">0% (CAFTA)</td>
+                            </tr>
+                            <tr class="border-b border-slate-100 dark:border-slate-800/50">
+                                <td class="py-4 font-bold text-slate-800 dark:text-slate-200">ITBIS</td>
+                                <td class="py-4 text-slate-500">18%</td>
+                                <td class="py-4 text-blue-600 font-bold">9% (Híbridos/Eléctricos)</td>
+                            </tr>
+                            <tr class="border-b border-slate-100 dark:border-slate-800/50">
+                                <td class="py-4 font-bold text-slate-800 dark:text-slate-200">Primera Placa</td>
+                                <td class="py-4 text-slate-500">17%</td>
+                                <td class="py-4 text-blue-600 font-bold">8.5% (Incentivo Verde)</td>
+                            </tr>
+                            <tr>
+                                <td class="py-4 font-bold text-slate-800 dark:text-slate-200">Emisión CO2</td>
+                                <td class="py-4 text-slate-500">0% - 3%</td>
+                                <td class="py-4 font-bold text-blue-600">0% (Eléctricos)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="bg-amber-50 dark:bg-amber-900/10 p-8 rounded-[2.5rem] border border-amber-100 dark:border-amber-900/30 mt-12 not-prose">
+                    <h3 class="text-xl font-black text-amber-800 dark:text-amber-400 mb-4">💡 Consejo Pro: El Tratado DR-CAFTA</h3>
+                    <p class="text-sm text-amber-900/80 dark:text-amber-200/60 leading-relaxed text-left">
+                        Si el vehículo fue fabricado en Estados Unidos (el VIN debe empezar con 1, 4 o 5) y presentas un Certificado de Origen válido, puedes eliminar el 20% de arancel por completo. ¡Esto representa un ahorro de miles de dólares!
+                    </p>
+                </div>
+
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6 text-left">3. Incentivos para Vehículos Ecológicos (Ley 103-13)</h2>
+                <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
+                    La República Dominicana apuesta por la movilidad sostenible. Bajo la <strong>Ley 103-13</strong>, los vehículos eléctricos e híbridos disfrutan de una reducción del 50% en varios impuestos. Esto no solo ayuda al medio ambiente, sino que hace que importar un Tesla, un Prius o cualquier modelo electrificado sea mucho más asequible que uno de combustión tradicional.
+                </p>
+
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6 text-left">4. El Proceso Paso a Paso</h2>
+                <div class="space-y-6 not-prose">
+                    <div class="flex gap-6 text-left">
+                        <div class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold flex-shrink-0">1</div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1 text-slate-800 dark:text-white">Compra y Verificación</h4>
+                            <p class="text-sm text-slate-500">Verifica el VIN para asegurar que el vehículo no tenga impedimentos legales y cumpla con la regla de los 5 años.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6 text-left">
+                        <div class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold flex-shrink-0">2</div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1 text-slate-800 dark:text-white">Embarque y Logística</h4>
+                            <p class="text-sm text-slate-500">Contrata un Freight Forwarder confiable que maneje el transporte hacia puertos dominicanos (Caucedo, Haina o Puerto Plata).</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-6 text-left">
+                        <div class="bg-blue-600 text-white w-12 h-12 rounded-full flex items-center justify-center font-bold flex-shrink-0">3</div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1 text-slate-800 dark:text-white">Liquidación Aduanal</h4>
+                            <p class="text-sm text-slate-500">Un agente técnico procesará el DUA (Documento Único Administrativo) ante la DGA para el pago de impuestos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6 text-left">Conclusión</h2>
+                <p class="text-slate-600 dark:text-slate-400 leading-relaxed mb-12 text-justify">
+                    Importar tu propio vehículo te permite controlar la calidad y el historial de lo que conduces. Al usar herramientas como nuestra <strong>Calculadora Profesional</strong>, eliminas la incertidumbre y tomas decisiones basadas en datos reales.
+                </p>
+
+                <div class="bg-blue-600 p-10 rounded-[3rem] text-center text-white not-prose shadow-2xl shadow-blue-200 dark:shadow-none">
+                    <h3 class="text-2xl font-black mb-4 !text-white">¿Listo para calcular tus impuestos?</h3>
+                    <p class="!text-white mb-8">Nuestra calculadora gratuita está actualizada con las tasas oficiales de la DGA para este 2026.</p>
+                    <a href="index.html" class="inline-block bg-white text-blue-600 hover:bg-slate-100 px-10 py-4 rounded-2xl font-black uppercase tracking-widest transition-all shadow-lg">Ir a la Calculadora</a>
+                </div>
+            </section>
+        </article>
     </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Ferrampa Logistics</h4>
+                <p class="text-xs leading-relaxed">Expertos en logística y gestión aduanal en República Dominicana. Transparencia y precisión en cada proceso.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Enlaces Legales</h4>
+                <ul class="text-xs space-y-2 text-left">
+                    <li><a href="privacidad.html" class="hover:text-blue-400 transition-colors">Política de Privacidad</a></li>
+                    <li><a href="terminos.html" class="hover:text-blue-400 transition-colors">Términos y Condiciones</a></li>
+                    <li><a href="cookies.html" class="hover:text-blue-400 transition-colors">Política de Cookies</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Contacto</h4>
+                <p class="text-xs leading-relaxed">Email: info.aduanasenlinea@gmail.com<br>WhatsApp: +1 (809) 415-0116</p>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-center">
+            <p class="text-[10px] uppercase tracking-tighter">© 2026 Ferrampa Logistics | Todos los derechos reservados.</p>
+        </div>
+    </footer>
 </body>
 </html>

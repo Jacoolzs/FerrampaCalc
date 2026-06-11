@@ -3,82 +3,188 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manual de Usuario: Cómo usar ImportCalc Pro | Ferrampa Logistics</title>
-    <meta name="description" content="Aprende a usar nuestra calculadora de impuestos. Decodificación de VIN, modo automático, cálculo de arancel y exportación de reportes PDF.">
+    <title>Manual de Usuario | Ferrampa Logistics</title>
+    <meta name="description" content="Aprende a usar todas las funciones de ImportCalc Pro para tus importaciones vehiculares en República Dominicana.">
     <link rel="canonical" href="https://ferrampalogistics.com/manual-usuario.html" />
+    <meta name="google-adsense-account" content="ca-pub-1035094221157757">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1035094221157757" crossorigin="anonymous"></script>
     <link rel="icon" type="image/jpg" href="img/og-image.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
+
     <script>
-        if (localStorage.getItem('dark_mode') === 'true' || (!('dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        // Configuración inicial del tema oscuro
+        if (localStorage.getItem('dark_mode') === 'true' || 
+            (!('dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
+
+        function updateThemeIcons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            const sunIconMobile = document.getElementById('sun-icon-mobile');
+            const moonIconMobile = document.getElementById('moon-icon-mobile');
+            
+            if (sunIcon) sunIcon.classList.toggle('hidden', !isDark);
+            if (moonIcon) moonIcon.classList.toggle('hidden', isDark);
+            if (sunIconMobile) sunIconMobile.classList.toggle('hidden', !isDark);
+            if (moonIconMobile) moonIconMobile.classList.toggle('hidden', isDark);
+        }
+
+        function toggleDarkMode() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.setItem('dark_mode', isDark);
+            updateThemeIcons();
+        }
+        window.toggleDarkMode = toggleDarkMode;
+
+        window.addEventListener('DOMContentLoaded', updateThemeIcons);
     </script>
 </head>
 <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300">
     <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 h-20 flex justify-between items-center">
-            <a href="index.html" class="flex items-center gap-3">
-                <div class="bg-blue-600 p-2 rounded-xl">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line></svg>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex items-center gap-3 cursor-pointer">
+                    <div class="bg-blue-600 p-2 rounded-xl md:rounded-2xl shadow-lg shadow-blue-200 dark:shadow-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg md:text-xl font-bold leading-none">Ferrampa Logistics</h1>
+                        <p class="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-blue-600">Calculadora de Impuestos de Importacion</p>
+                    </div>
+                </a>
+
+                <!-- Menú Desktop -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Calculadora</a>
+                    <a href="articulos.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Artículos</a>
+                    <a href="manual-usuario.html" class="text-sm font-bold hover:text-blue-200 transition-colors animate-pulse-nav">Guía de Usuario</a>
+                    <a href="contacto.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Contacto</a>
+                    <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+                    <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:scale-110 transition-transform">
+                        <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" cy="1" x2="12" y2="3"/><line x1="12" cy="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
                 </div>
-                <div>
-                    <span class="text-xl font-bold block leading-none">Ferrampa Logistics</span>
-                    <span class="text-[9px] font-black uppercase tracking-widest text-blue-600">Manual de Ayuda</span>
+
+                <div class="flex md:hidden items-center gap-2">
+                    <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800">
+                        <svg id="sun-icon-mobile" class="hidden" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" cy="1" x2="12" y2="3"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg id="moon-icon-mobile" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="p-2.5 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
                 </div>
-            </a>
-            <div class="flex items-center gap-6">
-                <a href="index.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Calculadora</a>
-                <a href="contacto.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Contacto</a>
             </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-6 space-y-4">
+            <a href="index.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Calculadora</a>
+            <a href="articulos.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Artículos</a>
+            <a href="manual-usuario.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Guía de Usuario</a>
+            <a href="contacto.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Contacto</a>
         </div>
     </nav>
 
     <main class="max-w-5xl mx-auto px-4 mt-12 mb-24 text-left">
+        <a href="index.html" class="text-blue-600 font-bold mb-12 inline-flex items-center gap-2 transition-transform hover:-translate-x-1">← Ir a la calculadora</a>
+        
         <h1 class="text-5xl font-black text-slate-900 dark:text-white mb-4">Manual de Usuario</h1>
-        <p class="text-xl text-slate-500 mb-12">Domina todas las funciones de ImportCalc Pro para tus importaciones.</p>
+        <p class="text-xl text-slate-500 mb-12 text-left">Domina todas las funciones de ImportCalc Pro para tus importaciones.</p>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-            <section class="bg-blue-600 text-white p-8 rounded-[2.5rem] shadow-xl">
-                <h2 class="text-2xl font-bold mb-4 flex items-center gap-3">
-                    <span class="bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center text-sm">01</span>
-                    Configuración Inicial
-                </h2>
-                <p class="text-sm opacity-90 leading-relaxed text-justify">Defina el <span class="font-bold">Tipo de Cliente</span>: Las Personas Físicas pagan un 20% de arancel, mientras que los Dealers certificados disfrutan de un 10%.</p>
-            </section>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
+            <div class="space-y-6">
+                <div class="bg-blue-600 text-white p-8 rounded-[2.5rem] shadow-xl shadow-blue-100">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                        <span class="bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center text-sm">01</span>
+                        Configuración Inicial
+                    </h2>
+                    <p class="text-sm opacity-90 leading-relaxed mb-4 text-justify">Defina el <span class="font-bold text-white">Tipo de Cliente</span>: Las Personas Físicas pagan un 20% de arancel, mientras que los Dealers certificados disfrutan de un 10%. Ajuste la <span class="font-bold text-white">Tasa del Dólar</span> según el mercado para obtener valores precisos en DOP.</p>
+                </div>
 
-            <section class="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-700 shadow-sm">
-                <h2 class="text-2xl font-black text-slate-800 dark:text-white mb-4 flex items-center gap-3">
-                    <span class="bg-slate-100 dark:bg-slate-700 w-8 h-8 rounded-lg flex items-center justify-center text-sm text-slate-500">02</span>
-                    Decodificación de VIN
-                </h2>
-                <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed text-justify">Ingrese los 17 caracteres del VIN y presione <span class="text-blue-600 font-bold">AUTO</span>. El sistema rellenará automáticamente Marca, Modelo, Año y Motor.</p>
-            </section>
+                <div class="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-slate-100 dark:border-slate-700 shadow-sm">
+                    <h2 class="text-2xl font-black text-slate-800 dark:text-white mb-4 flex items-center gap-3">
+                        <span class="bg-slate-100 dark:bg-slate-700 w-8 h-8 rounded-lg flex items-center justify-center text-sm text-slate-500">02</span>
+                        Decodificación de VIN
+                    </h2>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed text-justify">Ingrese los 17 caracteres del VIN y presione <span class="text-blue-600 font-bold">AUTO</span>. El sistema rellenará automáticamente Marca, Modelo, Año, Motor y País de origen, detectando incentivos CAFTA o Ley 103-13 instantáneamente.</p>
+                </div>
+            </div>
 
-            <section class="bg-amber-50 dark:bg-amber-900/10 p-8 rounded-[2.5rem] border border-amber-100 dark:border-amber-900/30">
-                <h2 class="text-2xl font-black text-amber-800 dark:text-amber-400 mb-4 flex items-center gap-3">
-                    <span class="bg-amber-200/50 w-8 h-8 rounded-lg flex items-center justify-center text-sm text-amber-700">03</span>
-                    Modo Inteligente
-                </h2>
-                <p class="text-sm text-amber-900/80 dark:text-amber-200/60 leading-relaxed text-justify">Al activarlo, el sistema fija el <span class="font-bold">Seguro (2%)</span> y el <span class="font-bold">Flete (15%)</span> automáticamente.</p>
-            </section>
+            <div class="space-y-6 text-left">
+                <div class="bg-amber-50 dark:bg-amber-900/10 p-8 rounded-[2.5rem] border border-amber-100 dark:border-amber-900/30">
+                    <h2 class="text-2xl font-black text-amber-800 dark:text-amber-400 mb-4 flex items-center gap-3">
+                        <span class="bg-amber-200/50 w-8 h-8 rounded-lg flex items-center justify-center text-sm text-amber-700">03</span>
+                        Modo Automático Inteligente
+                    </h2>
+                    <div class="space-y-4">
+                        <p class="text-sm text-amber-900/80 dark:text-amber-200/60 leading-relaxed text-justify">Al activarlo, el sistema fija el <span class="font-bold">Seguro (2%)</span> y el <span class="font-bold">Flete (15%)</span> basado en el valor FOB. Este modo activa y bloquea automáticamente los "Gastos Compartidos" para simplificar su gestión.</p>
+                    </div>
+                </div>
 
-            <section class="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl">
-                <h2 class="text-2xl font-bold mb-4 flex items-center gap-3">
-                    <span class="bg-white/10 w-8 h-8 rounded-lg flex items-center justify-center text-sm">04</span>
-                    Reportes PDF
-                </h2>
-                <p class="text-sm opacity-80 leading-relaxed text-justify">Exporte un reporte ejecutivo profesional listo para sus trámites comerciales o financieros.</p>
-            </section>
+                <div class="bg-slate-900 text-white p-8 rounded-[2.5rem] shadow-2xl">
+                    <h2 class="text-2xl font-bold mb-4 flex items-center gap-3">
+                        <span class="bg-white/10 w-8 h-8 rounded-lg flex items-center justify-center text-sm">04</span>
+                        Reportes Profesionales
+                    </h2>
+                    <p class="text-sm opacity-80 leading-relaxed mb-4 text-justify">El <span class="font-bold text-blue-400">Resumen General</span> muestra totales consolidados en DOP y USD. Al exportar a <span class="font-bold text-white">PDF</span>, obtendrá un reporte ejecutivo listo para trámites comerciales o proyecciones financieras.</p>
+                </div>
+            </div>
         </div>
 
-        <section class="mt-16 bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-800">
-            <h2 class="text-xl font-black mb-8">Glosario de Términos</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div><h3 class="text-sm font-bold text-blue-700 uppercase mb-2">1. Valor FOB</h3><p class="text-xs text-slate-600">Precio neto de compra en origen. Sin transporte ni seguros.</p></div>
-                <div><h3 class="text-sm font-bold text-blue-700 uppercase mb-2">2. Base CIF</h3><p class="text-xs text-slate-600">Suma de Costo + Seguro + Flete. Base para el cálculo de impuestos.</p></div>
-                <div><h3 class="text-sm font-bold text-blue-700 uppercase mb-2">3. Ley 103-13</h3><p class="text-xs text-slate-600">Incentivo para vehículos ecológicos con reducción del 50% en impuestos.</p></div>
+        <!-- Guía de Términos Integrada (EXACTAMENTE COMO EN FEATURE-PRUEBA) -->
+        <section class="mt-16 text-left">
+            <div class="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-800">
+                <div class="flex items-center gap-3 mb-8 text-slate-800 dark:text-white">
+                    <div class="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-xl text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" cy="17" x2="12.01" cy="17"/></svg></div>
+                    <h2 class="text-xl font-black tracking-tight">Guía de Términos y Variaciones</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+                    <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">1. Valor FOB</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Precio neto de compra en origen. No incluye transporte marítimo ni seguros.</p></div>
+                    <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">2. CIF (Base Imponible)</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">Es la suma de <span class="font-bold text-slate-800 dark:text-slate-200">Costo + Seguro + Flete</span>. Aduanas usa este valor para aplicar todos los cargos.</p></div>
+                    <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">3. Gravamen Arancelario</h3><p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-left">• <span class="font-bold text-slate-800 dark:text-slate-200">0%:</span> Con tratado (CAFTA/UE).<br>• <span class="font-bold text-slate-800 dark:text-slate-200">20%:</span> Persona Física sin tratado.<br>• <span class="font-bold text-green-600">10%:</span> Dealer sin tratado.</p></div>
+                    
+                    <div>
+                        <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">4. ITBIS Reducido</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">9% para híbridos y eléctricos. 18% para motores de combustión tradicional.</p>
+                        <a href="https://dgii.gov.do/legislacion/reglamentos/Documents/2011/293-11.pdf" target="_blank" class="btn-law">Ver Ley ITBIS</a>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">5. Impuesto Placa</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-left">Registro inicial (Primera Placa). 17% estándar. 8.5% para incentivos ecológicos.</p>
+                        <a href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/557-05.pdf" target="_blank" class="btn-law">Ver Ley Placa</a>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">6. Emisión CO2</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-left">Impuesto basado en contaminación ambiental. Los ecológicos pagan 0%.</p>
+                        <a href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/253-12.pdf" target="_blank" class="btn-law">Ver Ley CO2</a>
+                    </div>
+
+                    <div>
+                        <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">7. Eléctricos / Híbridos</h3>
+                        <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed text-left">Incentivo de la Ley 103-13 para la movilidad sostenible en el país.</p>
+                        <a href="https://dgii.gov.do/vehiculosMotor/legislacion/Documents/Ley103-13.pdf" target="_blank" class="btn-law">Ver Ley 103-13</a>
+                    </div>
+                    
+                    <div class="bg-amber-50 dark:bg-amber-900/10 p-5 rounded-2xl border border-amber-100 dark:border-amber-900/30 lg:col-span-2 text-left">
+                        <h3 class="text-xs font-bold text-amber-700 dark:text-amber-400 uppercase mb-2 text-left">🛡️ ESCUDO LEGAL</h3>
+                        <p class="text-[10px] text-amber-900 dark:text-amber-200/60 leading-relaxed italic text-left">
+                            Esta cotización es referencial basada en datos del usuario y la API de la NHTSA. Los valores definitivos de liquidación son determinados exclusivamente por la Dirección General de Aduanas (DGA).
+                        </p>
+                    </div>
+                </div>
             </div>
         </section>
     </main>

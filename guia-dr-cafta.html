@@ -3,68 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tratado DR-CAFTA: Cómo pagar 0% de Arancel en Vehículos a RD</title>
-    <meta name="description" content="Aprende cómo aplicar el tratado DR-CAFTA para exonerar el arancel del 20% en la importación de vehículos desde EE. UU. a República Dominicana.">
+    <title>Guía DR-CAFTA: Ahorra el 20% en Importación Vehicular RD | Ferrampa Logistics</title>
+    <meta name="description" content="Descubra cómo aplicar el tratado DR-CAFTA para exonerar el 20% de arancel en República Dominicana. Requisitos, VIN y Certificado de Origen.">
     <link rel="canonical" href="https://ferrampalogistics.com/guia-dr-cafta.html" />
     <meta name="google-adsense-account" content="ca-pub-1035094221157757">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1035094221157757" crossorigin="anonymous"></script>
     <link rel="icon" type="image/jpg" href="img/og-image.jpg">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      "headline": "Guía DR-CAFTA: Ahorra el 20% de Arancel en Aduanas RD",
-      "description": "Explicación detallada sobre cómo certificar el origen de un vehículo para no pagar aranceles bajo el tratado DR-CAFTA.",
-      "image": "https://ferrampalogistics.com/img/og-image.jpg",
-      "author": { "@type": "Organization", "name": "Ferrampa Logistics" },
-      "publisher": { "@type": "Organization", "name": "Ferrampa Logistics" },
-      "datePublished": "2026-06-10"
-    }
-    </script>
-
     <script>
-        if (localStorage.getItem('dark_mode') === 'true' || (!('dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (localStorage.getItem('dark_mode') === 'true' || 
+            (!('dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
             document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
         }
+
+        function updateThemeIcons() {
+            const isDark = document.documentElement.classList.contains('dark');
+            const sunIcon = document.getElementById('sun-icon');
+            const moonIcon = document.getElementById('moon-icon');
+            const sunIconMobile = document.getElementById('sun-icon-mobile');
+            const moonIconMobile = document.getElementById('moon-icon-mobile');
+            
+            if (sunIcon) sunIcon.classList.toggle('hidden', !isDark);
+            if (moonIcon) moonIcon.classList.toggle('hidden', isDark);
+            if (sunIconMobile) sunIconMobile.classList.toggle('hidden', !isDark);
+            if (moonIconMobile) moonIconMobile.classList.toggle('hidden', isDark);
+        }
+
         function toggleDarkMode() {
             const isDark = document.documentElement.classList.toggle('dark');
             localStorage.setItem('dark_mode', isDark);
+            updateThemeIcons();
         }
+        window.toggleDarkMode = toggleDarkMode;
+
+        window.addEventListener('DOMContentLoaded', updateThemeIcons);
     </script>
 </head>
-<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300 text-left">
-    <main class="max-w-4xl mx-auto px-4 mt-12 pb-24">
-        <div class="flex justify-between items-center mb-12">
-            <a href="index.html" class="text-blue-600 font-bold">← Volver a la calculadora</a>
-            <button onclick="toggleDarkMode()" class="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl">🌓</button>
-        </div>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300">
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex items-center gap-3 cursor-pointer">
+                    <div class="bg-blue-600 p-2 rounded-xl md:rounded-2xl shadow-lg shadow-blue-200 dark:shadow-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg md:text-xl font-bold leading-none">Ferrampa Logistics</h1>
+                        <p class="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-blue-600">Calculadora de Impuestos de Importacion</p>
+                    </div>
+                </a>
 
-        <article class="prose dark:prose-invert max-w-none">
-            <h1 class="text-4xl font-black mb-8">DR-CAFTA: El Secreto para importar con 0% de Arancel</h1>
-            <p>El arancel estándar para importar un vehículo a la República Dominicana es del <span class="font-bold">20%</span>. Sin embargo, gracias al tratado de libre comercio <span class="text-blue-600 font-bold">DR-CAFTA</span>, puedes reducir este impuesto a cero si el vehículo cumple con ciertos requisitos.</p>
-            
-            <h2>¿Qué vehículos califican?</h2>
-            <p>No basta con que el vehículo se compre en EE. UU. Para calificar, el vehículo debe haber sido <span class="font-bold">fabricado</span> en un país miembro del tratado (EE. UU., México, Costa Rica, etc.).</p>
-            <ul>
-                <li><strong>Origen:</strong> Debe tener un Certificado de Origen emitido por el fabricante o dealer.</li>
-                <li><strong>VIN:</strong> Los vehículos cuyo VIN comienza con 1, 2, 3, 4 o 5 suelen ser de fabricación norteamericana.</li>
-            </ul>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Calculadora</a>
+                    <a href="articulos.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Artículos</a>
+                    <a href="manual-usuario.html" class="text-sm font-bold hover:text-blue-200 transition-colors animate-pulse-nav">Guía de Usuario</a>
+                    <a href="contacto.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Contacto</a>
+                    <div class="h-6 w-px bg-slate-200 dark:bg-slate-700 mx-2"></div>
+                    <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:scale-110 transition-transform">
+                        <svg id="sun-icon" class="hidden" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" cy="1" x2="12" y2="3"/><line x1="12" cy="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                </div>
 
-            <h2>¿Cómo se solicita la exoneración?</h2>
-            <p>Al momento de la declaración en Aduanas (DGA), tu gestor aduanal debe presentar la prueba de origen. Si no se presenta, Aduanas aplicará el 20% automáticamente.</p>
-        </article>
-
-        <section class="mt-20 border-t pt-12">
-            <h3 class="font-bold mb-6">Guías Recomendadas</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                <a href="guia-importacion-2026.html" class="p-4 border rounded-xl hover:border-blue-500 transition-all">Pasos para Importar</a>
-                <a href="guia-ley-103-13.html" class="p-4 border rounded-xl hover:border-blue-500 transition-all">Incentivos para Eléctricos</a>
+                <div class="flex md:hidden items-center gap-2">
+                    <button onclick="toggleDarkMode()" class="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800">
+                        <svg id="sun-icon-mobile" class="hidden" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" cy="1" x2="12" y2="3"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                        <svg id="moon-icon-mobile" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                    </button>
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="p-2.5 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                    </button>
+                </div>
             </div>
-        </section>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-6 space-y-4">
+            <a href="index.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Calculadora</a>
+            <a href="articulos.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Artículos</a>
+            <a href="manual-usuario.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Guía de Usuario</a>
+            <a href="contacto.html" class="block w-full text-left font-bold text-slate-700 dark:text-slate-200 py-2 border-b border-slate-50 dark:border-slate-800">Contacto</a>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 mt-12 pb-24 text-left">
+        <a href="articulos.html" class="text-blue-600 font-bold mb-8 inline-flex items-center gap-2 transition-transform hover:-translate-x-1">← Volver a Artículos</a>
+        
+        <article class="prose dark:prose-invert max-w-none">
+            <header class="mb-16">
+                <h1 class="text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight">DR-CAFTA: Cómo Ahorrar el 20% de Arancel Legalmente</h1>
+                <div class="flex items-center gap-4 text-sm text-slate-500 font-bold uppercase tracking-widest">
+                    <span class="bg-green-100 text-green-600 px-3 py-1 rounded-full dark:bg-green-900/30">Estrategia de Ahorro</span>
+                    <span>10 min de lectura</span>
+                </div>
+            </header>
+
+            <section class="space-y-8 text-left">
+                <p class="text-xl text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
+                    El <strong>DR-CAFTA</strong> (Tratado de Libre Comercio entre República Dominicana, Centroamérica y Estados Unidos) es la herramienta más poderosa para reducir los costos de importación. Al aplicar este tratado, puedes <strong>exonerar el 20% de arancel</strong> que normalmente se aplica a los vehículos, pagando un 0% de gravamen aduanal.
+                </p>
+
+                <div class="bg-blue-600 p-8 rounded-[2.5rem] shadow-xl not-prose">
+                    <h2 class="text-2xl font-bold mb-4 !text-white !mt-0">¿Qué es el Arancel y por qué importa?</h2>
+                    <p class="text-sm leading-relaxed !text-white text-justify">
+                        El arancel es un impuesto que se aplica sobre el valor CIF del vehículo. En RD, la tasa estándar para personas físicas es del 20%. En un vehículo de $15,000 USD, esto representa un ahorro directo de <strong>$3,000 USD</strong> si aplicas el tratado correctamente.
+                    </p>
+                </div>
+
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6">Requisitos Cruciales para Aplicar</h2>
+                <p class="text-slate-600 dark:text-slate-400">Para beneficiarse del 0% de arancel, el vehículo debe cumplir tres condiciones innegociables:</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 not-prose">
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
+                        <div class="text-3xl mb-4">🇺🇸</div>
+                        <h4 class="font-bold text-lg mb-2 text-slate-900 dark:text-white">Origen de Manufactura</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">El vehículo debe haber sido fabricado en Estados Unidos o en un país miembro del tratado. <strong>Ojo:</strong> No basta con comprarlo en USA, debe ser <em>fabricado</em> allí.</p>
+                    </div>
+                    <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-100 dark:border-slate-800">
+                        <div class="text-3xl mb-4">📄</div>
+                        <h4 class="font-bold text-lg mb-2 text-slate-900 dark:text-white">Certificado de Origen</h4>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">Es el documento legal que certifica la procedencia. Debe estar firmado por el exportador o productor y ser presentado en original a la DGA.</p>
+                    </div>
+                </div>
+
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6">Cómo identificarlo mediante el VIN</h2>
+                <p class="text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
+                    El Número de Identificación Vehicular (VIN) es la huella dactilar de tu auto. El primer dígito indica el país de origen. Para aplicar al DR-CAFTA desde Estados Unidos, el VIN debe comenzar obligatoriamente con:
+                </p>
+                <div class="flex flex-wrap gap-4 not-prose">
+                    <div class="bg-blue-100 dark:bg-blue-900/30 px-6 py-3 rounded-2xl font-black text-blue-600 text-xl">1</div>
+                    <div class="bg-blue-100 dark:bg-blue-900/30 px-6 py-3 rounded-2xl font-black text-blue-600 text-xl">4</div>
+                    <div class="bg-blue-100 dark:bg-blue-900/30 px-6 py-3 rounded-2xl font-black text-blue-600 text-xl">5</div>
+                </div>
+                <p class="text-xs text-slate-400 italic">*Nota: Si el VIN empieza con 2 (Canadá) o 3 (México), no aplica para DR-CAFTA a pesar de ser Norteamérica.</p>
+
+                <div class="bg-amber-50 dark:bg-amber-900/10 p-8 rounded-[2.5rem] border border-amber-100 dark:border-amber-900/30 mt-12 not-prose">
+                    <h3 class="text-xl font-black text-amber-800 dark:text-amber-400 mb-4 !mt-0">💡 Advertencia para Compradores</h3>
+                    <p class="text-sm text-amber-900/80 dark:text-amber-200/60 leading-relaxed text-justify">
+                        Muchas marcas japonesas (Toyota, Honda) o europeas (BMW, Mercedes) fabrican modelos específicos en plantas de Estados Unidos. Estos vehículos <strong>sí aplican</strong>. Verifique siempre el VIN antes de realizar el pago en subastas como Copart o IAAI.
+                    </p>
+                </div>
+
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6">El Proceso de Aplicación</h2>
+                <ol class="space-y-4 text-slate-600 dark:text-slate-400">
+                    <li><strong class="text-slate-900 dark:text-white">Validación de Datos:</strong> Al ingresar el VIN en nuestra calculadora, el sistema detecta automáticamente si el origen es compatible con el tratado.</li>
+                    <li><strong class="text-slate-900 dark:text-white">Solicitud del Certificado:</strong> Solicite a su dealer o exportador en origen el "CAFTA Certificate of Origin".</li>
+                    <li><strong class="text-slate-900 dark:text-white">Declaración en Aduanas:</strong> Su agente aduanal debe marcar la casilla de "Tratado Preferencial" al momento de someter el DUA.</li>
+                </ol>
+
+                <h2 class="text-3xl font-black text-slate-900 dark:text-white mt-12 mb-6">Conclusión</h2>
+                <p class="text-slate-600 dark:text-slate-400 leading-relaxed mb-12 text-justify">
+                    Aprovechar el DR-CAFTA es la diferencia entre una importación costosa y un negocio inteligente. No dejes dinero sobre la mesa por falta de documentación. Un Certificado de Origen a tiempo es tu mejor aliado financiero.
+                </p>
+
+                <div class="bg-blue-600 p-10 rounded-[3rem] text-center text-white not-prose shadow-2xl shadow-blue-200 dark:shadow-none">
+                    <h3 class="text-2xl font-black mb-4 !text-white">¿Tu vehículo califica para el ahorro?</h3>
+                    <p class="!text-white mb-8">Usa nuestra herramienta de decodificación de VIN para saber si puedes ahorrar el 20% de arancel ahora mismo.</p>
+                    <a href="index.html" class="inline-block bg-white text-blue-600 hover:bg-slate-100 px-10 py-4 rounded-2xl font-black uppercase tracking-widest transition-all shadow-lg">Calcular con DR-CAFTA</a>
+                </div>
+            </section>
+        </article>
     </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Ferrampa Logistics</h4>
+                <p class="text-xs leading-relaxed">Expertos en logística y gestión aduanal en República Dominicana. Transparencia y precisión en cada proceso.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Enlaces Legales</h4>
+                <ul class="text-xs space-y-2 text-left">
+                    <li><a href="privacidad.html" class="hover:text-blue-400 transition-colors">Política de Privacidad</a></li>
+                    <li><a href="terminos.html" class="hover:text-blue-400 transition-colors">Términos y Condiciones</a></li>
+                    <li><a href="cookies.html" class="hover:text-blue-400 transition-colors">Política de Cookies</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Contacto</h4>
+                <p class="text-xs leading-relaxed">Email: info.aduanasenlinea@gmail.com<br>WhatsApp: +1 (809) 415-0116</p>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-center">
+            <p class="text-[10px] uppercase tracking-tighter">© 2026 Ferrampa Logistics | Todos los derechos reservados.</p>
+        </div>
+    </footer>
 </body>
 </html>
