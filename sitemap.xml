@@ -1,31 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <!-- Páginas Principales -->
     <url>
-        <loc>https://ferrampalogistics.com/</loc>
-        <lastmod>2026-04-04</lastmod>
+        <loc>https://ferrampalogistics.com/index.html</loc>
+        <lastmod>2026-06-10</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
+        <loc>https://ferrampalogistics.com/articulos.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.9</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/manual-usuario.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/contacto.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+
+    <!-- 15 Guías Técnicas -->
+    <url>
         <loc>https://ferrampalogistics.com/guia-importacion-2026.html</loc>
-        <lastmod>2026-04-04</lastmod>
+        <lastmod>2026-06-10</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
     </url>
     <url>
+        <loc>https://ferrampalogistics.com/guia-dr-cafta.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
         <loc>https://ferrampalogistics.com/guia-subastas-usa.html</loc>
-        <lastmod>2026-04-04</lastmod>
+        <lastmod>2026-06-10</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-ley-103-13.html</loc>
-        <lastmod>2026-04-04</lastmod>
-        <changefreq>monthly</changefreq>
-        <priority>0.8</priority>
-    </url>
-    <url>
-        <loc>https://ferrampalogistics.com/guia-dr-cafta.html</loc>
         <lastmod>2026-06-10</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
@@ -37,30 +58,83 @@
         <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://ferrampalogistics.com/manual-usuario.html</loc>
+        <loc>https://ferrampalogistics.com/guia-puertos-rd.html</loc>
         <lastmod>2026-06-10</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.7</priority>
+        <priority>0.8</priority>
     </url>
     <url>
-        <loc>https://ferrampalogistics.com/contacto.html</loc>
+        <loc>https://ferrampalogistics.com/guia-freight-forwarder.html</loc>
         <lastmod>2026-06-10</lastmod>
         <changefreq>monthly</changefreq>
-        <priority>0.5</priority>
+        <priority>0.8</priority>
     </url>
+    <url>
+        <loc>https://ferrampalogistics.com/guia-gastos-locales.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/guia-comparativa-gasolina-hibrido.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/guia-faq-importacion.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/guia-ipi-vehiculos.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/guia-placa-exhibicion.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/guia-traspaso-dgii.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/guia-proxy-bidding.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/guia-mantenimiento-importado.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+
+    <!-- Páginas Legales -->
     <url>
         <loc>https://ferrampalogistics.com/privacidad.html</loc>
-        <lastmod>2026-04-04</lastmod>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/terminos.html</loc>
-        <lastmod>2026-04-04</lastmod>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/cookies.html</loc>
-        <lastmod>2026-04-04</lastmod>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>yearly</changefreq>
         <priority>0.3</priority>
     </url>
 </urlset>

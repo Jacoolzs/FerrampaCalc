@@ -4,33 +4,65 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Política de Privacidad | Ferrampa Logistics</title>
-    <meta name="google-adsense-account" content="ca-pub-1035094221157757">
-    <link rel="icon" type="image/jpg" href="img/og-image.jpg">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description" content="Política de privacidad de Ferrampa Logistics. Información sobre el tratamiento de datos y cookies de Google AdSense.">
+    <link rel="canonical" href="https://ferrampalogistics.com/privacidad.html" />
     <meta name="google-adsense-account" content="ca-pub-1035094221157757">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1035094221157757" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+    <link rel="icon" type="image/jpg" href="img/og-image.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script>
+        if (localStorage.getItem('dark_mode') === 'true' || 
+            (!('dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 p-8">
-    <div class="max-w-3xl mx-auto bg-white p-10 rounded-3xl shadow-sm border border-slate-200">
-        <a href="index.html" class="text-blue-600 font-bold mb-8 inline-block">← Volver a la calculadora</a>
-        <h1 class="text-3xl font-black mb-6">Política de Privacidad</h1>
-        <p class="mb-4 text-sm leading-relaxed">En Ferrampa Logistics, valoramos su privacidad. Esta política describe cómo manejamos la información en cumplimiento con la Ley No. 172-13 de Protección de Datos de República Dominicana.</p>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300">
+    <main class="max-w-4xl mx-auto px-4 py-16 text-left">
+        <a href="index.html" class="text-blue-600 font-bold mb-12 inline-flex items-center gap-2 transition-transform hover:-translate-x-1">← Volver a la calculadora</a>
         
-        <h2 class="text-xl font-bold mt-8 mb-4">1. Recopilación de Datos</h2>
-        <p class="mb-4 text-sm leading-relaxed text-justify">Nuestra calculadora procesa datos técnicos (VIN, año, valor FOB) localmente en su navegador. No almacenamos estos datos en servidores externos a menos que usted utilice voluntariamente nuestro formulario de contacto.</p>
+        <div class="bg-white dark:bg-slate-900 p-10 md:p-16 rounded-[3rem] shadow-sm border border-slate-200 dark:border-slate-800">
+            <h1 class="text-5xl font-black text-slate-900 dark:text-white mb-8">Política de Privacidad</h1>
+            
+            <div class="space-y-8 text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
+                <p>En <strong>Ferrampa Logistics</strong>, accesible desde ferrampalogistics.com, una de nuestras principales prioridades es la privacidad de nuestros visitantes. Este documento de Política de Privacidad contiene tipos de información que son recolectados y registrados por nosotros y cómo los utilizamos.</p>
 
-        <h2 class="text-xl font-bold mt-8 mb-4">2. Uso de la Información</h2>
-        <p class="mb-4 text-sm leading-relaxed text-justify">La información proporcionada en el formulario de contacto (Nombre, Email, Mensaje) se utiliza exclusivamente para responder a sus consultas de importación y servicios logísticos.</p>
+                <h2 class="text-2xl font-black text-slate-900 dark:text-white">1. Información que recopilamos</h2>
+                <p>Nuestra calculadora de impuestos procesa datos técnicos del vehículo (VIN, año, valor) de forma local en su dispositivo. Solo recopilamos información personal (nombre, correo electrónico) cuando usted decide contactarnos voluntariamente a través de nuestro formulario oficial.</p>
 
-        <h2 class="text-xl font-bold mt-8 mb-4">3. Publicidad y AdSense</h2>
-        <p class="mb-4 text-sm leading-relaxed text-justify">Este sitio utiliza Google AdSense para mostrar anuncios. Google puede utilizar cookies para publicar anuncios basados en sus visitas previas a este u otros sitios web.</p>
+                <h2 class="text-2xl font-black text-slate-900 dark:text-white">2. Google AdSense y Cookies de terceros</h2>
+                <div class="bg-blue-50 dark:bg-blue-900/10 p-6 rounded-2xl border border-blue-100 dark:border-blue-800">
+                    <p class="text-sm">Google es uno de los proveedores de terceros en nuestro sitio. También utiliza cookies, conocidas como cookies de DART, para servir anuncios a nuestros visitantes basados en su visita a este y otros sitios en el Internet. Usted puede elegir declinar el uso de cookies de DART visitando la Política de Privacidad de la red de contenido y anuncios de Google en la siguiente URL: <a href="https://policies.google.com/technologies/ads" class="text-blue-600 underline">https://policies.google.com/technologies/ads</a></p>
+                </div>
 
-        <h2 class="text-xl font-bold mt-8 mb-4">4. Seguridad</h2>
-        <p class="mb-4 text-sm leading-relaxed text-justify">Implementamos medidas técnicas para proteger sus datos personales contra acceso no autorizado o alteración.</p>
+                <h2 class="text-2xl font-black text-slate-900 dark:text-white">3. Proveedores de Servicios y TCF v2.2</h2>
+                <p>Cumplimos con el Marco de Transparencia y Consentimiento (TCF) de la IAB. Utilizamos cookies para personalizar el contenido y los anuncios, para proporcionar funciones de redes sociales y para analizar nuestro tráfico. También compartimos información sobre su uso de nuestro sitio con nuestros socios de publicidad (Google AdSense) y análisis.</p>
 
-        <p class="mt-12 text-[10px] text-slate-400">Última actualización: Abril 2026</p>
-    </div>
+                <h2 class="text-2xl font-black text-slate-900 dark:text-white">4. Derechos de Protección de Datos (GDPR/Ley 172-13)</h2>
+                <p>Nos aseguramos de que usted sea plenamente consciente de todos sus derechos de protección de datos. Cada usuario tiene derecho al acceso, rectificación, cancelación y oposición de sus datos personales almacenados en nuestros registros de contacto.</p>
+
+                <h2 class="text-2xl font-black text-slate-900 dark:text-white">5. Consentimiento</h2>
+                <p>Al utilizar nuestro sitio web, usted acepta nuestra Política de Privacidad y está de acuerdo con sus términos.</p>
+            </div>
+
+            <p class="mt-16 text-xs text-slate-400 uppercase tracking-widest font-bold">Última actualización: 10 de Junio, 2026</p>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <p class="text-xs">© 2026 Ferrampa Logistics | <a href="terminos.html" class="hover:text-white">Términos</a> | <a href="cookies.html" class="hover:text-white">Cookies</a></p>
+        </div>
+    </footer>
 </body>
 </html>
