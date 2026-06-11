@@ -25,6 +25,30 @@
         <priority>0.8</priority>
     </url>
     <url>
+        <loc>https://ferrampalogistics.com/guia-dr-cafta.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/guia-documentos-aduanas.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/manual-usuario.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.7</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/contacto.html</loc>
+        <lastmod>2026-06-10</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.5</priority>
+    </url>
+    <url>
         <loc>https://ferrampalogistics.com/privacidad.html</loc>
         <lastmod>2026-04-04</lastmod>
         <priority>0.3</priority>

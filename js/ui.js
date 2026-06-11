@@ -170,10 +170,15 @@ export function showToast(msg, type = 'info') {
     toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
 }
 
-// ─── Navigation ─────────────────────────────────────────────────────────────
+// ─── Navigation (Mantenida por compatibilidad, aunque se prefieren links HTML) ───
 export function navigateTo(pageId) {
-    const views = ['view-home', 'view-blog-guia', 'view-blog-subastas', 'view-blog-ley', 'view-contacto', 'view-guia'];
+    const views = ['view-home']; // Solo queda la home en index.html
     const target = `view-${pageId}`;
+    
+    // Si intentamos navegar a algo que ya no está aquí, redirigir vía window.location
+    if (pageId === 'contacto') { window.location.href = 'contacto.html'; return; }
+    if (pageId === 'guia') { window.location.href = 'manual-usuario.html'; return; }
+
     views.forEach(v => {
         const el = document.getElementById(v);
         if (el) v === target ? el.classList.remove('hidden') : el.classList.add('hidden');
