@@ -1,29 +1,46 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
     <!-- Páginas Principales -->
     <url>
         <loc>https://ferrampalogistics.com/</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-image.jpg</image:loc>
+            <image:title>Calculadora de Importación Vehicular RD 2026</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/articulos.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.9</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-guias.jpg</image:loc>
+            <image:title>Guías y Artículos de Importación Vehicular RD</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/manual-usuario.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-image.jpg</image:loc>
+            <image:title>Manual de Usuario de la Calculadora</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/contacto.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.7</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-image.jpg</image:loc>
+            <image:title>Contacto y Asesoría Aduanal Ferrampa</image:title>
+        </image:image>
     </url>
 
     <!-- 15 Guías Técnicas -->
@@ -32,90 +49,150 @@
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.9</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-guias.jpg</image:loc>
+            <image:title>Guía Completa de Importación Vehicular RD 2026</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-dr-cafta.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-subastas.jpg</image:loc>
+            <image:title>Tratado DR-CAFTA: 0% Arancel de Importación</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-subastas-usa.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-subastas.jpg</image:loc>
+            <image:title>Subastas de Autos en USA: Copart e IAAI</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-ley-103-13.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-subastas.jpg</image:loc>
+            <image:title>Ley 103-13: Incentivos para Autos Híbridos y Eléctricos</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-documentos-aduanas.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-guias.jpg</image:loc>
+            <image:title>Documentos Requeridos por Aduanas DGA</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-puertos-rd.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-guias.jpg</image:loc>
+            <image:title>Caucedo vs Río Haina: Comparativa de Puertos</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-freight-forwarder.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-subastas.jpg</image:loc>
+            <image:title>Cómo Elegir un Freight Forwarder hacia RD</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-gastos-locales.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-guias.jpg</image:loc>
+            <image:title>Gastos Locales y Costos Portuarios en RD</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-comparativa-gasolina-hibrido.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-subastas.jpg</image:loc>
+            <image:title>Comparativa de Impuestos: Gasolina vs Híbrido</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-faq-importacion.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-guias.jpg</image:loc>
+            <image:title>Preguntas Frecuentes de Importación Vehicular RD</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-ipi-vehiculos.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-guias.jpg</image:loc>
+            <image:title>Impuesto a la Propiedad Inmobiliaria y Vehicular</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-placa-exhibicion.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-guias.jpg</image:loc>
+            <image:title>Placa de Exhibición vs Placa Definitiva DGII</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-traspaso-dgii.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-guias.jpg</image:loc>
+            <image:title>Guía de Traspaso de Vehículos en la DGII</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-proxy-bidding.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-subastas.jpg</image:loc>
+            <image:title>Estrategia de Proxy Bidding en Subastas USA</image:title>
+        </image:image>
     </url>
     <url>
         <loc>https://ferrampalogistics.com/guia-mantenimiento-importado.html</loc>
         <lastmod>2026-09-20</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+        <image:image>
+            <image:loc>https://ferrampalogistics.com/img/og-guias.jpg</image:loc>
+            <image:title>Mantenimiento Preventivo de Autos Importados</image:title>
+        </image:image>
     </url>
 
     <!-- Páginas Legales -->
