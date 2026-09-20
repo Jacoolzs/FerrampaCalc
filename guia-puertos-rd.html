@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -267,7 +267,25 @@
             <p class="text-[10px] uppercase tracking-tighter">© 2026 Ferrampa Logistics | Todos los derechos reservados.</p>
         </div>
     </footer>
+        <!-- Botón Volver Arriba Flotante -->
+    <button id="btn-back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="fixed bottom-6 right-6 p-3 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white shadow-xl shadow-blue-500/30 opacity-0 pointer-events-none transition-all duration-300 z-40" aria-label="Volver arriba">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"/></svg>
+    </button>
+    <script>
+        window.addEventListener("scroll", () => {
+            const btn = document.getElementById("btn-back-to-top");
+            if (!btn) return;
+            if (window.scrollY > 400) {
+                btn.classList.remove("opacity-0", "pointer-events-none");
+                btn.classList.add("opacity-100");
+            } else {
+                btn.classList.add("opacity-0", "pointer-events-none");
+                btn.classList.remove("opacity-100");
+            }
+        });
+    </script>
     <!-- Script de Consentimiento de Cookies Universal -->
     <script src="js/cookie-consent.js"></script>
 </body>
 </html>
+
