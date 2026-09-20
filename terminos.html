@@ -4,32 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Términos y Condiciones | Ferrampa Logistics</title>
-    <meta name="google-adsense-account" content="ca-pub-1035094221157757">
-    <link rel="icon" type="image/jpg" href="img/og-image.jpg">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description" content="Términos y condiciones de uso de la Calculadora de Importación Vehicular de Ferrampa Logistics.">
+    <link rel="canonical" href="https://ferrampalogistics.com/terminos.html" />
     <meta name="google-adsense-account" content="ca-pub-1035094221157757">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1035094221157757" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+    <link rel="icon" type="image/jpg" href="img/og-image.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script>
+        if (localStorage.getItem('dark_mode') === 'true' || 
+            (!('dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 p-8">
-    <div class="max-w-3xl mx-auto bg-white p-10 rounded-3xl shadow-sm border border-slate-200">
-        <a href="index.html" class="text-blue-600 font-bold mb-8 inline-block">← Volver a la calculadora</a>
-        <h1 class="text-3xl font-black mb-6">Términos y Condiciones</h1>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300">
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex items-center gap-3 cursor-pointer">
+                    <div class="bg-blue-600 p-2 rounded-xl md:rounded-2xl shadow-lg shadow-blue-200 dark:shadow-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg md:text-xl font-bold leading-none">Ferrampa Logistics</h1>
+                        <p class="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-blue-600">Calculadora de Impuestos de Importacion</p>
+                    </div>
+                </a>
+
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Calculadora</a>
+                    <a href="articulos.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Artículos</a>
+                    <a href="manual-usuario.html" class="text-sm font-bold hover:text-blue-200 transition-colors">Guía de Usuario</a>
+                    <a href="contacto.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Contacto</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-16 text-left">
+        <a href="index.html" class="text-blue-600 font-bold mb-8 inline-flex items-center gap-2 transition-transform hover:-translate-x-1">← Volver a la calculadora</a>
         
-        <h2 class="text-xl font-bold mt-8 mb-4">1. Naturaleza del Servicio</h2>
-        <p class="mb-4 text-sm leading-relaxed text-justify">La calculadora de Ferrampa Logistics es una herramienta informativa y gratuita. Los resultados proporcionados son estimaciones basadas en leyes tributarias dominicanas vigentes y no constituyen una liquidación definitiva de impuestos.</p>
+        <div class="bg-white dark:bg-slate-900 p-10 md:p-16 rounded-[3rem] shadow-sm border border-slate-200 dark:border-slate-800">
+            <h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-8">Términos y Condiciones</h1>
+            
+            <div class="space-y-8 text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
+                <div>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">1. Naturaleza del Servicio</h2>
+                    <p>La calculadora y recursos informativos provistos por <strong>Ferrampa Logistics</strong> constituyen una herramienta digital gratuita y referencial. Los cálculos de impuestos (Arancel, ITBIS, Primera Placa y Servicios Aduaneros) son simulaciones técnicas formuladas a partir de las leyes tributarias vigentes en la República Dominicana (incluyendo la Ley No. 103-13 de Incentivo a la Importación de Vehículos de Energía No Convencional y el Tratado DR-CAFTA).</p>
+                </div>
 
-        <h2 class="text-xl font-bold mt-8 mb-4">2. Exclusión de Responsabilidad</h2>
-        <p class="mb-4 text-sm leading-relaxed text-justify">Ferrampa Logistics no se hace responsable por discrepancias entre los cálculos de esta plataforma y los valores finales determinados por la Dirección General de Aduanas (DGA). El usuario acepta que los valores definitivos dependen de la valoración oficial en puerto.</p>
+                <div>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">2. Exclusión de Responsabilidad y Liquidación Oficial</h2>
+                    <p>Ferrampa Logistics y sus desarrolladores no asumen responsabilidad jurídica o económica por discrepancias entre los montos simulados en esta plataforma y la liquidación definitiva expedida por la Dirección General de Aduanas (DGA) o la Dirección General de Impuestos Internos (DGII). Toda valoración aduanera está sujeta a verificación física, documental y determinación de valor en puerto según el criterio oficial de la autoridad aduanera correspondiente.</p>
+                </div>
 
-        <h2 class="text-xl font-bold mt-8 mb-4">3. Propiedad Intelectual</h2>
-        <p class="mb-4 text-sm leading-relaxed text-justify">Todo el contenido, diseño y código fuente de esta aplicación es propiedad de Ferrampa Logistics y está protegido por las leyes de derecho de autor.</p>
+                <div>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">3. Propiedad Intelectual y Uso del Contenido</h2>
+                    <p>Todos los algoritmos de cálculo, diseño gráfico, logotipos, artículos educativos, código fuente y elementos interactivos presentes en ferrampalogistics.com están protegidos bajo las leyes de propiedad intelectual y derechos de autor vigentes en la República Dominicana y tratados internacionales. Queda terminantemente prohibido el raspado automatizado (web scraping), reproducción no autorizada o copia total o parcial con fines comerciales sin consentimiento previo por escrito.</p>
+                </div>
 
-        <h2 class="text-xl font-bold mt-8 mb-4">4. Uso Permitido</h2>
-        <p class="mb-4 text-sm leading-relaxed text-justify">Queda prohibida la reproducción total o parcial de esta herramienta con fines comerciales externos sin autorización expresa.</p>
+                <div>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">4. Exactitud de los Datos y Límites Legales</h2>
+                    <p>El usuario es responsable de ingresar datos técnicos fidedignos (valor FOB real, procedencia de manufactura y número de chasis/VIN). Se recuerda que la ley dominicana prohíbe la importación de vehículos de motor livianos con más de cinco (5) años de fabricación contados a partir del año en curso.</p>
+                </div>
 
-        <p class="mt-12 text-[10px] text-slate-400">Última actualización: Abril 2026</p>
-    </div>
+                <div>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">5. Modificaciones del Servicio</h2>
+                    <p>Ferrampa Logistics se reserva el derecho de actualizar, modificar o discontinuar temporal o permanentemente cualquiera de las funciones de la calculadora, así como las tasas y fórmulas aplicadas, sin previo aviso para adaptarse a modificaciones arancelarias oficiales emitidas por el Estado Dominicano.</p>
+                </div>
+            </div>
+
+            <p class="mt-16 text-xs text-slate-400 uppercase tracking-widest font-bold">Última actualización: Junio 2026</p>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Ferrampa Logistics</h4>
+                <p class="text-xs leading-relaxed">Soluciones y herramientas digitales de cálculo logístico y aduanal en República Dominicana.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Enlaces Legales</h4>
+                <ul class="text-xs space-y-2 text-left">
+                    <li><a href="privacidad.html" class="hover:text-blue-400 transition-colors">Política de Privacidad</a></li>
+                    <li><a href="terminos.html" class="hover:text-blue-400 transition-colors">Términos y Condiciones</a></li>
+                    <li><a href="cookies.html" class="hover:text-blue-400 transition-colors">Política de Cookies</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Contacto</h4>
+                <p class="text-xs leading-relaxed">Email: info.aduanasenlinea@gmail.com<br>WhatsApp: +1 (809) 415-0116</p>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-center">
+            <p class="text-[10px] uppercase tracking-tighter">© 2026 Ferrampa Logistics | Todos los derechos reservados.</p>
+        </div>
+    </footer>
 </body>
 </html>

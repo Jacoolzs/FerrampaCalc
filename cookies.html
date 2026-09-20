@@ -4,33 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Política de Cookies | Ferrampa Logistics</title>
-    <meta name="google-adsense-account" content="ca-pub-1035094221157757">
-    <link rel="icon" type="image/jpg" href="img/og-image.jpg">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description" content="Información detallada sobre el uso de cookies y tecnologías de almacenamiento local en Ferrampa Logistics.">
+    <link rel="canonical" href="https://ferrampalogistics.com/cookies.html" />
     <meta name="google-adsense-account" content="ca-pub-1035094221157757">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1035094221157757" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; }</style>
+    <link rel="icon" type="image/jpg" href="img/og-image.jpg">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script>
+        if (localStorage.getItem('dark_mode') === 'true' || 
+            (!('dark_mode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
-<body class="bg-slate-50 text-slate-800 p-8">
-    <div class="max-w-3xl mx-auto bg-white p-10 rounded-3xl shadow-sm border border-slate-200">
-        <a href="index.html" class="text-blue-600 font-bold mb-8 inline-block">← Volver a la calculadora</a>
-        <h1 class="text-3xl font-black mb-6">Política de Cookies</h1>
+<body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300">
+    <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex items-center gap-3 cursor-pointer">
+                    <div class="bg-blue-600 p-2 rounded-xl md:rounded-2xl shadow-lg shadow-blue-200 dark:shadow-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 md:w-6 md:h-6" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><line x1="10" y1="9" x2="8" y2="9"></line></svg>
+                    </div>
+                    <div>
+                        <h1 class="text-lg md:text-xl font-bold leading-none">Ferrampa Logistics</h1>
+                        <p class="text-[8px] md:text-[9px] font-black uppercase tracking-[0.2em] text-blue-600">Calculadora de Impuestos de Importacion</p>
+                    </div>
+                </a>
+
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="index.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Calculadora</a>
+                    <a href="articulos.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Artículos</a>
+                    <a href="manual-usuario.html" class="text-sm font-bold hover:text-blue-200 transition-colors">Guía de Usuario</a>
+                    <a href="contacto.html" class="text-sm font-bold hover:text-blue-600 transition-colors">Contacto</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 py-16 text-left">
+        <a href="index.html" class="text-blue-600 font-bold mb-8 inline-flex items-center gap-2 transition-transform hover:-translate-x-1">← Volver a la calculadora</a>
         
-        <h2 class="text-xl font-bold mt-8 mb-4">1. ¿Qué son las cookies?</h2>
-        <p class="mb-4 text-sm leading-relaxed text-justify">Las cookies son pequeños archivos de texto que se almacenan en su dispositivo para mejorar su experiencia de navegación.</p>
+        <div class="bg-white dark:bg-slate-900 p-10 md:p-16 rounded-[3rem] shadow-sm border border-slate-200 dark:border-slate-800">
+            <h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-8">Política de Cookies</h1>
+            
+            <div class="space-y-8 text-slate-600 dark:text-slate-400 leading-relaxed text-justify">
+                <div>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">1. ¿Qué son las cookies y el almacenamiento local?</h2>
+                    <p>Las cookies y el almacenamiento local (como LocalStorage de HTML5) son pequeños ficheros de datos que se guardan en el navegador de su dispositivo al interactuar con nuestra plataforma. Permiten recordar preferencias de usuario (por ejemplo, el modo oscuro y sus cálculos vehiculares recientes) para ofrecerle una experiencia rápida, fluida y personalizada en visitas sucesivas.</p>
+                </div>
 
-        <h2 class="text-xl font-bold mt-8 mb-4">2. Cookies Utilizadas</h2>
-        <ul class="list-disc ml-6 mb-4 text-sm leading-relaxed text-justify">
-            <li><strong>Cookies de Sesión (LocalStorage):</strong> Utilizadas para guardar sus cálculos y configuraciones de la calculadora para que no tenga que volver a introducirlos.</li>
-            <li><strong>Cookies de Análisis:</strong> Podemos utilizar herramientas como Google Analytics para entender el tráfico del sitio.</li>
-            <li><strong>Cookies de Publicidad (AdSense):</strong> Google utiliza cookies para mostrar anuncios relevantes para los usuarios.</li>
-        </ul>
+                <div>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">2. Categorías de cookies utilizadas</h2>
+                    <ul class="list-disc ml-6 space-y-3 mt-2">
+                        <li><strong>Técnicas y Funcionales (Esenciales):</strong> Empleamos almacenamiento local (LocalStorage) estrictamente para retener el estado de sus vehículos agregados, la tasa de cambio USD/DOP y la preferencia de visualización (claro/oscuro). Estos datos permanecen exclusivamente en su equipo y no se transfieren a servidores externos.</li>
+                        <li><strong>Cookies Analíticas:</strong> Nos asisten en cuantificar el volumen de visitantes, los artículos más consultados y la procedencia del tráfico para optimizar el rendimiento técnico del sitio.</li>
+                        <li><strong>Cookies Publicitarias de Google AdSense:</strong> Google y sus asociados utilizan cookies (incluida la cookie de DoubleClick/DART) para desplegar anuncios basados en las visitas previas del usuario a este u otros sitios web. Cumplimos con el Marco de Transparencia y Consentimiento (TCF v2.2) de la IAB.</li>
+                    </ul>
+                </div>
 
-        <h2 class="text-xl font-bold mt-8 mb-4">3. Control de Cookies</h2>
-        <p class="mb-4 text-sm leading-relaxed text-justify">Usted puede configurar su navegador para rechazar todas las cookies o para que le avise cuando se envíe una. Sin embargo, algunas funciones de la calculadora podrían no funcionar correctamente sin ellas.</p>
+                <div>
+                    <h2 class="text-xl font-black text-slate-900 dark:text-white mb-2">3. Desactivación y Gestión de Cookies</h2>
+                    <p>Usted puede configurar en cualquier momento su navegador (Google Chrome, Mozilla Firefox, Apple Safari o Microsoft Edge) para restringir, bloquear o suprimir las cookies. Asimismo, puede inhabilitar la publicidad personalizada de Google visitando el gestor oficial de preferencias en <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline font-bold">Google Ads Settings</a> o mediante la iniciativa de autorregulación <a href="https://aboutads.info/choices/" target="_blank" rel="noopener noreferrer" class="text-blue-600 underline font-bold">aboutads.info</a>.</p>
+                </div>
+            </div>
 
-        <p class="mt-12 text-[10px] text-slate-400">Última actualización: Abril 2026</p>
-    </div>
+            <p class="mt-16 text-xs text-slate-400 uppercase tracking-widest font-bold">Última actualización: Junio 2026</p>
+        </div>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-12 border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-12 text-left">
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Ferrampa Logistics</h4>
+                <p class="text-xs leading-relaxed">Soluciones y herramientas digitales de cálculo logístico y aduanal en República Dominicana.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Enlaces Legales</h4>
+                <ul class="text-xs space-y-2 text-left">
+                    <li><a href="privacidad.html" class="hover:text-blue-400 transition-colors">Política de Privacidad</a></li>
+                    <li><a href="terminos.html" class="hover:text-blue-400 transition-colors">Términos y Condiciones</a></li>
+                    <li><a href="cookies.html" class="hover:text-blue-400 transition-colors">Política de Cookies</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-bold mb-4 uppercase text-xs tracking-widest">Contacto</h4>
+                <p class="text-xs leading-relaxed">Email: info.aduanasenlinea@gmail.com<br>WhatsApp: +1 (809) 415-0116</p>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto px-4 mt-12 pt-8 border-t border-slate-800 text-center">
+            <p class="text-[10px] uppercase tracking-tighter">© 2026 Ferrampa Logistics | Todos los derechos reservados.</p>
+        </div>
+    </footer>
 </body>
 </html>

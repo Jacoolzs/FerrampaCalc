@@ -752,15 +752,3 @@ window.loadFromHistory = loadFromHistory;
 window.deleteHistoryItem = deleteHistoryItem;
 window.clearHistory = clearHistory;
 window.toggleAutoTasa = toggleAutoTasa;
-
-// ─── AdBlock Detector ───────────────────────────────────────────────────────
-function checkAdBlock() {
-    setTimeout(() => {
-        const ad = document.querySelector('.ad-placeholder');
-        if (ad && (ad.offsetHeight === 0 || window.getComputedStyle(ad).display === 'none')) {
-            document.getElementById('adblock-modal')?.classList.remove('hidden');
-        }
-    }, 2500); // Pequeño retraso para dar tiempo a los bloqueadores a actuar
-}
-
-window.addEventListener('load', checkAdBlock);

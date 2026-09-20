@@ -39,24 +39,70 @@
 
     <!-- Schema.org JSON-LD -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "Ferrampa Logistics Calculator",
-      "operatingSystem": "Web",
-      "applicationCategory": "FinanceApplication",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "Ferrampa Logistics Calculator",
+        "operatingSystem": "Web",
+        "applicationCategory": "FinanceApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "Calculadora profesional de impuestos de importación vehicular para República Dominicana. Soporta Ley 103-13 y DR-CAFTA.",
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "reviewCount": "1250"
+        }
       },
-      "description": "Calculadora profesional de impuestos de importación vehicular para República Dominicana. Soporta Ley 103-13 y DR-CAFTA.",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "4.9",
-        "reviewCount": "1250"
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Ferrampa Logistics",
+        "url": "https://ferrampalogistics.com/",
+        "logo": "https://ferrampalogistics.com/img/og-image.jpg",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+1-809-415-0116",
+          "contactType": "customer service",
+          "areaServed": "DO",
+          "availableLanguage": "Spanish"
+        }
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "¿Cuál es el vehículo más antiguo que puedo importar legalmente en 2026?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "De acuerdo con la legislación aduanera vigente en la República Dominicana, los vehículos livianos no pueden exceder los cinco (5) años de fabricación. Por lo tanto, para este año 2026, el año mínimo de fabricación admitido es el 2021."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Cómo sé si mi vehículo califica para pagar 0% de Arancel por DR-CAFTA?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Para calificar, el vehículo debe haber sido ensamblado en los Estados Unidos o en un país signatario del tratado (VIN con prefijo 1, 4 o 5) y contar con el Certificado de Origen original emitido por el exportador o concesionario."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "¿Por qué los impuestos reales en puerto pueden variar respecto al cálculo referencial?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Nuestra calculadora procesa el valor FOB declarado. Sin embargo, la DGA coteja este valor contra su tabla interna de valoración oficial en puerto. Si la factura es inferior a la tabla referencial oficial, se liquidará con base en el valor de tasación aduanal."
+            }
+          }
+        ]
       }
-    }
+    ]
     </script>
 
     <script>
@@ -296,6 +342,202 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- SECCIÓN EDITORIAL EDUCATIVA Y GUÍA TÉCNICA (ALTO VALOR ADSENSE & SEO) -->
+                <div class="mt-20 border-t border-slate-200 dark:border-slate-800 pt-16 text-left space-y-16">
+                    
+                    <!-- Encabezado Editorial -->
+                    <div class="max-w-3xl">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 text-xs font-bold uppercase tracking-wider mb-4">
+                            <span>Información Oficial & Normativas 2026</span>
+                        </div>
+                        <h2 class="text-3xl md:text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                            ¿Cómo se calculan los Impuestos de Importación Vehicular en República Dominicana?
+                        </h2>
+                        <p class="text-slate-600 dark:text-slate-400 mt-4 leading-relaxed text-base">
+                            La liquidación de tributos para vehículos importados ante la <strong>Dirección General de Aduanas (DGA)</strong> y el registro en la <strong>Dirección General de Impuestos Internos (DGII)</strong> se rige bajo el método de valoración internacional <strong>CIF (Cost, Insurance and Freight)</strong>. Comprender esta estructura le permite proyectar con total certeza su presupuesto antes de comprar en subastas o concesionarios internacionales.
+                        </p>
+                    </div>
+
+                    <!-- Cuadrícula: Desglose de Tributos e Impuestos -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div class="w-10 h-10 rounded-2xl bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black mb-4">1</div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-2">Base CIF</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Suma del valor <strong>FOB</strong> (costo del vehículo en origen) + <strong>Seguro</strong> (2% referencial) + <strong>Flete marítimo</strong> (15% estimado). Convertido a pesos dominicanos según la tasa oficial de aduanas.
+                            </p>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div class="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-950 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-black mb-4">2</div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-2">Gravamen / Arancel</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Tasa estándar del <strong>20%</strong> sobre el valor CIF para Personas Físicas (10% para Dealers registrados). Se reduce a <strong>0%</strong> si el vehículo califica bajo el tratado <strong>DR-CAFTA</strong> con Certificado de Origen válido.
+                            </p>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div class="w-10 h-10 rounded-2xl bg-sky-50 dark:bg-sky-950 text-sky-600 dark:text-sky-400 flex items-center justify-center font-black mb-4">3</div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-2">ITBIS (18%)</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Impuesto sobre Transferencias de Bienes Industrializados y Servicios. Se aplica el <strong>18%</strong> sobre la base imponible compuesta por (Valor CIF + Gravamen). Vehículos híbridos pagan 9% por Ley 103-13.
+                            </p>
+                        </div>
+
+                        <div class="bg-white dark:bg-slate-900 p-6 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                            <div class="w-10 h-10 rounded-2xl bg-amber-50 dark:bg-amber-950 text-amber-600 dark:text-amber-400 flex items-center justify-center font-black mb-4">4</div>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-lg mb-2">Primera Placa & CO2</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                                Tasa base del <strong>17%</strong> sobre el valor CIF según Ley DGII, más el impuesto a las emisiones de dióxido de carbono (0% a 3% según el rango de gramos de CO2/km de la tabla oficial).
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tabla Comparativa de Regímenes Fiscales -->
+                    <div class="bg-white dark:bg-slate-900 rounded-[2.5rem] border border-slate-200 dark:border-slate-800 p-8 shadow-sm">
+                        <div class="mb-6">
+                            <h3 class="text-xl font-black text-slate-900 dark:text-white">Resumen de Tasas Impositivas según Tipo de Motor y Tratado</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Valores aplicables de conformidad con la Ley 103-13 y normativa DGA/DGII 2026</p>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-xs text-left">
+                                <thead>
+                                    <tr class="border-b border-slate-100 dark:border-slate-800 text-slate-400 uppercase font-black tracking-wider">
+                                        <th class="py-3 px-4">Categoría de Vehículo</th>
+                                        <th class="py-3 px-4">Arancel Estándar</th>
+                                        <th class="py-3 px-4">Arancel DR-CAFTA</th>
+                                        <th class="py-3 px-4">ITBIS</th>
+                                        <th class="py-3 px-4">Impuesto Primera Placa</th>
+                                        <th class="py-3 px-4">Servicio Aduanal</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-100 dark:divide-slate-800 font-bold text-slate-700 dark:text-slate-300">
+                                    <tr>
+                                        <td class="py-4 px-4 text-slate-900 dark:text-white font-black">Combustión (Gasolina / Diésel)</td>
+                                        <td class="py-4 px-4">20% (Física) / 10% (Dealer)</td>
+                                        <td class="py-4 px-4 text-green-600 dark:text-green-400">0%</td>
+                                        <td class="py-4 px-4">18%</td>
+                                        <td class="py-4 px-4">17% + CO2 (hasta 3%)</td>
+                                        <td class="py-4 px-4">$150 USD a tasa DGA</td>
+                                    </tr>
+                                    <tr class="bg-blue-50/50 dark:bg-blue-950/20">
+                                        <td class="py-4 px-4 text-blue-600 dark:text-blue-400 font-black">Híbrido Convencional / Plug-in (Ley 103-13)</td>
+                                        <td class="py-4 px-4 text-blue-600 dark:text-blue-400">10% (50% Exonerado)</td>
+                                        <td class="py-4 px-4 text-green-600 dark:text-green-400">0%</td>
+                                        <td class="py-4 px-4 text-blue-600 dark:text-blue-400">9% (50% Exonerado)</td>
+                                        <td class="py-4 px-4 text-blue-600 dark:text-blue-400">8.5% (50% Exonerado)</td>
+                                        <td class="py-4 px-4">$150 USD a tasa DGA</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="py-4 px-4 text-green-600 dark:text-green-400 font-black">100% Eléctrico (EV / Cero Emisiones)</td>
+                                        <td class="py-4 px-4 text-green-600 dark:text-green-400">0% (Incentivo Eco)</td>
+                                        <td class="py-4 px-4 text-green-600 dark:text-green-400">0%</td>
+                                        <td class="py-4 px-4 text-blue-600 dark:text-blue-400">9% (50% Exonerado)</td>
+                                        <td class="py-4 px-4 text-green-600 dark:text-green-400">8.5% + 0% CO2</td>
+                                        <td class="py-4 px-4">$150 USD a tasa DGA</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Recursos y Enlaces a Artículos Destacados -->
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h3 class="text-2xl font-black text-slate-900 dark:text-white">Guías Especializadas de Importación</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Aprenda a gestionar su importación paso a paso con nuestros artículos técnicos</p>
+                            </div>
+                            <a href="articulos.html" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">Ver todos los artículos →</a>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <a href="guia-importacion-2026.html" class="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 transition-all group shadow-sm">
+                                <span class="text-xs font-black text-blue-600 uppercase tracking-wider">Regulaciones</span>
+                                <h4 class="font-bold text-slate-900 dark:text-white text-base mt-2 mb-2 group-hover:text-blue-600 transition-colors">Guía Definitiva 2026: Límite de los 5 Años</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Conozca la restricción de año vehicular (hasta año 2021) y documentos requeridos en puerto.</p>
+                            </a>
+
+                            <a href="guia-dr-cafta.html" class="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 transition-all group shadow-sm">
+                                <span class="text-xs font-black text-green-600 uppercase tracking-wider">Ahorro Fiscal</span>
+                                <h4 class="font-bold text-slate-900 dark:text-white text-base mt-2 mb-2 group-hover:text-green-600 transition-colors">Tratado DR-CAFTA: Exoneración del 20%</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Cómo validar el VIN y tramitar el Certificado de Origen para no pagar arancel.</p>
+                            </a>
+
+                            <a href="guia-ley-103-13.html" class="p-6 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 hover:border-blue-500 transition-all group shadow-sm">
+                                <span class="text-xs font-black text-purple-600 uppercase tracking-wider">Incentivos Verdes</span>
+                                <h4 class="font-bold text-slate-900 dark:text-white text-base mt-2 mb-2 group-hover:text-purple-600 transition-colors">Ley 103-13: Autos Híbridos y Eléctricos</h4>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Descuento del 50% en arancel, placa e ITBIS para vehículos de movilidad ecológica.</p>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Sección FAQ Preguntas Frecuentes -->
+                    <div class="bg-white dark:bg-slate-900 p-8 md:p-12 rounded-[3rem] border border-slate-200 dark:border-slate-800 shadow-sm">
+                        <div class="max-w-2xl mb-8">
+                            <h3 class="text-2xl md:text-3xl font-black text-slate-900 dark:text-white">Preguntas Frecuentes sobre Importación Vehicular en RD</h3>
+                            <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed">
+                                Respuestas claras a las dudas más recurrentes al liquidar aranceles ante la Dirección General de Aduanas.
+                            </p>
+                        </div>
+
+                        <div class="space-y-6">
+                            <div class="border-b border-slate-100 dark:border-slate-800 pb-6">
+                                <h4 class="font-bold text-slate-900 dark:text-white text-sm mb-2">¿Cuál es el vehículo más antiguo que puedo importar legalmente en 2026?</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    De acuerdo con la legislación aduanera vigente en la República Dominicana, los vehículos livianos no pueden exceder los <strong>cinco (5) años de fabricación</strong>. Por lo tanto, para este año 2026, el año mínimo de fabricación admitido es el <strong>2021</strong>. Los vehículos que no cumplan este requisito son reembarcados obligatoriamente hacia el país de origen.
+                                </p>
+                            </div>
+
+                            <div class="border-b border-slate-100 dark:border-slate-800 pb-6">
+                                <h4 class="font-bold text-slate-900 dark:text-white text-sm mb-2">¿Cómo sé si mi vehículo califica para pagar 0% de Arancel por DR-CAFTA?</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    Para calificar, el vehículo debe haber sido ensamblado en los Estados Unidos o en un país signatario del tratado, identificado por su número de chasis (VIN que inicie con 1, 4 o 5 para manufactura en EE.UU.). Adicionalmente, el importador debe presentar a la DGA el Certificado de Origen original emitido y firmado por el concesionario o exportador.
+                                </p>
+                            </div>
+
+                            <div class="border-b border-slate-100 dark:border-slate-800 pb-6">
+                                <h4 class="font-bold text-slate-900 dark:text-white text-sm mb-2">¿Por qué los impuestos reales en puerto pueden variar respecto al cálculo referencial?</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    Nuestra calculadora procesa el valor FOB de factura que usted proporciona. Sin embargo, los tasadores de la DGA cotejan dicho valor con su tabla interna de valoración oficial de referencia. Si el valor facturado es considerado por debajo del valor de mercado fiscal, la aduana liquidará sobre su tasación oficial de referencia.
+                                </p>
+                            </div>
+
+                            <div>
+                                <h4 class="font-bold text-slate-900 dark:text-white text-sm mb-2">¿Qué gastos adicionales debo prever además de los impuestos aduanales?</h4>
+                                <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+                                    Además del Arancel, ITBIS, Placa y Servicio DGA, debe presupuestar los gastos locales en el puerto dominicano de llegada (honorarios del agente aduanal autorizado, verificación física, grúa de patio y cargos portuarios de Caucedo o Haina). En nuestra guía de gastos locales detallamos cada uno de estos rubros.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Acerca de Ferrampa Logistics (E-E-A-T) -->
+                    <div class="bg-gradient-to-r from-blue-900 to-slate-900 rounded-[2.5rem] p-8 md:p-10 text-white shadow-xl">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                            <div class="lg:col-span-2 space-y-4">
+                                <span class="text-[10px] font-black uppercase tracking-widest text-blue-300">Transparencia & Asesoría Especializada</span>
+                                <h3 class="text-2xl font-black text-white">Sobre Ferrampa Logistics</h3>
+                                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                                    Ferrampa Logistics es una iniciativa técnica desarrollada en la República Dominicana por especialistas en logística y trámites aduanales. Desarrollamos herramientas de libre acceso orientadas a brindar certidumbre fiscal, transparencia en el cálculo de gravámenes y democratización de la información aduanera. Nuestro contenido es revisado periódicamente para reflejar las últimas resoluciones emitidas por la DGA y la DGII.
+                                </p>
+                                <div class="flex flex-wrap gap-4 pt-2">
+                                    <a href="contacto.html" class="bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all">Contactar Asesor</a>
+                                    <a href="manual-usuario.html" class="bg-white/10 hover:bg-white/20 text-white px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all">Ver Manual de Usuario</a>
+                                </div>
+                            </div>
+                            <div class="border-t lg:border-t-0 lg:border-l border-slate-700/60 lg:pl-8 space-y-3 text-xs">
+                                <p class="text-slate-400 uppercase font-black tracking-widest text-[9px]">Sede de Operaciones</p>
+                                <p class="font-bold text-white">Santo Domingo, República Dominicana</p>
+                                <p class="text-slate-400 uppercase font-black tracking-widest text-[9px] pt-2">Contacto Directo</p>
+                                <p class="text-slate-200">Email: <a href="mailto:info.aduanasenlinea@gmail.com" class="text-blue-400 underline">info.aduanasenlinea@gmail.com</a></p>
+                                <p class="text-slate-200">WhatsApp: <a href="https://wa.me/18094150116" target="_blank" class="text-green-400 underline">+1 (809) 415-0116</a></p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </main>
         </div>
     </div>
@@ -330,20 +572,8 @@
 
     <!-- Banner de Cookies -->
     <div id="cookie-banner" class="fixed bottom-0 left-0 right-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-4 z-[9999] shadow-2xl flex flex-col md:flex-row items-center justify-between gap-4">
-        <p class="text-xs text-slate-600 dark:text-slate-400 text-center md:text-left">Utilizamos cookies para mejorar su experiencia.</p>
+        <p class="text-xs text-slate-600 dark:text-slate-400 text-center md:text-left">Utilizamos cookies para mejorar su experiencia y analizar el tráfico.</p>
         <button onclick="document.getElementById('cookie-banner').remove()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all">Aceptar</button>
-    </div>
-
-    <!-- AdBlock Modal -->
-    <div id="adblock-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[10000] hidden flex items-center justify-center p-4">
-        <div class="bg-white dark:bg-slate-800 max-w-md w-full rounded-[2.5rem] p-10 shadow-2xl text-center border border-slate-100 dark:border-slate-700">
-            <h3 class="text-2xl font-black text-slate-900 dark:text-white mb-4">¡Hola! Bloqueador detectado.</h3>
-            <p class="text-sm text-slate-500 mb-8">Esta herramienta es gratuita gracias a los anuncios. Por favor desactiva tu AdBlock.</p>
-            <div class="space-y-3">
-                <button onclick="window.location.reload()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-black uppercase text-xs">Recargar</button>
-                <button onclick="document.getElementById('adblock-modal').classList.add('hidden')" class="w-full text-slate-400 font-bold text-[10px] uppercase">Continuar</button>
-            </div>
-        </div>
     </div>
 </body>
 </html>

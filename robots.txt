@@ -1,10 +1,11 @@
 User-agent: *
 Allow: /
-Disallow: /js/
-Disallow: /css/
 
-# Permitir específicamente a los robots de AdSense
+# Permitir específicamente a los robots de AdSense y Googlebot
 User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: Googlebot
 Allow: /
 
 Sitemap: https://ferrampalogistics.com/sitemap.xml
