@@ -9,11 +9,7 @@ option { color: #334155; font-weight: normal; }
 
 .disabled-input { opacity: 0.5; pointer-events: none; filter: grayscale(1); }
 .hidden { display: none !important; }
-.loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.8); z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.loading-overlay.hidden, #loading.hidden { display: none !important; }
-.dark .loading-overlay { background: rgba(15, 23, 42, 0.9); }
-
-.ad-placeholder { background: rgba(241, 245, 249, 0.5); border: 1px dashed #cbd5e1; border-radius: 1.5rem; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 9px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; min-height: 90px; margin: 1.5rem 0; }
+.dark .ad-placeholder { background: rgba(241, 245, 249, 0.5); border: 1px dashed #cbd5e1; border-radius: 1.5rem; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 9px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; min-height: 90px; margin: 1.5rem 0; }
 .dark .ad-placeholder { background: rgba(30, 41, 59, 0.3); border-color: #334155; color: #475569; }
 
 .ad-box { background: #eff6ff; border: 1px solid #dbeafe; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: #3b82f6; font-size: 11px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }

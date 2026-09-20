@@ -585,12 +585,6 @@ export function initApp() {
         });
     } catch (err) {
         console.error("Error durante inicialización de la app:", err);
-    } finally {
-        const loadingEl = document.getElementById('loading');
-        if (loadingEl) {
-            loadingEl.classList.add('hidden');
-            loadingEl.style.display = 'none';
-        }
     }
 }
 
