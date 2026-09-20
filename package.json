@@ -1,0 +1,26 @@
+{
+  "name": "ferrampacalc",
+  "version": "1.0.0",
+  "description": "![Ferrampa Logistics Logo](img/og-image.jpg)",
+  "main": "index.js",
+  "scripts": {
+    "build:css": "npx @tailwindcss/cli -i ./css/tailwind-input.css -o ./css/tailwind.css --minify",
+    "watch:css": "npx @tailwindcss/cli -i ./css/tailwind-input.css -o ./css/tailwind.css --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jacoolzs/FerrampaCalc.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Jacoolzs/FerrampaCalc/issues"
+  },
+  "homepage": "https://github.com/Jacoolzs/FerrampaCalc#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

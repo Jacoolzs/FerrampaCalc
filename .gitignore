@@ -1,0 +1,15 @@
+# Dependencias de Node
+node_modules/
+package-lock.json
+
+# CSS de desarrollo (el input, no el output)
+# css/tailwind-input.css se mantiene en el repo
+# css/tailwind.css se versiona para el deploy estático
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+*.swp
