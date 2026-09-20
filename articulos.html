@@ -55,6 +55,37 @@
 
         window.addEventListener('DOMContentLoaded', updateThemeIcons);
     </script>
+
+    <!-- Schema.org JSON-LD (CollectionPage & Breadcrumbs) -->
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Artículos y Guías de Importación Vehicular RD",
+        "description": "Recursos y guías estratégicas sobre importación vehicular en República Dominicana: Ley 103-13, DR-CAFTA, subastas y aduanas.",
+        "url": "https://ferrampalogistics.com/articulos.html"
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Inicio",
+            "item": "https://ferrampalogistics.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Artículos",
+            "item": "https://ferrampalogistics.com/articulos.html"
+          }
+        ]
+      }
+    ]
+    </script>
 </head>
 <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 font-sans transition-colors duration-300">
     <nav class="sticky top-0 z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
