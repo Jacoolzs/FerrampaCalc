@@ -1,11 +1,20 @@
 import { CURRENT_YEAR, IMPORT_LIMIT_YEAR } from './constants.js';
 import { calcularImpuestosIndividual, formatDOP } from './calculos.js';
+import { 
+    initHistory, 
+    saveToHistory as persistHistory, 
+    renderHistory, 
+    deleteHistoryItem, 
+    clearHistory, 
+    getHistory 
+} from './history.js';
+import { fetchVINData } from './vin-service.js';
+import { generatePDF, generateExcel } from './report-export.js';
 
 let vehicles = [];
 let nextId = 1;
 let saveTimeout = null;
 let totalChart = null;
-let history = [];
 
 // ─── Chart Management ───────────────────────────────────────────────────────
 export function updateChart(data) {
@@ -46,66 +55,18 @@ export function updateChart(data) {
     }
 }
 
-// ─── History Management ─────────────────────────────────────────────────────
+// ─── History Management (Delegado al módulo history.js) ─────────────────────
 export function saveToHistory(total, vehicleCount) {
-    const entry = {
-        id: Date.now(),
-        date: new Date().toLocaleString(),
-        total: total,
-        count: vehicleCount,
-        vehicles: JSON.parse(JSON.stringify(vehicles))
-    };
-    history.unshift(entry);
-    if (history.length > 10) history.pop();
-    localStorage.setItem('importcalc_history', JSON.stringify(history));
-    renderHistory();
-}
-
-export function renderHistory() {
-    const container = document.getElementById('history-container');
-    if (!container) return;
-    
-    if (history.length === 0) {
-        container.innerHTML = '<p class="text-[10px] text-slate-400 italic text-center py-4">No hay cálculos recientes.</p>';
-        return;
-    }
-
-    container.innerHTML = history.map(item => `
-        <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex justify-between items-center group">
-            <div class="cursor-pointer flex-1" onclick="window.loadFromHistory(${item.id})">
-                <p class="text-[9px] font-bold text-slate-400 uppercase leading-none mb-1">${item.date}</p>
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-black text-slate-700 dark:text-slate-200">${formatDOP(item.total)}</span>
-                    <span class="text-[8px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full font-bold">${item.count} Veh.</span>
-                </div>
-            </div>
-            <button onclick="window.deleteHistoryItem(${item.id})" class="opacity-0 group-hover:opacity-100 p-1.5 text-slate-300 hover:text-red-500 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-            </button>
-        </div>
-    `).join('');
+    persistHistory(total, vehicleCount, vehicles);
 }
 
 export function loadFromHistory(id) {
-    const entry = history.find(h => h.id === id);
+    const list = getHistory();
+    const entry = list.find(h => h.id === id);
     if (!entry) return;
     vehicles = JSON.parse(JSON.stringify(entry.vehicles));
     renderVehicles();
     showToast('Cálculo recuperado del historial', 'success');
-}
-
-export function deleteHistoryItem(id) {
-    history = history.filter(h => h.id !== id);
-    localStorage.setItem('importcalc_history', JSON.stringify(history));
-    renderHistory();
-}
-
-export function clearHistory() {
-    if (confirm('¿Seguro que deseas limpiar todo el historial?')) {
-        history = [];
-        localStorage.removeItem('importcalc_history');
-        renderHistory();
-    }
 }
 
 // ─── Contact Form (AJAX con FormSubmit) ──────────────────────────────────────
@@ -250,63 +211,29 @@ export async function decodeVIN(vId) {
     btn.innerHTML = `<span class="animate-spin inline-block w-3 h-3 border-2 border-blue-600 border-t-transparent rounded-full"></span>`;
     btn.disabled = true;
 
-    // Lógica Pre-API: Identificar origen por el primer dígito del VIN
-    const firstDigit = v.vin.charAt(0).toUpperCase();
-    
-    // Prefijos que califican para Tratado (0% Arancel sugerido):
-    // 1,4,5 = USA | 2 = Canadá | 3 = México | W = Alemania | S = UK | V = Francia/España | Z = Italia | Y = Suecia
-    const isCaftaUePrefix = ['1','2','3','4','5','W','S','V','Z','Y'].includes(firstDigit);
-    
-    // Prefijos de Asia (Suelen pagar 20% / 10%): J = Japón | K = Corea | L = China
-    const isAsianPrefix = ['J', 'K', 'L'].includes(firstDigit);
-
-    // Aplicar pre-selección de origen basada en el VIN (Mejora: Automático por Tratado)
-    if (isCaftaUePrefix) {
-        v.origen = 'cafta'; // EEUU / UE / CAFTA
-    } else if (isAsianPrefix) {
-        v.origen = 'otros';
-    }
-
     try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 8000);
+        const result = await fetchVINData(v.vin);
+        v.origen = result.origen || result.suggestedOrigin || v.origen;
 
-        const response = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${v.vin}?format=json`, { signal: controller.signal });
-        clearTimeout(timeoutId);
-
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-        const data = await response.json();
-        const res = data.Results?.[0];
-
-        if (res && res.Make && res.Make.trim() !== '' && res.ModelYear) {
-            v.name = `${res.Make} ${res.Model}`.trim();
-            v.year = parseInt(res.ModelYear) || CURRENT_YEAR;
-            
-            const fuel = (res.FuelTypePrimary || '').toLowerCase();
-            v.engineType = (fuel.includes('electric') || fuel.includes('hybrid')) ? 'hybrid_electric' : 'gas';
-            
-            // Validación final con la respuesta de la API (si está disponible)
-            const plantCountry = (res.PlantCountry || '').toUpperCase();
-            const caftaCountries = ['UNITED STATES (USA)', 'MEXICO', 'CANADA', 'GERMANY', 'SPAIN', 'FRANCE', 'ITALY', 'BELGIUM', 'GUATEMALA', 'HONDURAS', 'EL SALVADOR', 'NICARAGUA', 'COSTA RICA', 'UNITED KINGDOM (UK)', 'SWEDEN'];
-            v.origen = caftaCountries.includes(plantCountry) ? 'cafta' : v.origen;
-
+        if (result.success) {
+            v.name = result.name;
+            v.year = result.year;
+            v.engineType = result.engineType;
             renderVehicles();
             debouncedSave();
             showToast(`VIN Decodificado: ${v.name} (${v.year})`, 'success');
         } else {
-            // Caso: API no lo conoce (Europa/Japón), pero ya pre-seleccionamos el origen arriba
             renderVehicles();
             debouncedSave();
             let msg = 'VIN no reconocido por base de datos USA.';
-            if (isAsianPrefix) msg += ' (Vehículo de origen Asiático).';
-            if (isCaftaUePrefix) msg += ' (Vehículo Europeo/Norteamericano detectado).';
+            if (result.isAsianPrefix) msg += ' (Vehículo de origen Asiático).';
+            if (result.isCaftaUePrefix) msg += ' (Vehículo Europeo/Norteamericano detectado).';
             showToast(`${msg} Complete marca y año manualmente.`, 'warning');
             highlightManualFields(vId);
         }
     } catch (err) {
         renderVehicles();
-        showToast('Error de conexión. Se aplicó origen sugerido por VIN, rellene el resto.', 'error');
+        showToast('Error de conexión o VIN inválido. Rellene manualmente.', 'error');
         highlightManualFields(vId);
     } finally {
         btn.innerHTML = orig;
@@ -574,113 +501,33 @@ export function calculateAll() {
     ug('nav-total', formatDOP(totalFinal));
 }
 
-// ─── Export ──────────────────────────────────────────────────────────────────
+// ─── Export (Delegado a report-export.js) ────────────────────────────────────
 export function exportToPDF(vId = null) {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF('p', 'mm', 'a4'); // Orientación vertical
-    const items = vId ? vehicles.filter(v => v.id === vId) : vehicles;
-    const tasa = parseFloat(document.getElementById('global-tasa')?.value || 60);
-    
-    if (!vId) {
-        const total = items.reduce((acc, v) => acc + v.results.subtotal, 0);
-        saveToHistory(total, items.length);
+    try {
+        const tasa = parseFloat(document.getElementById('global-tasa')?.value || 60);
+        generatePDF(vehicles, vId, tasa);
+
+        if (!vId) {
+            const total = vehicles.reduce((acc, v) => acc + (v.results?.subtotal || 0), 0);
+            saveToHistory(total, vehicles.length);
+        }
+    } catch (e) {
+        console.error("Error al exportar a PDF:", e);
+        showToast('Error al generar PDF. Intente nuevamente.', 'error');
     }
-
-    const formatUSD = (val) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(val);
-
-    // Encabezado
-    doc.setFillColor(29, 78, 216);
-    doc.rect(0, 0, 210, 40, 'F');
-    doc.setTextColor(255, 255, 255);
-    doc.setFontSize(22);
-    doc.setFont('helvetica', 'bold');
-    doc.text('FERRAMPA LOGISTICS', 14, 20);
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Calculadora de Importación Vehicular 2026', 14, 28);
-    doc.text(`Fecha: ${new Date().toLocaleDateString()} | Tasa: RD$ ${tasa.toFixed(2)}`, 14, 34);
-
-    // Cálculos de Totales
-    const tFob = items.reduce((acc, v) => acc + v.fob, 0);
-    const tSeg = items.reduce((acc, v) => acc + (v.results.seguroUSD || 0), 0);
-    const tFle = items.reduce((acc, v) => acc + (v.results.fleteUSD || 0), 0);
-    const tOtr = items.reduce((acc, v) => acc + (v.results.otrosUSD || 0), 0);
-    const tCIF = items.reduce((acc, v) => acc + v.results.cif, 0);
-    const tAra = items.reduce((acc, v) => acc + v.results.gravamen, 0);
-    const tItb = items.reduce((acc, v) => acc + v.results.itbis, 0);
-    const tSer = items.reduce((acc, v) => acc + v.results.service, 0);
-    const tPla = items.reduce((acc, v) => acc + v.results.placa, 0);
-    const tTotal = tAra + tItb + tSer + tPla;
-
-    let currentY = 50;
-    doc.setTextColor(30, 41, 59);
-    doc.setFontSize(14);
-    doc.text('RESUMEN EJECUTIVO', 14, currentY);
-    
-    // Tabla de Resumen Dividida (Izquierda: Logística | Derecha: Impuestos)
-    doc.autoTable({
-        startY: currentY + 5,
-        head: [['GASTOS DEL VEHICULO (USD / DOP)', 'IMPUESTOS A PAGAR (DOP / USD)']],
-        body: [
-            [`Total FOB: ${formatUSD(tFob)} / ${formatDOP(tFob * tasa)}`, `Arancel: ${formatDOP(tAra)} / ${formatUSD(tAra / tasa)}`],
-            [`Seguro: ${formatUSD(tSeg)} / ${formatDOP(tSeg * tasa)}`, `ITBIS: ${formatDOP(tItb)} / ${formatUSD(tItb / tasa)}`],
-            [`Flete: ${formatUSD(tFle)} / ${formatDOP(tFle * tasa)}`, `Servicio Aduanero: ${formatDOP(tSer)} / ${formatUSD(tSer / tasa)}`],
-            [`Otros: ${formatUSD(tOtr)} / ${formatDOP(tOtr * tasa)}`, `Total Placa: ${formatDOP(tPla)} / ${formatUSD(tPla / tasa)}`],
-            [
-                { content: `TOTAL CIF: ${formatDOP(tCIF)} / ${formatUSD(tCIF / tasa)}`, styles: { fontStyle: 'bold', fillColor: [241, 245, 249] } },
-                { content: `TOTAL IMPUESTOS: ${formatDOP(tTotal)} / ${formatUSD(tTotal / tasa)}`, styles: { fontStyle: 'bold', fillColor: [241, 245, 249] } }
-            ]
-        ],
-        theme: 'grid',
-        styles: { fontSize: 7.5, cellPadding: 3 },
-        headStyles: { fillColor: [51, 65, 85] }
-    });
-
-    currentY = doc.lastAutoTable.finalY + 15;
-
-    // Detalle por Vehículo
-    doc.setFontSize(14);
-    doc.text('DETALLE POR VEHÍCULO', 14, currentY);
-
-    const detailData = items.map(v => [
-        v.name,
-        v.year,
-        formatUSD(v.fob),
-        formatDOP(v.results.gravamen),
-        formatDOP(v.results.itbis),
-        formatDOP(v.results.placa),
-        formatDOP(v.results.subtotal)
-    ]);
-
-    doc.autoTable({
-        startY: currentY + 5,
-        head: [['Vehículo', 'Año', 'FOB (USD)', 'Arancel', 'ITBIS', 'Placa', 'Subtotal']],
-        body: detailData,
-        theme: 'striped',
-        styles: { fontSize: 8 },
-        headStyles: { fillColor: [29, 78, 216] }
-    });
-
-    // Pie de página legal
-    const finalY = doc.lastAutoTable.finalY + 10;
-    doc.setFontSize(8);
-    doc.setTextColor(150);
-    doc.text('Nota: Estos valores son referenciales basados en la tasa del día. La liquidación oficial es emitida por la DGA.', 14, finalY);
-    doc.text('Generado por Ferrampa Logistics ImportCalc.', 14, finalY + 5);
-
-    doc.save(`Cotizacion_Ferrampa_${vId ? 'Vehiculo' : 'General'}.pdf`);
 }
 
 export function exportSinglePDF(id) { exportToPDF(id); }
 
 export function exportToExcel() {
-    const data = vehicles.map(v => ({ 'Vehículo': v.name, 'Año': v.year, 'CIF DOP': v.results.cif, 'Arancel': v.results.gravamen, 'Placa': v.results.placa, 'ITBIS': v.results.itbis, 'Servicio': v.results.service, 'TOTAL': v.results.subtotal }));
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Cotización');
-    XLSX.writeFile(wb, 'ImportCalc_RD.xlsx');
-    
-    const total = vehicles.reduce((acc, v) => acc + v.results.subtotal, 0);
-    saveToHistory(total, vehicles.length);
+    try {
+        generateExcel(vehicles);
+        const total = vehicles.reduce((acc, v) => acc + (v.results?.subtotal || 0), 0);
+        saveToHistory(total, vehicles.length);
+    } catch (e) {
+        console.error("Error al exportar a Excel:", e);
+        showToast('Error al generar Excel. Verifique que la librería esté cargada.', 'error');
+    }
 }
 
 export function shareWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent('Resumen Cotización RD: ' + document.getElementById('nav-total').innerText)}`, '_blank'); }
@@ -713,10 +560,7 @@ export function initApp() {
     updateThemeIcons();
     
     // Cargar Historial
-    const savedHistory = localStorage.getItem('importcalc_history');
-    if (savedHistory) {
-        try { history = JSON.parse(savedHistory); renderHistory(); } catch(e) { history = []; }
-    }
+    initHistory();
 
     const saved = localStorage.getItem('importcalc_data');
     if (saved) {
