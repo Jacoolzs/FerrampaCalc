@@ -557,31 +557,41 @@ function updateThemeIcons() {
 
 // ─── Init ────────────────────────────────────────────────────────────────────
 export function initApp() {
-    updateThemeIcons();
-    
-    // Cargar Historial
-    initHistory();
+    try {
+        updateThemeIcons();
+        
+        // Cargar Historial
+        initHistory();
 
-    const saved = localStorage.getItem('importcalc_data');
-    if (saved) {
-        try {
-            const data = JSON.parse(saved);
-            vehicles = data.vehicles || [];
-            nextId = data.nextId || (vehicles.length > 0 ? Math.max(...vehicles.map(v => v.id)) + 1 : 1);
-            if (document.getElementById('global-tasa')) document.getElementById('global-tasa').value = data.tasa || 60.00;
-            if (document.getElementById('entidad')) document.getElementById('entidad').value = data.entidad || 'fisica';
-            if (document.getElementById('check-shared')) document.getElementById('check-shared').checked = data.isShared !== undefined ? data.isShared : true;
-            if (document.getElementById('g-seguro')) document.getElementById('g-seguro').value = data.gSeguro || 100;
-            if (document.getElementById('g-flete')) document.getElementById('g-flete').value = data.gFlete || 1200;
-            if (document.getElementById('g-otros')) document.getElementById('g-otros').value = data.gOtros || 0;
-            toggleSharedPanel(false);
-        } catch (e) { addVehicle(); }
-    } else { addVehicle(); }
-    document.getElementById('loading').classList.add('hidden');
-    ['global-tasa', 'g-seguro', 'g-flete', 'g-otros'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener('input', () => { calculateAll(); debouncedSave(); });
-    });
+        const saved = localStorage.getItem('importcalc_data');
+        if (saved) {
+            try {
+                const data = JSON.parse(saved);
+                vehicles = data.vehicles || [];
+                nextId = data.nextId || (vehicles.length > 0 ? Math.max(...vehicles.map(v => v.id)) + 1 : 1);
+                if (document.getElementById('global-tasa')) document.getElementById('global-tasa').value = data.tasa || 60.00;
+                if (document.getElementById('entidad')) document.getElementById('entidad').value = data.entidad || 'fisica';
+                if (document.getElementById('check-shared')) document.getElementById('check-shared').checked = data.isShared !== undefined ? data.isShared : true;
+                if (document.getElementById('g-seguro')) document.getElementById('g-seguro').value = data.gSeguro || 100;
+                if (document.getElementById('g-flete')) document.getElementById('g-flete').value = data.gFlete || 1200;
+                if (document.getElementById('g-otros')) document.getElementById('g-otros').value = data.gOtros || 0;
+                toggleSharedPanel(false);
+            } catch (e) { addVehicle(); }
+        } else { addVehicle(); }
+        
+        ['global-tasa', 'g-seguro', 'g-flete', 'g-otros'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.addEventListener('input', () => { calculateAll(); debouncedSave(); });
+        });
+    } catch (err) {
+        console.error("Error durante inicialización de la app:", err);
+    } finally {
+        const loadingEl = document.getElementById('loading');
+        if (loadingEl) {
+            loadingEl.classList.add('hidden');
+            loadingEl.style.display = 'none';
+        }
+    }
 }
 
 // ─── Global Exposure ─────────────────────────────────────────────────────────
