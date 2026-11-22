@@ -137,8 +137,8 @@ export function navigateTo(pageId) {
     const target = `view-${pageId}`;
     
     // Si intentamos navegar a algo que ya no está aquí, redirigir vía window.location
-    if (pageId === 'contacto') { window.location.href = 'contacto.html'; return; }
-    if (pageId === 'guia') { window.location.href = 'manual-usuario.html'; return; }
+    if (pageId === 'contacto') { window.location.href = '/contacto'; return; }
+    if (pageId === 'guia') { window.location.href = '/manual-usuario'; return; }
 
     views.forEach(v => {
         const el = document.getElementById(v);
@@ -363,7 +363,7 @@ export function renderVehicles() {
                     <div class="space-y-4">
                         <div class="flex gap-4"><div class="flex-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">Año</label><input type="number" value="${v.year}" oninput="window.updateVehicleData(${v.id}, 'year', this.value)" class="w-full p-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl font-bold text-xs text-left"></div><div class="flex-1 self-end"><div id="badge-year-${v.id}" class="px-2 py-2 rounded-xl text-[8px] font-black uppercase text-center ${isOk ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 animate-pulse'}">${isOk ? 'OK' : 'No Permitido'}</div></div></div>
                         <div id="alert-year-warning-${v.id}" class="${isOk ? 'hidden' : ''} p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-2xl text-[10px] text-red-700 dark:text-red-300 leading-relaxed text-left">
-                            <span class="font-bold">⚠️ Restricción Legal DGA:</span> La ley prohíbe importar autos con más de 5 años (${IMPORT_LIMIT_YEAR} o anterior). <a href="guia-importacion-2026.html" class="underline font-bold hover:text-red-900 dark:hover:text-white">Leer Regla de los 5 Años →</a>
+                            <span class="font-bold">⚠️ Restricción Legal DGA:</span> La ley prohíbe importar autos con más de 5 años (${IMPORT_LIMIT_YEAR} o anterior). <a href="/guia-importacion-2026" class="underline font-bold hover:text-red-900 dark:hover:text-white">Leer Regla de los 5 Años →</a>
                         </div>
                         <div class="text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">FOB (USD)</label><input type="number" value="${v.fob}" oninput="window.updateVehicleData(${v.id}, 'fob', this.value)" class="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-blue-600 dark:text-blue-400 text-sm outline-none focus:ring-1 focus:ring-blue-500"></div>
                         ${perVehicleCosts}

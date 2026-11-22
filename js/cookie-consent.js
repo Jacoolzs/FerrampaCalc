@@ -26,8 +26,8 @@
                         <h4 class="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">Aviso de Privacidad y Cookies</h4>
                         <p class="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                             Utilizamos almacenamiento local técnico y cookies analíticas y de publicidad (Google AdSense) para ofrecerle la calculadora de impuestos y anuncios personalizados. Consulte nuestra 
-                            <a href="cookies.html" class="text-blue-600 dark:text-blue-400 underline font-bold hover:text-blue-700">Política de Cookies</a> y 
-                            <a href="privacidad.html" class="text-blue-600 dark:text-blue-400 underline font-bold hover:text-blue-700">Privacidad</a>.
+                            <a href="/cookies" class="text-blue-600 dark:text-blue-400 underline font-bold hover:text-blue-700">Política de Cookies</a> y 
+                            <a href="/privacidad" class="text-blue-600 dark:text-blue-400 underline font-bold hover:text-blue-700">Privacidad</a>.
                         </p>
                     </div>
                 </div>
