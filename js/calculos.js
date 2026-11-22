@@ -1,3 +1,5 @@
+import { esPreferencial } from './tratados.js';
+
 /**
  * Lógica pura de cálculo de impuestos para un vehículo.
  */
@@ -14,7 +16,7 @@ export function calcularImpuestosIndividual(v, config) {
 
     // Arancel
     let fG = 0;
-    if (v.origen === 'cafta') {
+    if (esPreferencial(v.origen)) {
         fG = 0;
     } else if (config.entidad === 'dealer') {
         fG = (v.engineType === 'hybrid_electric') ? 0.05 : 0.10;

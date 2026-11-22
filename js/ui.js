@@ -9,12 +9,22 @@ import {
     getHistory 
 } from './history.js';
 import { fetchVINData } from './vin-service.js';
+import { GRUPOS_PAISES, TRATADOS, nombrePais, normalizarOrigen, tratadoDePais } from './tratados.js';
 import { generatePDF, generateExcel } from './report-export.js';
 
 let vehicles = [];
 let nextId = 1;
 let saveTimeout = null;
 let totalChart = null;
+
+const opcionesPais = (actual) => GRUPOS_PAISES.map(g => `<optgroup label="${g.grupo}">${g.paises.map(([codigo, nombre]) => `<option value="${codigo}" ${codigo === actual ? 'selected' : ''}>${nombre}</option>`).join('')}</optgroup>`).join('');
+
+function avisoTratado(v) {
+    const clave = tratadoDePais(v.pais);
+    if (!clave) return `<p class="mt-2 text-[11px] leading-snug text-slate-600 dark:text-slate-300">Sin tratado vigente para este país: aplica el arancel general.</p>`;
+    const t = TRATADOS[clave];
+    return `<label class="mt-2 flex items-start gap-2 text-[11px] leading-snug text-slate-600 dark:text-slate-300 cursor-pointer"><input type="checkbox" ${v.aplicarTratado ? 'checked' : ''} onchange="window.updateVehicleData(${v.id}, 'aplicarTratado', this.checked)" class="mt-0.5 w-4 h-4 flex-shrink-0"><span>Aplicar <strong>${t.nombre}</strong> (0% arancel). Requiere ${t.prueba} y cumplir la regla de origen.</span></label>`;
+}
 
 // ─── Chart Management ───────────────────────────────────────────────────────
 export function updateChart(data) {
@@ -64,7 +74,7 @@ export function loadFromHistory(id) {
     const list = getHistory();
     const entry = list.find(h => h.id === id);
     if (!entry) return;
-    vehicles = JSON.parse(JSON.stringify(entry.vehicles));
+    vehicles = JSON.parse(JSON.stringify(entry.vehicles)).map(normalizarOrigen);
     renderVehicles();
     showToast('Cálculo recuperado del historial', 'success');
 }
@@ -183,7 +193,7 @@ export function toggleSharedPanel(shouldSave = true) {
 export function addVehicle() {
     const newV = {
         id: nextId++, vin: "", name: "Nuevo Vehículo",
-        year: CURRENT_YEAR, fob: 5000, origen: 'cafta',
+        year: CURRENT_YEAR, fob: 5000, pais: 'US', aplicarTratado: true, origen: 'cafta',
         engineType: 'gas', placaPct: 0.17, co2Pct: 0.03, // Ley 253-12: sin dato de emisiones aplica 3%
         seguro: 100, flete: 1200, otros: 0, results: {},
     };
@@ -213,7 +223,13 @@ export async function decodeVIN(vId) {
 
     try {
         const result = await fetchVINData(v.vin);
-        v.origen = result.origen || result.suggestedOrigin || v.origen;
+        if (result.pais) {
+            v.pais = result.pais;
+            v.aplicarTratado = true;
+            normalizarOrigen(v);
+        }
+        const clave = tratadoDePais(v.pais);
+        const detalleOrigen = `${nombrePais(v.pais)}: ${clave ? TRATADOS[clave].nombre : 'sin tratado'}`;
 
         if (result.success) {
             v.name = result.name;
@@ -221,14 +237,11 @@ export async function decodeVIN(vId) {
             v.engineType = result.engineType;
             renderVehicles();
             debouncedSave();
-            showToast(`VIN Decodificado: ${v.name} (${v.year})`, 'success');
+            showToast(`VIN Decodificado: ${v.name} (${v.year}). ${detalleOrigen}.`, 'success');
         } else {
             renderVehicles();
             debouncedSave();
-            let msg = 'VIN no reconocido por base de datos USA.';
-            if (result.isAsianPrefix) msg += ' (Vehículo de origen Asiático).';
-            if (result.isCaftaUePrefix) msg += ' (Vehículo Europeo/Norteamericano detectado).';
-            showToast(`${msg} Complete marca y año manualmente.`, 'warning');
+            showToast(`VIN no reconocido. Origen estimado: ${detalleOrigen}. Complete marca y año manualmente.`, 'warning');
             highlightManualFields(vId);
         }
     } catch (err) {
@@ -314,6 +327,13 @@ export function updateVehicleData(id, field, value) {
         v.engineType = value;
         renderVehicles(); // Estructura cambia, requiere render total
         return;
+    } else if (field === 'pais' || field === 'aplicarTratado') {
+        v[field] = value;
+        if (field === 'pais') v.aplicarTratado = true;
+        normalizarOrigen(v);
+        renderVehicles();
+        debouncedSave();
+        return;
     } else if (['fob', 'seguro', 'flete', 'otros', 'co2Pct'].includes(field)) {
         v[field] = parseFloat(value) || 0;
     } else {
@@ -368,7 +388,7 @@ export function renderVehicles() {
                         <div class="text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">FOB (USD)</label><input type="number" value="${v.fob}" oninput="window.updateVehicleData(${v.id}, 'fob', this.value)" class="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-blue-600 dark:text-blue-400 text-sm outline-none focus:ring-1 focus:ring-blue-500"></div>
                         ${perVehicleCosts}
                         <div class="grid grid-cols-1 gap-4">
-                            <div class="text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Origen</label><select onchange="window.updateVehicleData(${v.id}, 'origen', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold cursor-pointer text-left"><option value="cafta" ${v.origen === 'cafta' ? 'selected' : ''}>EEUU / UE / CAFTA</option><option value="otros" ${v.origen === 'otros' ? 'selected' : ''}>Otros Orígenes</option></select></div>
+                            <div class="text-left"><label for="pais-${v.id}" class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">País de fabricación</label><select id="pais-${v.id}" onchange="window.updateVehicleData(${v.id}, 'pais', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold cursor-pointer text-left">${opcionesPais(v.pais)}</select>${avisoTratado(v)}</div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="flex-1 text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Motor</label><select onchange="window.updateVehicleData(${v.id}, 'engineType', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold cursor-pointer text-left"><option value="gas" ${v.engineType === 'gas' ? 'selected' : ''}>Gasolina</option><option value="hybrid_electric" ${v.engineType === 'hybrid_electric' ? 'selected' : ''}>Híbrido / Eléctrico</option></select></div>
                                 <div class="flex-1 text-left"><div class="flex items-center justify-between mb-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">CO2</label><button onclick="document.getElementById('tip-co2-info-${v.id}').classList.toggle('hidden')" class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black">?</button></div><div class="relative"><select onchange="window.updateVehicleData(${v.id}, 'co2Pct', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-left"><option value="0.00" ${v.co2Pct == 0 ? 'selected' : ''}>0% (menos de 120 g)</option><option value="0.01" ${v.co2Pct == 0.01 ? 'selected' : ''}>1% (120-220 g)</option><option value="0.02" ${v.co2Pct == 0.02 ? 'selected' : ''}>2% (220-380 g)</option><option value="0.03" ${v.co2Pct == 0.03 ? 'selected' : ''}>3% (380 g+ o sin dato)</option></select><div id="tip-co2-info-${v.id}" class="hidden mt-2 p-3 bg-blue-800 text-white rounded-xl text-[10px] leading-relaxed shadow-xl absolute z-[60] w-48 border border-blue-400 right-0"><p class="font-bold mb-1">Cargos CO2:</p><p class="text-left">• Menos de 120g: <span class="font-bold">0%</span></p><p class="text-left">• 120-220g: <span class="font-bold">1%</span></p><p class="text-left">• 220-380g: <span class="font-bold">2%</span></p><p class="text-left">• 380g+: <span class="font-bold">3%</span></p><p class="text-left">• Sin dato: <span class="font-bold">3%</span></p></div></div></div>
@@ -567,7 +587,7 @@ export function initApp() {
         if (saved) {
             try {
                 const data = JSON.parse(saved);
-                vehicles = data.vehicles || [];
+                vehicles = (data.vehicles || []).map(normalizarOrigen);
                 nextId = data.nextId || (vehicles.length > 0 ? Math.max(...vehicles.map(v => v.id)) + 1 : 1);
                 if (document.getElementById('global-tasa')) document.getElementById('global-tasa').value = data.tasa || 60.00;
                 if (document.getElementById('entidad')) document.getElementById('entidad').value = data.entidad || 'fisica';
