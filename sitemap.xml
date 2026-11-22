@@ -43,6 +43,19 @@
         </image:image>
     </url>
 
+    <url>
+        <loc>https://ferrampalogistics.com/sobre-nosotros</loc>
+        <lastmod>2026-11-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://ferrampalogistics.com/tasas-vigentes</loc>
+        <lastmod>2026-11-22</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.9</priority>
+    </url>
+
     <!-- 15 Guías Técnicas -->
     <url>
         <loc>https://ferrampalogistics.com/guia-importacion-2026</loc>
