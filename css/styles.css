@@ -8,7 +8,6 @@ option { color: #334155; font-weight: normal; }
 .dark option { color: #e2e8f0; background-color: #1e293b; }
 
 .disabled-input { opacity: 0.5; pointer-events: none; filter: grayscale(1); }
-.hidden { display: none !important; }
 .dark .ad-placeholder { background: rgba(241, 245, 249, 0.5); border: 1px dashed #cbd5e1; border-radius: 1.5rem; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 9px; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; min-height: 90px; margin: 1.5rem 0; }
 .dark .ad-placeholder { background: rgba(30, 41, 59, 0.3); border-color: #334155; color: #475569; }
 
