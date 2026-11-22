@@ -13,3 +13,9 @@ Thumbs.db
 # Editores
 .vscode/
 *.swp
+
+# Secretos y credenciales
+.env
+.env.*
+*credentials*.json
+*service-account*.json
