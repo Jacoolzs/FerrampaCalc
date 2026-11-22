@@ -29,7 +29,7 @@ export function calcularImpuestosIndividual(v, config) {
     // ITBIS
     const itbisRate = (v.engineType === 'hybrid_electric') ? 0.09 : 0.18;
 
-    const sDOP = 150 * tasa;
+    const sDOP = 100 * tasa; // Decreto 627-06: US$100 por unidad
     const gD = cifDOP * fG;
     const pD = cifDOP * totalPlacaPct;
     const iD = (cifDOP + gD) * itbisRate;
