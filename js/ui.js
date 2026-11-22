@@ -19,6 +19,12 @@ let totalChart = null;
 
 const opcionesPais = (actual) => GRUPOS_PAISES.map(g => `<optgroup label="${g.grupo}">${g.paises.map(([codigo, nombre]) => `<option value="${codigo}" ${codigo === actual ? 'selected' : ''}>${nombre}</option>`).join('')}</optgroup>`).join('');
 
+// Sugerencia editable: híbridos 1%, eléctricos 0% y gasolina sin dato 3%.
+function sugerirCo2(v, esElectrico = false) {
+    if (v.co2Manual) return;
+    v.co2Pct = v.engineType === 'hybrid_electric' ? (esElectrico ? 0 : 0.01) : 0.03;
+}
+
 function avisoTratado(v) {
     const clave = tratadoDePais(v.pais);
     if (!clave) return `<p class="mt-2 text-[11px] leading-snug text-slate-600 dark:text-slate-300">Sin tratado vigente para este país: aplica el arancel general.</p>`;
@@ -235,6 +241,7 @@ export async function decodeVIN(vId) {
             v.name = result.name;
             v.year = result.year;
             v.engineType = result.engineType;
+            sugerirCo2(v, result.esElectrico);
             renderVehicles();
             debouncedSave();
             showToast(`VIN Decodificado: ${v.name} (${v.year}). ${detalleOrigen}.`, 'success');
@@ -325,7 +332,9 @@ export function updateVehicleData(id, field, value) {
         }
     } else if (field === 'engineType') {
         v.engineType = value;
+        sugerirCo2(v);
         renderVehicles(); // Estructura cambia, requiere render total
+        debouncedSave();
         return;
     } else if (field === 'pais' || field === 'aplicarTratado') {
         v[field] = value;
@@ -336,6 +345,7 @@ export function updateVehicleData(id, field, value) {
         return;
     } else if (['fob', 'seguro', 'flete', 'otros', 'co2Pct'].includes(field)) {
         v[field] = parseFloat(value) || 0;
+        if (field === 'co2Pct') v.co2Manual = true;
     } else {
         v[field] = value;
         if (field === 'vin') {
@@ -391,7 +401,7 @@ export function renderVehicles() {
                             <div class="text-left"><label for="pais-${v.id}" class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">País de fabricación</label><select id="pais-${v.id}" onchange="window.updateVehicleData(${v.id}, 'pais', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold cursor-pointer text-left">${opcionesPais(v.pais)}</select>${avisoTratado(v)}</div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="flex-1 text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Motor</label><select onchange="window.updateVehicleData(${v.id}, 'engineType', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold cursor-pointer text-left"><option value="gas" ${v.engineType === 'gas' ? 'selected' : ''}>Gasolina</option><option value="hybrid_electric" ${v.engineType === 'hybrid_electric' ? 'selected' : ''}>Híbrido / Eléctrico</option></select></div>
-                                <div class="flex-1 text-left"><div class="flex items-center justify-between mb-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">CO2</label><button onclick="document.getElementById('tip-co2-info-${v.id}').classList.toggle('hidden')" class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black">?</button></div><div class="relative"><select onchange="window.updateVehicleData(${v.id}, 'co2Pct', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-left"><option value="0.00" ${v.co2Pct == 0 ? 'selected' : ''}>0% (menos de 120 g)</option><option value="0.01" ${v.co2Pct == 0.01 ? 'selected' : ''}>1% (120-220 g)</option><option value="0.02" ${v.co2Pct == 0.02 ? 'selected' : ''}>2% (220-380 g)</option><option value="0.03" ${v.co2Pct == 0.03 ? 'selected' : ''}>3% (380 g+ o sin dato)</option></select><div id="tip-co2-info-${v.id}" class="hidden mt-2 p-3 bg-blue-800 text-white rounded-xl text-[10px] leading-relaxed shadow-xl absolute z-[60] w-48 border border-blue-400 right-0"><p class="font-bold mb-1">Cargos CO2:</p><p class="text-left">• Menos de 120g: <span class="font-bold">0%</span></p><p class="text-left">• 120-220g: <span class="font-bold">1%</span></p><p class="text-left">• 220-380g: <span class="font-bold">2%</span></p><p class="text-left">• 380g+: <span class="font-bold">3%</span></p><p class="text-left">• Sin dato: <span class="font-bold">3%</span></p></div></div></div>
+                                <div class="flex-1 text-left"><div class="flex items-center justify-between mb-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">CO2</label><button onclick="document.getElementById('tip-co2-info-${v.id}').classList.toggle('hidden')" class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black">?</button></div><div class="relative"><select onchange="window.updateVehicleData(${v.id}, 'co2Pct', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-left"><option value="0.00" ${v.co2Pct == 0 ? 'selected' : ''}>0% (menos de 120 g)</option><option value="0.01" ${v.co2Pct == 0.01 ? 'selected' : ''}>1% (120-220 g)</option><option value="0.02" ${v.co2Pct == 0.02 ? 'selected' : ''}>2% (220-380 g)</option><option value="0.03" ${v.co2Pct == 0.03 ? 'selected' : ''}>3% (380 g+ o sin dato)</option></select><div id="tip-co2-info-${v.id}" class="hidden mt-2 p-3 bg-blue-800 text-white rounded-xl text-[10px] leading-relaxed shadow-xl absolute z-[60] w-48 border border-blue-400 right-0"><p class="font-bold mb-1">Cargos CO2:</p><p class="text-left">• Menos de 120g: <span class="font-bold">0%</span></p><p class="text-left">• 120-220g: <span class="font-bold">1%</span></p><p class="text-left">• 220-380g: <span class="font-bold">2%</span></p><p class="text-left">• 380g+: <span class="font-bold">3%</span></p><p class="text-left">• Sin dato: <span class="font-bold">3%</span></p><p class="text-left mt-1">Híbridos y eléctricos: se cobra sobre el <span class="font-bold">50% del CIF</span>.</p></div></div></div>
                             </div>
                         </div>
                     </div>

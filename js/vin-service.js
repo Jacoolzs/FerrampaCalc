@@ -37,6 +37,7 @@ export async function fetchVINData(vin) {
                 name: `${res.Make} ${res.Model}`.trim(),
                 year: parseInt(res.ModelYear) || CURRENT_YEAR,
                 engineType: (fuel.includes('electric') || fuel.includes('hybrid')) ? 'hybrid_electric' : 'gas',
+                esElectrico: fuel.trim() === 'electric',
                 pais: paisDesdeNHTSA(plantCountry) || paisVin,
                 plantCountry: plantCountry
             };

@@ -26,7 +26,9 @@ export function calcularImpuestosIndividual(v, config) {
 
     // Placa
     const pPctBase = (v.engineType === 'hybrid_electric') ? 0.085 : 0.17;
-    const totalPlacaPct = pPctBase + parseFloat(v.co2Pct || 0);
+    // DGII: en vehículos de la Ley 103-13, el 17% y el CO2 se calculan sobre el 50% del CIF.
+    const co2Efectivo = parseFloat(v.co2Pct || 0) * (v.engineType === 'hybrid_electric' ? 0.5 : 1);
+    const totalPlacaPct = pPctBase + co2Efectivo;
 
     // ITBIS
     const itbisRate = (v.engineType === 'hybrid_electric') ? 0.09 : 0.18;
