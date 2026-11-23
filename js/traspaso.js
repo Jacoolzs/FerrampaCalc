@@ -82,11 +82,12 @@ function construirAvisos(r, datos) {
         if (!a.fecha) return;
         const dias = Math.round((a.limite - hoy) / 86400000);
         if (a.meses === 0 && dias <= 15) lista.push(aviso(dias === 0 ? `Hoy es el último día para pagar el ${nombre} sin recargos.` : `Le ${dias === 1 ? 'queda 1 día' : `quedan ${dias} días`} para pagar el ${nombre} sin recargos.`, 'warn'));
-        if (a.meses > 0 && hoy <= a.limiteHabil) lista.push(aviso(`La Norma 03-2025 da 90 días hábiles, que en su ${nombre} llegan al ${fecha(a.limiteHabil)}. La calculadora de la DGII ya muestra mora, así que confirme con la DGII antes de pagar.`, 'warn'));
+        if (hoy > a.fechaDgii && hoy <= a.limite) lista.push(aviso(`Por ley, el ${nombre} está en plazo hasta el ${fecha(a.limite)}. La calculadora publicada por la DGII puede mostrar mora desde el ${fecha(a.fechaDgii)}. Si se la cobran, pida la revisión citando el artículo 185 de la Ley 63-17.`, 'warn'));
+        if (a.meses > 0 && a.limite < parseFecha('2015-05-01')) lista.push(aviso('Antes de mayo de 2015 regía otra tasa de interés, así que el monto real puede variar.', 'warn'));
     });
     if (r.total > TASAS.umbralCheque) lista.push(aviso('Por superar RD$15,000, el pago debe hacerse con cheque certificado o de administración a nombre del Colector de Impuestos Internos.'));
     if (r.anterior) lista.push(aviso('Se incluye una sola impresión de matrícula. Confirme este cargo con la DGII en un doble traspaso.'));
-    if (hoy.getUTCFullYear() >= 2027 && (r.interes > 0)) lista.push(aviso('La DGII revisa la tasa de interés cada enero. Confirme el monto en su calculadora oficial.', 'warn'));
+    if (hoy.getUTCFullYear() >= 2027 && (r.interes > 0)) lista.push(aviso('La DGII fija la tasa de interés cada enero. Confirme que el 1.10% siga vigente antes de pagar.', 'warn'));
     if (datos.precioSinTabla) lista.push(aviso('Sin el valor de la tabla, el resultado puede quedar por debajo de lo que cobre la DGII.', 'warn'));
     return lista;
 }
@@ -115,12 +116,15 @@ function render() {
     if (!r) {
         $('tx-total').textContent = DGOP(0);
         $('tx-total-movil').textContent = DGOP(0);
+        $('tx-amnistia').hidden = true;
         ultimoResumen = '';
         return;
     }
 
     $('tx-total').textContent = DGOP(r.total);
     $('tx-total-movil').textContent = DGOP(r.total);
+    $('tx-amnistia').hidden = r.totalAmnistia === null;
+    if (r.totalAmnistia !== null) $('tx-amnistia-total').textContent = DGOP(r.totalAmnistia);
 
     const estadosLista = r.anterior ? [['Contrato anterior', r.anterior], ['Contrato actual', r.actual]] : [[null, r.actual]];
     estadosLista.forEach(([titulo, acto]) => {
@@ -147,7 +151,7 @@ function render() {
     agregar('Impresión de matrícula', r.matricula);
 
     avisos.append(...construirAvisos(r, { precioSinTabla: precio > 0 && valorTabla === 0 }));
-    ultimoResumen = ['Estimado de traspaso en la DGII', ...lineas, `Total estimado: ${DGOP(r.total)}`, 'Calculado en ferrampalogistics.com/calculadora-traspaso'].join('\n');
+    ultimoResumen = ['Estimado de traspaso en la DGII', ...lineas, `Total estimado: ${DGOP(r.total)}`, ...(r.totalAmnistia !== null ? [`Con la amnistía, si se solicita hasta el 31 de diciembre de 2026: ${DGOP(r.totalAmnistia)}`] : []), 'Calculado en ferrampalogistics.com/calculadora-traspaso'].join('\n');
 }
 
 async function copiar() {
