@@ -9,7 +9,24 @@ import {
     getHistory 
 } from './history.js';
 import { fetchVINData } from './vin-service.js';
-import { GRUPOS_PAISES, TRATADOS, nombrePais, normalizarOrigen, tratadoDePais } from './tratados.js';
+import { GRUPOS_PAISES, TRATADOS, VOLANTE_DERECHA, esPreferencial, nombrePais, normalizarOrigen, tratadoDePais } from './tratados.js';
+
+const PDF_LIBS = [
+    'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js',
+];
+let pdfLibsPromise = null;
+
+function cargarLibreriasPDF() {
+    pdfLibsPromise ??= PDF_LIBS.reduce((previa, src) => previa.then(() => new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = resolve;
+        script.onerror = () => reject(new Error('No se pudo cargar el generador de PDF.'));
+        document.head.appendChild(script);
+    })), Promise.resolve()).catch((error) => { pdfLibsPromise = null; throw error; });
+    return pdfLibsPromise;
+}
 import { generatePDF, generateExcel } from './report-export.js';
 
 let vehicles = [];
@@ -26,6 +43,11 @@ function sugerirCo2(v, esElectrico = false) {
 }
 
 function avisoTratado(v) {
+    const volante = VOLANTE_DERECHA.has(v.pais) ? `<p class="alert alert--bad mt-2">Verifique que tenga el volante a la izquierda. La DGA prohíbe importar vehículos con volante a la derecha y ordena su comiso. <a href="/guia-importacion-2026#requisitos">Ver la regla</a></p>` : '';
+    return avisoBase(v) + volante;
+}
+
+function avisoBase(v) {
     const clave = tratadoDePais(v.pais);
     if (!clave) return `<p class="note-row">Sin tratado vigente para este país: aplica el arancel general.</p>`;
     const t = TRATADOS[clave];
@@ -108,7 +130,7 @@ export async function handleContactSubmit(form) {
                 name: name,
                 email: email,
                 message: message,
-                _subject: `Nueva consulta de ImportCalc Pro: ${name}`,
+                _subject: `Nueva consulta de Ferrampa Logistics: ${name}`,
                 _captcha: "false"
             })
         });
@@ -407,9 +429,9 @@ export function renderVehicles() {
                         <div class="field"><label for="pais-${v.id}" class="label">País de fabricación</label><select id="pais-${v.id}" onchange="window.updateVehicleData(${v.id}, 'pais', this.value)" class="input">${opcionesPais(v.pais)}</select>${avisoTratado(v)}</div>
                         <div class="grid-2">
                             <div class="field"><label class="label" for="motor-${v.id}">Motor</label><select id="motor-${v.id}" onchange="window.updateVehicleData(${v.id}, 'engineType', this.value)" class="input"><option value="gas" ${v.engineType === 'gas' ? 'selected' : ''}>Gasolina</option><option value="hybrid_electric" ${v.engineType === 'hybrid_electric' ? 'selected' : ''}>Híbrido o eléctrico</option></select></div>
-                            <div class="field"><label class="label" for="co2-${v.id}">Emisiones de CO2</label><select id="co2-${v.id}" onchange="window.updateVehicleData(${v.id}, 'co2Pct', this.value)" class="input"><option value="0.00" ${v.co2Pct == 0 ? 'selected' : ''}>0% (menos de 120 g)</option><option value="0.01" ${v.co2Pct == 0.01 ? 'selected' : ''}>1% (120-220 g)</option><option value="0.02" ${v.co2Pct == 0.02 ? 'selected' : ''}>2% (220-380 g)</option><option value="0.03" ${v.co2Pct == 0.03 ? 'selected' : ''}>3% (380 g+ o sin dato)</option></select></div>
+                            <div class="field"><label class="label" for="co2-${v.id}">Emisiones de CO2</label><select id="co2-${v.id}" onchange="window.updateVehicleData(${v.id}, 'co2Pct', this.value)" class="input"><option value="0.00" ${v.co2Pct == 0 ? 'selected' : ''}>0% (menos de 120 g o exento)</option><option value="0.01" ${v.co2Pct == 0.01 ? 'selected' : ''}>1% (120-220 g)</option><option value="0.02" ${v.co2Pct == 0.02 ? 'selected' : ''}>2% (220-380 g)</option><option value="0.03" ${v.co2Pct == 0.03 ? 'selected' : ''}>3% (más de 380 g o sin dato)</option></select></div>
                         </div>
-                        <p class="help" style="margin-top:-6px">${esLimpio ? 'En híbridos y eléctricos, el CO2 se cobra sobre el 50% del CIF.' : 'Sin dato del fabricante se aplica 3%.'}</p>
+                        <p class="help" style="margin-top:-6px">${esLimpio ? 'En híbridos y eléctricos, el CO2 se cobra sobre el 50% del CIF.' : 'Sin dato del fabricante se aplica 3%. Ciertos vehículos de carga están exentos.'}</p>
                     </div>
                     <div class="vehicle-result">
                         <h3>Impuestos de este vehículo</h3>
@@ -418,6 +440,7 @@ export function renderVehicles() {
                         <div class="result-row"><span id="v-lbl-placa-${v.id}">Placa y CO2</span><span id="v-res-placa-${v.id}">RD$ 0.00</span></div>
                         <div class="result-row"><span>Servicio aduanero</span><span id="v-res-service-${v.id}">RD$ 0.00</span></div>
                         <div class="result-total"><span>Subtotal</span><span id="v-res-total-${v.id}">RD$ 0.00</span></div>
+                        <div class="result-row" id="v-no-treaty-row-${v.id}" hidden><span>Sin tratado</span><span id="v-res-no-treaty-${v.id}">RD$ 0.00</span></div>
                     </div>
                 </div>
             `;
@@ -485,6 +508,7 @@ export function calculateAll() {
         isAuto: isAuto
     };
 
+    let tSinTratado = 0, hayTratado = false;
     let tAra = 0, tItb = 0, tPla = 0, tSer = 0, tFob = 0, tCif = 0, tSeg = 0, tFle = 0, tOtr = 0;
 
     vehicles.forEach(v => {
@@ -496,6 +520,10 @@ export function calculateAll() {
 
         const res = calcularImpuestosIndividual(v, config);
         v.results = res;
+        const conTratado = esPreferencial(v.origen);
+        const resSinTratado = conTratado ? calcularImpuestosIndividual({ ...v, origen: 'otros' }, config) : res;
+        tSinTratado += resSinTratado.total;
+        hayTratado ||= conTratado;
 
         const ue = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
         const ueh = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
@@ -508,6 +536,9 @@ export function calculateAll() {
         ue(`v-res-placa-${v.id}`, formatDOP(res.placa));
         ueh(`v-lbl-placa-${v.id}`, `Placa y CO2 (${(res.placaPct * 100).toFixed(1)}%)`);
         ue(`v-res-total-${v.id}`, formatDOP(res.subtotal));
+        ue(`v-res-no-treaty-${v.id}`, formatDOP(resSinTratado.total));
+        const filaSinTratado = document.getElementById(`v-no-treaty-row-${v.id}`);
+        if (filaSinTratado) filaSinTratado.hidden = !conTratado;
 
         tAra += res.gravamen; tItb += res.itbis; tPla += res.placa; tSer += res.service;
         tFob += v.fob; tCif += res.cif;
@@ -534,6 +565,9 @@ export function calculateAll() {
     ug('res-total-global', formatDOP(totalFinal));
     ug('res-total-usd', formatUSD(totalFinal / tasa));
     ug('nav-total', formatDOP(totalFinal));
+    ug('g-total-sin-tratado', formatDOP(tSinTratado));
+    const avisoSinTratado = document.getElementById('g-no-treaty');
+    if (avisoSinTratado) avisoSinTratado.hidden = !hayTratado;
     ug('g-tax-arancel', formatDOP(tAra));
     ug('g-tax-itbis', formatDOP(tItb));
     ug('g-tax-placa', formatDOP(tPla));
@@ -541,8 +575,9 @@ export function calculateAll() {
 }
 
 // ─── Export (Delegado a report-export.js) ────────────────────────────────────
-export function exportToPDF(vId = null) {
+export async function exportToPDF(vId = null) {
     try {
+        await cargarLibreriasPDF();
         const tasa = parseFloat(document.getElementById('global-tasa')?.value || 60);
         generatePDF(vehicles, vId, tasa);
 

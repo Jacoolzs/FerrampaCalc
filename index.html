@@ -38,9 +38,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <link rel="stylesheet" href="css/tailwind.css">
     <link rel="stylesheet" href="css/styles.css">
 
@@ -171,7 +168,7 @@
                             <label class="label" for="entidad">Tipo de importador</label>
                             <select id="entidad" onchange="window.handleUIChange()" class="input">
                                 <option value="fisica">Persona física (20% arancel)</option>
-                                <option value="dealer">Dealer certificado (10% arancel)</option>
+                                <option value="dealer">Dealer certificado (10%, tasa de referencia)</option>
                             </select>
                         </div>
                         <div class="field">
@@ -235,6 +232,7 @@
                 <h2 id="titulo-resumen" class="text-base font-bold mb-1">Total estimado de impuestos</h2>
                 <p id="res-total-global" class="summary-total" aria-live="polite">RD$ 0.00</p>
                 <p id="res-total-usd" class="summary-usd">$ 0.00 USD</p>
+                <div id="g-no-treaty" class="no-treaty" hidden><span>Si no puede demostrar el origen</span><strong id="g-total-sin-tratado">RD$ 0.00</strong></div>
                 <div class="summary-list">
                     <h3>Impuestos</h3>
                     <div class="result-row"><span>Arancel</span><span id="g-tax-arancel">RD$ 0.00</span></div>
@@ -291,6 +289,7 @@
                         </tbody>
                     </table>
                 </div>
+                <p class="help mt-3">La tasa de dealer es de referencia y no la confirmamos en una fuente oficial pública. Valide su caso con un gestor.</p>
             </section>
 
             <section aria-labelledby="guias-home">

@@ -27,6 +27,9 @@ export const GRUPOS_PAISES = [
 
 const POR_CODIGO = new Map(GRUPOS_PAISES.flatMap(g => g.paises.map(([codigo, nombre]) => [codigo, { nombre, tratado: g.tratado }])));
 
+// Países de circulación por la izquierda donde es común el volante a la derecha.
+export const VOLANTE_DERECHA = new Set(['JP', 'GB', 'IE', 'CY', 'MT']);
+
 export const nombrePais = (codigo) => POR_CODIGO.get(codigo)?.nombre || 'Otro país';
 export const tratadoDePais = (codigo) => POR_CODIGO.get(codigo)?.tratado || null;
 export const esPreferencial = (origen) => Object.hasOwn(TRATADOS, origen);

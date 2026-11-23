@@ -91,7 +91,7 @@ export function generatePDF(vehicles, vId = null, tasa = 60) {
     doc.setFontSize(8);
     doc.setTextColor(150);
     doc.text('Nota: Estos valores son referenciales basados en la tasa del día. La liquidación oficial es emitida por la DGA.', 14, finalY);
-    doc.text('Generado por Ferrampa Logistics ImportCalc.', 14, finalY + 5);
+    doc.text('Generado por Ferrampa Logistics.', 14, finalY + 5);
 
     doc.save(`Cotizacion_Ferrampa_${vId ? 'Vehiculo' : 'General'}.pdf`);
 }
@@ -113,5 +113,5 @@ export function generateExcel(vehicles) {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new(); 
     XLSX.utils.book_append_sheet(wb, ws, 'Cotización');
-    XLSX.writeFile(wb, 'ImportCalc_RD.xlsx');
+    XLSX.writeFile(wb, 'Ferrampa_Calculo.xlsx');
 }
