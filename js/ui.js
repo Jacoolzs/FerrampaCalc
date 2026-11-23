@@ -583,6 +583,10 @@ export function calculateAll() {
     const avisoNo103 = document.getElementById('g-no-103');
     if (avisoNo103) avisoNo103.hidden = !hayLimpio;
     ug('g-no-103-label', hayTratado ? 'Si no cumple el tratado ni la Ley 103-13' : 'Si no cumple la Ley 103-13');
+    const tPercepcion = vehicles.reduce((acc, v) => acc + (v.results?.percepcion || 0), 0);
+    ug('g-total-percepcion', formatDOP(totalFinal + tPercepcion));
+    const avisoPercepcion = document.getElementById('g-percepcion');
+    if (avisoPercepcion) avisoPercepcion.hidden = tPercepcion <= 0;
     ug('g-tax-arancel', formatDOP(tAra));
     ug('g-tax-itbis', formatDOP(tItb));
     ug('g-tax-placa', formatDOP(tPla));
@@ -625,6 +629,7 @@ export function shareWhatsApp() {
     const lineas = [`Estimación de impuestos para importar a RD: ${texto('res-total-global')}`];
     if (visible('g-no-treaty')) lineas.push(`Si no demuestra el origen: ${texto('g-total-sin-tratado')}`);
     if (visible('g-no-103')) lineas.push(`${texto('g-no-103-label')}: ${texto('g-total-no-103')}`);
+    if (visible('g-percepcion')) lineas.push(`Si la DGA aplica la percepción de ITBIS: ${texto('g-total-percepcion')}`);
     lineas.push('El monto final lo determina la DGA.', 'https://ferrampalogistics.com/');
     window.open(`https://wa.me/?text=${encodeURIComponent(lineas.join('\n'))}`, '_blank');
 }

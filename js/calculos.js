@@ -45,6 +45,7 @@ return {
     service: sDOP,
     subtotal: gD + iD + pD + sDOP,
     total: gD + iD + pD + sDOP,
+    percepcion: config.entidad === 'dealer' ? 0 : iD * 0.30, // Ley 30-26, art. 354-1: escenario, no se suma al total
     gravPct: fG,
     placaPct: totalPlacaPct,
     itbisPct: itbisRate,
