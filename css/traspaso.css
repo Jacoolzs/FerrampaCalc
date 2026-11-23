@@ -1,0 +1,37 @@
+/* Calculadora de traspaso: usa los tokens de styles.css */
+.tx-label-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.calc-hero .trust-list a { display: inline-flex; align-items: center; min-height: 44px; }
+.tx-fields { display: grid; gap: 18px; }
+.tx-sources { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tx-sources a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px; background: var(--accent-soft); color: var(--text); border-radius: var(--radius-sm); font-size: 14px; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; transition: background-color .15s; }
+.tx-sources a:hover { background: var(--surface-2); }
+.tx-error { margin-top: 6px; color: var(--bad); font-size: 14px; font-weight: 700; }
+.input[aria-invalid="true"] { border-color: var(--bad); }
+input[type="date"].input { appearance: none; -webkit-appearance: none; }
+.dark input[type="date"].input { color-scheme: dark; }
+.tx-panel { display: grid; gap: 16px; margin-top: 12px; padding-top: 16px; border-top: 1px solid var(--border); }
+.tx-estados { display: grid; gap: 6px; margin-top: 14px; }
+.tx-status { padding: 8px 12px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 700; line-height: 1.35; }
+.tx-status--ok { background: var(--ok-soft); color: var(--ok); }
+.tx-status--bad { background: var(--bad-soft); color: var(--bad); }
+.tx-status--neutral { background: var(--surface-2); color: var(--muted); }
+.tx-estados:empty, #tx-detalle:empty { display: none; }
+.tx-vacio { margin-top: 14px; color: var(--muted); font-size: 15px; }
+.tx-avisos { display: grid; gap: 8px; margin-top: 14px; }
+.tx-avisos:empty { display: none; }
+.tx-alert { padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--surface-2); font-size: 14px; line-height: 1.45; color: var(--text); }
+.tx-alert--warn { border-left-color: var(--sun); background: var(--warn-soft); }
+.tx-acciones { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+.tx-acciones .btn { padding: 0 8px; font-size: 15px; }
+.tx-acciones .btn:disabled { opacity: .55; cursor: not-allowed; }
+.tx-copiado { min-height: 20px; margin-top: 6px; color: var(--ok); font-size: 14px; font-weight: 700; text-align: center; }
+.tx-excluye { margin-top: 10px; color: var(--muted); font-size: 13.5px; line-height: 1.45; }
+.formula--tx { list-style: none; padding: 0; }
+@media (min-width: 1040px) { .formula--tx { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.tx-prose { max-width: 76ch; margin-top: 14px; color: var(--muted); font-size: 17px; line-height: 1.65; }
+.tx-prose + .tx-prose { margin-top: 10px; }
+.tx-list { display: grid; gap: 8px; max-width: 76ch; margin-top: 14px; padding-left: 22px; color: var(--muted); font-size: 17px; line-height: 1.55; list-style: disc; }
+.tx-list--num { list-style: decimal; }
+.tx-list strong, .tx-prose strong { color: var(--text); }
+.tx-aviso-final { max-width: 76ch; margin-top: 18px; padding: 14px 16px; background: var(--warn-soft); border-radius: var(--radius); font-size: 15px; line-height: 1.5; }
+@media print { .tx-sources, .tx-acciones, .tx-copiado { display: none !important; } }
