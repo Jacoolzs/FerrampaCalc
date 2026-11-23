@@ -74,6 +74,11 @@ export function generatePDF(vehicles, vId = null, tasa = 60) {
         doc.text(`${etiquetaNo103}: ${formatDOP(totalEscenario('noCalifica'))}`, 14, currentY);
         currentY += 5;
     }
+    const percepcion = items.reduce((acc, v) => acc + (v.results.percepcion || 0), 0);
+    if (percepcion > 0) {
+        doc.text(`Si la DGA aplica la percepción de ITBIS (Ley 30-26): ${formatDOP(totalEscenario('subtotal') + percepcion)}`, 14, currentY);
+        currentY += 5;
+    }
     doc.setFont('helvetica', 'normal');
     currentY += 7;
 
