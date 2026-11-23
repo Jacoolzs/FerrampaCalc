@@ -39,6 +39,9 @@
         privacyBtn.addEventListener('click', () => window.googlefc.showRevocationMessage?.());
     }
 
+    const ajustes = document.getElementById('ajustes');
+    if (ajustes && window.matchMedia('(max-width: 639px)').matches) ajustes.open = false;
+
     const top = document.getElementById('back-top');
     if (top) {
         const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;

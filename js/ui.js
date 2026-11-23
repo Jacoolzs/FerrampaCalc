@@ -636,6 +636,7 @@ export function initApp() {
         
         // Cargar Historial
         initHistory();
+        renderHistory();
 
         const saved = localStorage.getItem('importcalc_data');
         if (saved) {

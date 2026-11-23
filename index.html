@@ -37,7 +37,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,400;0,600;0,700;1,400&family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/tailwind.css">
     <link rel="stylesheet" href="css/styles.css">
 
@@ -157,7 +157,7 @@
     </header>
 
         <main id="contenido" tabindex="-1">
-        <section class="calc-hero" aria-labelledby="titulo-calculadora">
+        <div class="hero-band"><section class="calc-hero" aria-labelledby="titulo-calculadora">
             <h1 id="titulo-calculadora">Calculadora de impuestos para importar un vehículo a RD</h1>
             <p>Estime arancel, ITBIS, primera placa, CO2 y servicio aduanero antes de comprar.</p>
             <ul class="trust-list">
@@ -165,7 +165,7 @@
                 <li><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Tratados según el país</li>
                 <li><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><a class="text-link" href="/tasas-vigentes">Ver tasas y fuentes</a></li>
             </ul>
-        </section>
+        </section></div>
 
         <div class="calc-layout">
             <div class="calc-main">
@@ -187,7 +187,8 @@
                             <div class="input-prefix"><span aria-hidden="true">RD$</span><input type="number" id="global-tasa" value="60.00" step="0.05" min="0" inputmode="decimal" class="input"></div>
                         </div>
                     </div>
-                    <div class="grid-2 mt-3">
+                    <details id="ajustes" class="ajustes" open><summary>Ajustes de tasa, seguro y flete<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary>
+<div class="grid-2 mt-3">
                         <label class="switch">
                             <input type="checkbox" id="check-auto-tasa" onchange="window.toggleAutoTasa()">
                             <span class="switch__track" aria-hidden="true"></span>
@@ -211,6 +212,7 @@
                             <div class="field"><label class="label" for="g-otros">Otros gastos (US$)</label><input type="number" id="g-otros" value="0" min="0" inputmode="decimal" class="input"></div>
                         </div>
                     </div>
+                    </details>
                 </section>
 
                 <section aria-labelledby="paso-vehiculos">
@@ -232,10 +234,11 @@
                     </section>
             </div>
 
-            <aside id="resumen" class="calc-aside card" aria-labelledby="titulo-resumen">
-                <h2 id="titulo-resumen" class="text-base font-bold mb-1">Total estimado de impuestos</h2>
+            <aside id="resumen" class="calc-aside receipt" aria-labelledby="titulo-resumen">
+                <div class="receipt__head"><h2 id="titulo-resumen">Liquidación estimada</h2>
                 <p id="res-total-global" class="summary-total" aria-live="polite">RD$ 0.00</p>
-                <p id="res-total-usd" class="summary-usd">$ 0.00 USD</p>
+                <p id="res-total-usd" class="summary-usd">$ 0.00 USD</p></div>
+                <div class="receipt__body">
                 <div id="g-no-treaty" class="no-treaty" hidden><span>Si no puede demostrar el origen</span><strong id="g-total-sin-tratado">RD$ 0.00</strong></div>
                 <div class="summary-list">
                     <h3>Impuestos</h3>
@@ -263,6 +266,7 @@
                     </button>
                 </div>
                 <p class="help mt-3">Estimación informativa. El monto final lo determina la DGA al liquidar. No incluye <a class="text-link" href="/guia-gastos-locales">gastos de puerto</a>.</p>
+            </div>
             </aside>
         </div>
 
@@ -271,12 +275,13 @@
                 <p class="eyebrow">Cómo funciona</p>
                 <h2 id="como-calcula" class="section-title">Cómo se calculan los impuestos</h2>
                 <p class="section-lead">La DGA y la DGII parten del valor <strong>CIF</strong>: costo del vehículo, seguro y flete. Estos son los cuatro pasos principales.</p>
-                <div class="how-grid">
-                    <article class="card"><span class="step-num" aria-hidden="true">1</span><h3>Base CIF</h3><p>Suma el valor FOB, el seguro y el flete, y lo convierte a pesos.</p></article>
-                    <article class="card"><span class="step-num" aria-hidden="true">2</span><h3>Arancel</h3><p>20% del CIF, o 10% para dealers. Baja a 0% si el vehículo califica para DR-CAFTA, EPA o el acuerdo con Reino Unido.</p></article>
-                    <article class="card"><span class="step-num" aria-hidden="true">3</span><h3>ITBIS</h3><p>18% sobre el CIF más el arancel. Híbridos y eléctricos pagan 9% por la Ley 103-13.</p></article>
-                    <article class="card"><span class="step-num" aria-hidden="true">4</span><h3>Primera placa y CO2</h3><p>17% del CIF más 0% a 3% según emisiones. En híbridos y eléctricos se calcula sobre el 50% del CIF.</p></article>
-                </div>
+                <ol class="formula">
+                    <li><span>Base</span><strong>CIF</strong><p>Valor FOB, seguro y flete, convertidos a pesos.</p></li>
+                    <li><span>0%, 10% o 20%</span><strong>Arancel</strong><p>Baja a 0% si el vehículo califica para DR-CAFTA, EPA o el acuerdo con Reino Unido.</p></li>
+                    <li><span>18% o 9%</span><strong>ITBIS</strong><p>Sobre CIF más arancel. Híbridos y eléctricos pagan 9%.</p></li>
+                    <li><span>17% + 0% a 3%</span><strong>Placa y CO2</strong><p>En híbridos y eléctricos se calcula sobre el 50% del CIF.</p></li>
+                    <li><span>US$100</span><strong>Servicio</strong><p>Cargo fijo por vehículo, pagado en pesos.</p></li>
+                </ol>
                 <p class="mt-4"><a class="text-link" href="/guia-impuestos-importacion">Ver fórmulas y ejemplos completos</a></p>
             </section>
 
