@@ -27,9 +27,9 @@ function sugerirCo2(v, esElectrico = false) {
 
 function avisoTratado(v) {
     const clave = tratadoDePais(v.pais);
-    if (!clave) return `<p class="mt-2 text-[11px] leading-snug text-slate-600 dark:text-slate-300">Sin tratado vigente para este país: aplica el arancel general.</p>`;
+    if (!clave) return `<p class="note-row">Sin tratado vigente para este país: aplica el arancel general.</p>`;
     const t = TRATADOS[clave];
-    return `<label class="mt-2 flex items-start gap-2 text-[11px] leading-snug text-slate-600 dark:text-slate-300 cursor-pointer"><input type="checkbox" ${v.aplicarTratado ? 'checked' : ''} onchange="window.updateVehicleData(${v.id}, 'aplicarTratado', this.checked)" class="mt-0.5 w-4 h-4 flex-shrink-0"><span>Aplicar <strong>${t.nombre}</strong> (0% arancel). Requiere ${t.prueba} y cumplir la regla de origen.</span></label>`;
+    return `<label class="check-row"><input type="checkbox" ${v.aplicarTratado ? 'checked' : ''} onchange="window.updateVehicleData(${v.id}, 'aplicarTratado', this.checked)"><span>Aplicar <strong>${t.nombre}</strong> (0% arancel). Requiere ${t.prueba} y cumplir la regla de origen.</span></label>`;
 }
 
 // ─── Chart Management ───────────────────────────────────────────────────────
@@ -323,8 +323,8 @@ export function updateVehicleData(id, field, value) {
         const b = document.getElementById(`badge-year-${id}`);
         if (b) {
             const ok = v.year >= IMPORT_LIMIT_YEAR;
-            b.innerText = ok ? 'OK' : 'No Permitido';
-            b.className = `px-2 py-2 rounded-xl text-[8px] font-black uppercase text-center ${ok ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700 animate-pulse'}`;
+            b.innerText = ok ? 'Permitido' : 'No permitido';
+            b.className = `status ${ok ? 'status--ok' : 'status--bad'}`;
             const alertBox = document.getElementById(`alert-year-warning-${id}`);
             if (alertBox) {
                 ok ? alertBox.classList.add('hidden') : alertBox.classList.remove('hidden');
@@ -370,49 +370,54 @@ export function renderVehicles() {
         vehicles.forEach((v, index) => {
             const isOk = v.year >= IMPORT_LIMIT_YEAR;
             const card = document.createElement('div');
-            card.className = 'vehicle-card glass-card p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm transition-all text-left relative';
+            card.className = 'vehicle-card card';
 
             // FIX 2: "otros" por vehículo cuando shared is OFF
             const perVehicleCosts = !sh ? `
-                <div class="grid grid-cols-3 gap-2 p-2 bg-slate-50 dark:bg-slate-800/50 rounded-2xl text-left">
-                    <div><label class="text-[9px] font-bold text-slate-400">Seguro (USD)</label><input type="number" value="${v.seguro}" oninput="window.updateVehicleData(${v.id}, 'seguro', this.value)" class="w-full p-1.5 border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg text-[11px] text-left"></div>
-                    <div><label class="text-[9px] font-bold text-slate-400">Flete (USD)</label><input type="number" value="${v.flete}" oninput="window.updateVehicleData(${v.id}, 'flete', this.value)" class="w-full p-1.5 border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg text-[11px] text-left"></div>
-                    <div><label class="text-[9px] font-bold text-slate-400">Otros (USD)</label><input type="number" value="${v.otros}" oninput="window.updateVehicleData(${v.id}, 'otros', this.value)" class="w-full p-1.5 border border-slate-200 dark:border-slate-600 bg-white dark:bg-slate-900 rounded-lg text-[11px] text-left"></div>
-                </div>` : '';
+                <fieldset class="grid-3">
+                    <legend class="label">Costos de este vehículo (US$)</legend>
+                    <div class="field"><label class="help" style="margin:0 0 4px" for="seguro-${v.id}">Seguro</label><input id="seguro-${v.id}" type="number" min="0" inputmode="decimal" value="${v.seguro}" oninput="window.updateVehicleData(${v.id}, 'seguro', this.value)" class="input"></div>
+                    <div class="field"><label class="help" style="margin:0 0 4px" for="flete-${v.id}">Flete</label><input id="flete-${v.id}" type="number" min="0" inputmode="decimal" value="${v.flete}" oninput="window.updateVehicleData(${v.id}, 'flete', this.value)" class="input"></div>
+                    <div class="field"><label class="help" style="margin:0 0 4px" for="otros-${v.id}">Otros</label><input id="otros-${v.id}" type="number" min="0" inputmode="decimal" value="${v.otros}" oninput="window.updateVehicleData(${v.id}, 'otros', this.value)" class="input"></div>
+                </fieldset>` : '';
 
+            const esLimpio = v.engineType === 'hybrid_electric';
             card.innerHTML = `
-                <div class="flex justify-between items-center mb-4">
-                    <div class="flex items-center gap-2 w-full text-left"><span class="bg-blue-600 text-white font-black px-2 py-1 rounded-md text-[9px] uppercase">V#${index + 1}</span><input type="text" value="${v.name}" oninput="window.updateVehicleData(${v.id}, 'name', this.value)" class="w-full bg-transparent border-b border-transparent hover:border-slate-200 dark:hover:border-slate-700 focus:border-blue-500 outline-none font-bold text-slate-700 dark:text-slate-200 py-1 text-sm text-left"></div>
-                    <div class="flex items-center gap-1">
-                        <button onclick="window.exportSinglePDF(${v.id})" class="p-2 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></button>
-                        <button onclick="window.removeVehicle(${v.id})" class="p-2 text-slate-300 hover:text-red-500 rounded-lg"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg></button>
-                    </div>
+                <div class="vehicle-card__head">
+                    <span class="vehicle-tag">Vehículo ${index + 1}</span>
+                    <label class="sr-only" for="name-${v.id}">Nombre del vehículo ${index + 1}</label>
+                    <input id="name-${v.id}" type="text" value="${v.name}" oninput="window.updateVehicleData(${v.id}, 'name', this.value)" class="vehicle-name">
+                    <button type="button" onclick="window.exportSinglePDF(${v.id})" class="icon-btn" aria-label="Descargar PDF del vehículo ${index + 1}"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/><path d="M12 15V3"/></svg></button>
+                    <button type="button" onclick="window.removeVehicle(${v.id})" class="icon-btn icon-btn--danger" aria-label="Eliminar vehículo ${index + 1}"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
                 </div>
-                <div class="mb-6"><div class="flex items-center justify-between mb-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">VIN NUMBER (OPCIONAL)</label><button onclick="document.getElementById('tip-vin-info-${v.id}').classList.toggle('hidden')" class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black hover:bg-blue-600 hover:text-white transition-all shadow-sm">?</button></div><div class="flex gap-2 relative"><input type="text" value="${v.vin}" maxlength="17" oninput="window.updateVehicleData(${v.id}, 'vin', this.value.toUpperCase())" class="flex-1 p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl font-mono text-[11px] outline-none uppercase focus:ring-1 focus:ring-blue-500"><button id="btn-vin-${v.id}" onclick="window.decodeVIN(${v.id})" class="${v.vin.length < 11 ? 'hidden' : ''} bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 px-2 rounded-xl border border-blue-100 dark:border-blue-800 font-bold text-[9px]">AUTO</button><div id="tip-vin-info-${v.id}" class="hidden mt-10 p-3 bg-blue-800 text-white rounded-xl text-[10px] leading-relaxed shadow-xl absolute z-[50] w-full border border-blue-400 text-left"><p class="font-bold mb-1 underline">Ayuda VIN:</p><p class="text-left">• Rellena: <span class="font-bold">País, Motor, Año y Arancel sugerido</span>.</p><p class="text-left">• <span class="text-amber-300 font-bold">No rellena</span>: Valor FOB ni Emisión CO2.</p><p class="mt-1 opacity-90 italic">Verifique que el nombre, motor y origen sean correctos.</p></div></div></div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="space-y-4">
-                        <div class="flex gap-4"><div class="flex-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">Año</label><input type="number" value="${v.year}" oninput="window.updateVehicleData(${v.id}, 'year', this.value)" class="w-full p-2 border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 rounded-xl font-bold text-xs text-left"></div><div class="flex-1 self-end"><div id="badge-year-${v.id}" class="px-2 py-2 rounded-xl text-[8px] font-black uppercase text-center ${isOk ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400' : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 animate-pulse'}">${isOk ? 'OK' : 'No Permitido'}</div></div></div>
-                        <div id="alert-year-warning-${v.id}" class="${isOk ? 'hidden' : ''} p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-900 rounded-2xl text-[10px] text-red-700 dark:text-red-300 leading-relaxed text-left">
-                            <span class="font-bold">⚠️ Restricción Legal DGA:</span> La ley prohíbe importar autos con más de 5 años (${IMPORT_LIMIT_YEAR} o anterior). <a href="/guia-importacion-2026" class="underline font-bold hover:text-red-900 dark:hover:text-white">Leer Regla de los 5 Años →</a>
+                <div class="vehicle-body">
+                    <div class="vehicle-fields">
+                        <div class="field">
+                            <label class="label" for="vin-${v.id}">VIN (opcional)</label>
+                            <div class="vin-row"><input id="vin-${v.id}" type="text" value="${v.vin}" maxlength="17" autocomplete="off" spellcheck="false" aria-describedby="vin-help-${v.id}" oninput="window.updateVehicleData(${v.id}, 'vin', this.value.toUpperCase())" class="input"><button type="button" id="btn-vin-${v.id}" onclick="window.decodeVIN(${v.id})" class="${v.vin.length < 11 ? 'hidden' : ''} btn btn-secondary">Completar</button></div>
+                            <p id="vin-help-${v.id}" class="help">Completa país, motor y año. Verifique el resultado.</p>
                         </div>
-                        <div class="text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">FOB (USD)</label><input type="number" value="${v.fob}" oninput="window.updateVehicleData(${v.id}, 'fob', this.value)" class="w-full p-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl font-bold text-blue-600 dark:text-blue-400 text-sm outline-none focus:ring-1 focus:ring-blue-500"></div>
+                        <div class="grid-2">
+                            <div class="field"><label class="label" for="year-${v.id}">Año</label><input id="year-${v.id}" type="number" inputmode="numeric" value="${v.year}" oninput="window.updateVehicleData(${v.id}, 'year', this.value)" class="input"></div>
+                            <div class="field"><span class="label">Antigüedad</span><div id="badge-year-${v.id}" class="status ${isOk ? 'status--ok' : 'status--bad'}">${isOk ? 'Permitido' : 'No permitido'}</div></div>
+                        </div>
+                        <div id="alert-year-warning-${v.id}" class="${isOk ? 'hidden' : ''} alert alert--bad" role="alert">La ley prohíbe importar vehículos con más de 5 años. <a href="/guia-importacion-2026#requisitos">Ver la regla</a></div>
+                        <div class="field"><label class="label" for="fob-${v.id}">Valor FOB (US$)</label><div class="input-prefix input-prefix--usd"><span aria-hidden="true">$</span><input id="fob-${v.id}" type="number" min="0" inputmode="decimal" value="${v.fob}" oninput="window.updateVehicleData(${v.id}, 'fob', this.value)" class="input"></div><p class="help">Precio del vehículo en origen, sin seguro ni flete.</p></div>
                         ${perVehicleCosts}
-                        <div class="grid grid-cols-1 gap-4">
-                            <div class="text-left"><label for="pais-${v.id}" class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">País de fabricación</label><select id="pais-${v.id}" onchange="window.updateVehicleData(${v.id}, 'pais', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold cursor-pointer text-left">${opcionesPais(v.pais)}</select>${avisoTratado(v)}</div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div class="flex-1 text-left"><label class="block text-[10px] font-bold text-slate-400 mb-1 uppercase">Motor</label><select onchange="window.updateVehicleData(${v.id}, 'engineType', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold cursor-pointer text-left"><option value="gas" ${v.engineType === 'gas' ? 'selected' : ''}>Gasolina</option><option value="hybrid_electric" ${v.engineType === 'hybrid_electric' ? 'selected' : ''}>Híbrido / Eléctrico</option></select></div>
-                                <div class="flex-1 text-left"><div class="flex items-center justify-between mb-1"><label class="block text-[10px] font-bold text-slate-400 uppercase">CO2</label><button onclick="document.getElementById('tip-co2-info-${v.id}').classList.toggle('hidden')" class="bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 w-4 h-4 rounded-full flex items-center justify-center text-[9px] font-black">?</button></div><div class="relative"><select onchange="window.updateVehicleData(${v.id}, 'co2Pct', this.value)" class="w-full p-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs font-bold text-left"><option value="0.00" ${v.co2Pct == 0 ? 'selected' : ''}>0% (menos de 120 g)</option><option value="0.01" ${v.co2Pct == 0.01 ? 'selected' : ''}>1% (120-220 g)</option><option value="0.02" ${v.co2Pct == 0.02 ? 'selected' : ''}>2% (220-380 g)</option><option value="0.03" ${v.co2Pct == 0.03 ? 'selected' : ''}>3% (380 g+ o sin dato)</option></select><div id="tip-co2-info-${v.id}" class="hidden mt-2 p-3 bg-blue-800 text-white rounded-xl text-[10px] leading-relaxed shadow-xl absolute z-[60] w-48 border border-blue-400 right-0"><p class="font-bold mb-1">Cargos CO2:</p><p class="text-left">• Menos de 120g: <span class="font-bold">0%</span></p><p class="text-left">• 120-220g: <span class="font-bold">1%</span></p><p class="text-left">• 220-380g: <span class="font-bold">2%</span></p><p class="text-left">• 380g+: <span class="font-bold">3%</span></p><p class="text-left">• Sin dato: <span class="font-bold">3%</span></p><p class="text-left mt-1">Híbridos y eléctricos: se cobra sobre el <span class="font-bold">50% del CIF</span>.</p></div></div></div>
-                            </div>
+                        <div class="field"><label for="pais-${v.id}" class="label">País de fabricación</label><select id="pais-${v.id}" onchange="window.updateVehicleData(${v.id}, 'pais', this.value)" class="input">${opcionesPais(v.pais)}</select>${avisoTratado(v)}</div>
+                        <div class="grid-2">
+                            <div class="field"><label class="label" for="motor-${v.id}">Motor</label><select id="motor-${v.id}" onchange="window.updateVehicleData(${v.id}, 'engineType', this.value)" class="input"><option value="gas" ${v.engineType === 'gas' ? 'selected' : ''}>Gasolina</option><option value="hybrid_electric" ${v.engineType === 'hybrid_electric' ? 'selected' : ''}>Híbrido o eléctrico</option></select></div>
+                            <div class="field"><label class="label" for="co2-${v.id}">Emisiones de CO2</label><select id="co2-${v.id}" onchange="window.updateVehicleData(${v.id}, 'co2Pct', this.value)" class="input"><option value="0.00" ${v.co2Pct == 0 ? 'selected' : ''}>0% (menos de 120 g)</option><option value="0.01" ${v.co2Pct == 0.01 ? 'selected' : ''}>1% (120-220 g)</option><option value="0.02" ${v.co2Pct == 0.02 ? 'selected' : ''}>2% (220-380 g)</option><option value="0.03" ${v.co2Pct == 0.03 ? 'selected' : ''}>3% (380 g+ o sin dato)</option></select></div>
                         </div>
+                        <p class="help" style="margin-top:-6px">${esLimpio ? 'En híbridos y eléctricos, el CO2 se cobra sobre el 50% del CIF.' : 'Sin dato del fabricante se aplica 3%.'}</p>
                     </div>
-                    <div class="bg-blue-50 dark:bg-blue-900/20 rounded-3xl p-5 flex flex-col justify-between border border-blue-100 dark:border-blue-800 h-full text-left">
-                        <div class="space-y-2 text-xs">
-                            <div class="flex justify-between text-slate-500 dark:text-slate-400 text-left"><span id="v-lbl-grav-${v.id}">Arancel:</span><span id="v-res-gravamen-${v.id}" class="text-slate-600 dark:text-slate-300 font-bold text-left">RD$ 0.00</span></div>
-                            <div class="flex justify-between text-slate-500 dark:text-slate-400 text-left"><span id="v-lbl-itbis-${v.id}">ITBIS:</span><span id="v-res-itbis-${v.id}" class="font-bold text-slate-600 dark:text-slate-300 text-left">RD$ 0.00</span></div>
-                            <div class="flex justify-between text-slate-500 dark:text-slate-400 text-left"><span><span class="font-bold text-slate-700 dark:text-slate-200">Serv. Aduana</span>:</span><span id="v-res-service-${v.id}" class="font-bold text-slate-500 dark:text-slate-400">RD$ 0.00</span></div>
-                            <div class="flex justify-between text-slate-500 dark:text-slate-400 text-left"><span id="v-lbl-placa-${v.id}">Placa:</span><span id="v-res-placa-${v.id}" class="font-bold text-blue-600 dark:text-blue-400 text-left">RD$ 0.00</span></div>
-                        </div>
-                        <div class="mt-4 pt-4 border-t border-blue-100 dark:border-blue-800 flex justify-between items-baseline"><span class="text-[9px] font-black uppercase text-slate-400">Subtotal</span><span id="v-res-total-${v.id}" class="text-xl font-black text-blue-700 dark:text-blue-400 text-right">RD$ 0.00</span></div>
+                    <div class="vehicle-result">
+                        <h3>Impuestos de este vehículo</h3>
+                        <div class="result-row"><span id="v-lbl-grav-${v.id}">Arancel</span><span id="v-res-gravamen-${v.id}">RD$ 0.00</span></div>
+                        <div class="result-row"><span id="v-lbl-itbis-${v.id}">ITBIS</span><span id="v-res-itbis-${v.id}">RD$ 0.00</span></div>
+                        <div class="result-row"><span id="v-lbl-placa-${v.id}">Placa y CO2</span><span id="v-res-placa-${v.id}">RD$ 0.00</span></div>
+                        <div class="result-row"><span>Servicio aduanero</span><span id="v-res-service-${v.id}">RD$ 0.00</span></div>
+                        <div class="result-total"><span>Subtotal</span><span id="v-res-total-${v.id}">RD$ 0.00</span></div>
                     </div>
                 </div>
             `;
@@ -496,12 +501,12 @@ export function calculateAll() {
         const ueh = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
 
         ue(`v-res-gravamen-${v.id}`, formatDOP(res.gravamen));
-        ueh(`v-lbl-grav-${v.id}`, `<span class="font-bold text-slate-700">Arancel</span> (${(res.gravPct * 100).toFixed(1)}%):`);
+        ueh(`v-lbl-grav-${v.id}`, `Arancel (${(res.gravPct * 100).toFixed(1)}%)`);
         ue(`v-res-itbis-${v.id}`, formatDOP(res.itbis));
-        ueh(`v-lbl-itbis-${v.id}`, `<span class="font-bold text-slate-700">ITBIS</span> (${(res.itbisPct * 100).toFixed(0)}%):`);
+        ueh(`v-lbl-itbis-${v.id}`, `ITBIS (${(res.itbisPct * 100).toFixed(0)}%)`);
         ue(`v-res-service-${v.id}`, formatDOP(res.service));
         ue(`v-res-placa-${v.id}`, formatDOP(res.placa));
-        ueh(`v-lbl-placa-${v.id}`, `<span class="font-bold text-slate-700">Placa</span> (${(res.placaPct * 100).toFixed(1)}%):`);
+        ueh(`v-lbl-placa-${v.id}`, `Placa y CO2 (${(res.placaPct * 100).toFixed(1)}%)`);
         ue(`v-res-total-${v.id}`, formatDOP(res.subtotal));
 
         tAra += res.gravamen; tItb += res.itbis; tPla += res.placa; tSer += res.service;
@@ -529,6 +534,10 @@ export function calculateAll() {
     ug('res-total-global', formatDOP(totalFinal));
     ug('res-total-usd', formatUSD(totalFinal / tasa));
     ug('nav-total', formatDOP(totalFinal));
+    ug('g-tax-arancel', formatDOP(tAra));
+    ug('g-tax-itbis', formatDOP(tItb));
+    ug('g-tax-placa', formatDOP(tPla));
+    ug('g-tax-servicio', formatDOP(tSer));
 }
 
 // ─── Export (Delegado a report-export.js) ────────────────────────────────────
