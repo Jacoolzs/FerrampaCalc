@@ -102,7 +102,7 @@
         "name": "¿Cuánto tiempo tengo para hacer el traspaso?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "La Norma General 03-2025 fija 90 días hábiles desde la firma. La calculadora oficial de la DGII empieza a cobrar mora al cumplirse 3 meses, o el siguiente día laborable, así que lo más seguro es pagar antes de esa fecha."
+          "text": "La Ley 63-17 y el Decreto 420-23 fijan 90 días laborables desde la firma del contrato. Esta calculadora sigue ese plazo. La calculadora publicada por la DGII puede mostrar mora desde los 3 meses, así que conviene no esperar al último día."
         }
       },
       {
@@ -119,6 +119,14 @@
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Ocurre cuando el vendedor compró el vehículo pero nunca lo puso a su nombre. Se paga 2% por cada contrato, es decir 4% en total si ambos tienen el mismo valor, y cada contrato puede tener sus propios recargos."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "¿La amnistía de 2026 aplica a un traspaso atrasado?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Sí puede aplicar. La Norma General 04-2026 incluye las deudas por transferencias de vehículos. Quien la solicite hasta el 31 de diciembre de 2026 paga el impuesto más el primer año de recargos e intereses."
         }
       }
     ]
@@ -145,8 +153,8 @@
             <h1 id="titulo-calculadora">Calculadora de traspaso de vehículos en RD</h1>
             <p>Sepa cuánto pagará en la DGII por poner un vehículo a su nombre, con recargos si ya pasó el plazo.</p>
             <ul class="trust-list">
-                <li><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Comparada con la calculadora de la DGII</li>
-                <li><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Incluye la Ley 30-26</li>
+                <li><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Según la Ley 63-17 y la Norma 03-2025</li>
+                <li><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Con la Ley 30-26 y la amnistía de 2026</li>
                 <li><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg><a class="text-link" href="#fuentes">Ver fuentes oficiales</a></li>
             </ul>
         </section></div>
@@ -210,6 +218,7 @@
                 <div class="receipt__body">
                     <p id="tx-vacio" class="tx-vacio">Escriba el precio del contrato o el valor de la tabla para ver el resultado.</p>
                     <div id="tx-estados" class="tx-estados"></div>
+                    <div id="tx-amnistia" class="no-treaty" hidden><span>Con la <a class="text-link" href="#amnistia">amnistía</a>, si la solicita hasta el 31 de diciembre de 2026</span><strong id="tx-amnistia-total">RD$ 0.00</strong></div>
                     <div id="tx-detalle" class="summary-list"></div>
                     <ul id="tx-avisos" class="tx-avisos"></ul>
                     <div class="tx-acciones">
@@ -259,6 +268,18 @@
                 <p class="tx-prose">Si ya tiene la placa, el chasis o la matrícula, use la <a class="text-link" href="https://dgii.gov.do/vehiculosMotor/consultas/Paginas/Valores-Fidedignos.aspx" target="_blank" rel="noopener noreferrer">consulta de valores fidedignos</a>. La tabla cambia con el tiempo, así que revísela el mismo día que vaya a pagar. Para conocer los documentos y los pasos, vea la <a class="text-link" href="/guia-traspaso-dgii">guía completa del traspaso</a>.</p>
             </section>
 
+            <section aria-labelledby="amnistia">
+                <p class="eyebrow">Hasta el 31 de diciembre de 2026</p>
+                <h2 id="amnistia" class="section-title">Amnistía para traspasos atrasados</h2>
+                <p class="tx-prose">La <a class="text-link" href="https://dgii.gov.do/legislacion/normasGenerales/Documents/Otras%20Normas%20de%20Inter%C3%A9s/norma04-26.pdf" target="_blank" rel="noopener noreferrer">Norma General 04-2026</a>, que aplica el artículo 8 de la Ley 30-26, incluye las deudas por transferencias de vehículos. Si tiene más de un año de atraso, puede pagar el impuesto más solo el <strong>primer año de recargos e intereses</strong>.</p>
+                <ul class="tx-list">
+                    <li><strong>Dónde solicitarla:</strong> en la Oficina Virtual o en su Administración Local, hasta el 31 de diciembre de 2026, inclusive.</li>
+                    <li><strong>Pago único:</strong> dentro de 30 días hábiles desde que la DGII notifique la aceptación.</li>
+                    <li><strong>Pago fraccionado:</strong> inicial de al menos 15% y cuotas mensuales por hasta 12 meses.</li>
+                    <li><strong>Cuidado:</strong> dejar de pagar tres cuotas consecutivas hace perder el beneficio.</li>
+                </ul>
+            </section>
+
             <section aria-labelledby="no-aplica">
                 <p class="eyebrow">Límites</p>
                 <h2 id="no-aplica" class="section-title">Cuándo esta calculadora no aplica</h2>
@@ -273,7 +294,7 @@
             <section aria-labelledby="preguntas">
                 <p class="eyebrow">Dudas comunes</p>
                 <h2 id="preguntas" class="section-title">Preguntas frecuentes</h2>
-                <div class="faq"><details><summary>¿Cuánto cuesta un traspaso de vehículo en la DGII?<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><p>Cuesta 2% del valor del vehículo más RD$100 por imprimir la matrícula. El valor es el mayor entre el precio del contrato y la tabla de la DGII. Por ejemplo, con un valor de RD$600,000 se pagan RD$12,100.</p></details><details><summary>¿Qué pasa si el contrato dice un precio menor que la tabla?<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><p>La DGII calcula el 2% sobre el valor de la tabla, porque siempre toma el mayor de los dos. Escribir un precio más bajo en el contrato no reduce el impuesto.</p></details><details><summary>¿Cuánto tiempo tengo para hacer el traspaso?<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><p>La Norma General 03-2025 fija 90 días hábiles desde la firma. La calculadora oficial de la DGII empieza a cobrar mora al cumplirse 3 meses, o el siguiente día laborable, así que lo más seguro es pagar antes de esa fecha.</p></details><details><summary>¿Cuánto es el recargo por atraso?<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><p>Desde el 1 de julio de 2026 es 3% por cada mes o fracción, con tope acumulado de 100% del impuesto. Además se cobra un interés de 1.10% mensual. Los meses anteriores a julio de 2026 mantienen el esquema de 10% el primer mes y 4% cada mes siguiente.</p></details><details><summary>¿Qué es un doble traspaso?<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><p>Ocurre cuando el vendedor compró el vehículo pero nunca lo puso a su nombre. Se paga 2% por cada contrato, es decir 4% en total si ambos tienen el mismo valor, y cada contrato puede tener sus propios recargos.</p></details></div>
+                <div class="faq"><details><summary>¿Cuánto cuesta un traspaso de vehículo en la DGII?<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><p>Cuesta 2% del valor del vehículo más RD$100 por imprimir la matrícula. El valor es el mayor entre el precio del contrato y la tabla de la DGII. Por ejemplo, con un valor de RD$600,000 se pagan RD$12,100.</p></details><details><summary>¿Qué pasa si el contrato dice un precio menor que la tabla?<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><p>La DGII calcula el 2% sobre el valor de la tabla, porque siempre toma el mayor de los dos. Escribir un precio más bajo en el contrato no reduce el impuesto.</p></details><details><summary>¿Cuánto tiempo tengo para hacer el traspaso?<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><p>La Ley 63-17 y el Decreto 420-23 fijan 90 días laborables desde la firma del contrato. Esta calculadora sigue ese plazo. La calculadora publicada por la DGII puede mostrar mora desde los 3 meses, así que conviene no esperar al último día.</p></details><details><summary>¿Cuánto es el recargo por atraso?<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><p>Desde el 1 de julio de 2026 es 3% por cada mes o fracción, con tope acumulado de 100% del impuesto. Además se cobra un interés de 1.10% mensual. Los meses anteriores a julio de 2026 mantienen el esquema de 10% el primer mes y 4% cada mes siguiente.</p></details><details><summary>¿Qué es un doble traspaso?<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><p>Ocurre cuando el vendedor compró el vehículo pero nunca lo puso a su nombre. Se paga 2% por cada contrato, es decir 4% en total si ambos tienen el mismo valor, y cada contrato puede tener sus propios recargos.</p></details><details><summary>¿La amnistía de 2026 aplica a un traspaso atrasado?<svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></summary><p>Sí puede aplicar. La Norma General 04-2026 incluye las deudas por transferencias de vehículos. Quien la solicite hasta el 31 de diciembre de 2026 paga el impuesto más el primer año de recargos e intereses.</p></details></div>
             </section>
 
             <section aria-labelledby="fuentes">
@@ -281,9 +302,9 @@
                 <h2 id="fuentes" class="section-title">Fuentes oficiales</h2>
                 <ul class="tx-list">
                     <li><a class="text-link" href="https://dgii.gov.do/publicacionesOficiales/bibliotecaVirtual/registrados/vehiculosMotor/Documents/Paso%20No.%201%20Tr%C3%A1mites%20Traspaso%20de%20Veh%C3%ADculos%20de%20Motor.pdf" target="_blank" rel="noopener noreferrer">DGII, Trámites para el traspaso de vehículos (julio de 2026)</a></li>
-                    <li><a class="text-link" href="https://dgii.gov.do/legislacion/normasGenerales/Documents/NG%20sobre%20Veh%C3%ADculos%20de%20Motor/Norma03-25.pdf" target="_blank" rel="noopener noreferrer">DGII, Norma General 03-2025, artículos 6, 7 y 21</a></li>
-                    <li><a class="text-link" href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/30-26.pdf" target="_blank" rel="noopener noreferrer">Ley 30-26, artículos 5, 6 y 7</a></li>
-                    <li><a class="text-link" href="https://dgii.gov.do/vehiculosMotor/consultas/Paginas/transferenciaVehiculosMotor.aspx" target="_blank" rel="noopener noreferrer">DGII, Calculadora de transferencia de vehículos</a></li>
+                    <li><a class="text-link" href="https://dgii.gov.do/legislacion/decretos/Documents/2023/Decreto420-23.pdf" target="_blank" rel="noopener noreferrer">Decreto 420-23, artículo 7, sobre el plazo de 90 días hábiles</a></li><li><a class="text-link" href="https://dgii.gov.do/legislacion/normasGenerales/Documents/NG%20sobre%20Veh%C3%ADculos%20de%20Motor/Norma03-25.pdf" target="_blank" rel="noopener noreferrer">DGII, Norma General 03-2025, artículos 6, 7 y 21</a></li><li><a class="text-link" href="https://dgii.gov.do/legislacion/normasGenerales/Documents/Otras%20Normas%20de%20Inter%C3%A9s/norma04-26.pdf" target="_blank" rel="noopener noreferrer">DGII, Norma General 04-2026, amnistía fiscal</a></li>
+                    <li><a class="text-link" href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/30-26.pdf" target="_blank" rel="noopener noreferrer">Ley 30-26, artículos 5 a 8</a></li>
+                    <li><a class="text-link" href="https://dgii.gov.do/vehiculosMotor/consultas/Paginas/transferenciaVehiculosMotor.aspx" target="_blank" rel="noopener noreferrer">DGII, Calculadora de transferencia (referencia)</a></li>
                     <li><a class="text-link" href="https://dgii.gov.do/servicios/Catlogos%20completos/Vehiculos-de-Motor.pdf" target="_blank" rel="noopener noreferrer">DGII, Catálogo de servicios de Vehículos de Motor</a></li>
                 </ul>
                 <p class="tx-aviso-final"><strong>Aviso:</strong> este resultado es una estimación informativa revisada el <time datetime="2026-11-22">22 de noviembre de 2026</time>. El monto final lo determina la DGII. ¿Vio un error? <a class="text-link" href="/contacto">Avísenos</a>.</p>

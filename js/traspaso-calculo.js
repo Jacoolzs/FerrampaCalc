@@ -1,13 +1,13 @@
 /**
  * Cálculo del traspaso de vehículos en República Dominicana.
- * Fuentes: Ley 173-07 art. 9, Norma General 03-2025 arts. 6 y 7, Ley 30-26 arts. 5 a 7
- * y la calculadora de transferencia de la DGII, cuyas reglas de plazo y mora se replican aquí.
+ * Fuentes: Ley 173-07 art. 9, Ley 63-17 art. 185, Decreto 420-23 art. 7, Norma General 03-2025
+ * arts. 6 y 7, Ley 30-26 arts. 5 a 8 y Norma General 04-2026 (amnistía).
  * Las fechas se manejan en UTC para que la zona horaria del navegador no mueva el día.
  */
 export const TASAS = {
     impuestoPct: 2,
     matricula: 100,
-    mesesPlazo: 3,
+    mesesCalculadoraDgii: 3,
     diasHabiles: 90,
     recargoPrimerMesPct: 10,
     recargoMesSiguientePct: 4,
@@ -15,7 +15,8 @@ export const TASAS = {
     topeRecargoPct: 100,
     ultimoDiaRegimenAnterior: '2026-06-30',
     interesMensualPct: 1.1,
-    mesesMaxInteres: 12,
+    mesesAmnistia: 12,
+    amnistiaHasta: '2026-12-31',
     umbralCheque: 15000,
     umbralConstancia: 800000,
     umbralConstanciaAnterior: 500000,
@@ -89,11 +90,11 @@ function sumarMeses(d, meses) {
     return utc(yD, mD, dia === ultimoDiaMes(y, m) ? ultimo : Math.min(dia, ultimo));
 }
 
-/** Último día para pagar sin mora, como lo aplica la calculadora de la DGII. */
-export const fechaLimite = (acto) => siguienteLaborable(sumarMeses(acto, TASAS.mesesPlazo));
+/** Referencia: la calculadora publicada por la DGII empieza a mostrar mora a los 3 meses. */
+export const fechaCalculadoraDgii = (acto) => siguienteLaborable(sumarMeses(acto, TASAS.mesesCalculadoraDgii));
 
-/** Referencia de la Norma 03-2025: 90 días hábiles contados desde la firma. */
-export function fechaDiasHabiles(acto) {
+/** Plazo legal: 90 días laborables contados desde la firma del acto. */
+export function fechaLimite(acto) {
     let r = acto, n = 0;
     while (n < TASAS.diasHabiles) {
         r = sumarDias(r, 1);
@@ -109,8 +110,8 @@ export function mesesEntre(desde, hasta) {
     return dif + (hasta.getUTCDate() > desde.getUTCDate() ? 1 : 0);
 }
 
-export function porcentajeRecargo(limite, pago) {
-    const meses = mesesEntre(limite, pago);
+export function porcentajeRecargo(limite, pago, maxMeses = Infinity) {
+    const meses = Math.min(mesesEntre(limite, pago), maxMeses);
     const anteriores = Math.min(meses, mesesEntre(limite, parseFecha(TASAS.ultimoDiaRegimenAnterior)));
     const previo = anteriores > 0 ? TASAS.recargoPrimerMesPct + TASAS.recargoMesSiguientePct * (anteriores - 1) : 0;
     if (previo >= TASAS.topeRecargoPct) return previo;
@@ -131,13 +132,17 @@ export function calcularActo({ precio = 0, valorTabla = 0, fecha = null, hoy }) 
     const limite = usable ? fechaLimite(usable) : null;
     const meses = limite ? mesesEntre(limite, hoy) : 0;
     const recargoPct = limite ? porcentajeRecargo(limite, hoy) : 0;
-    const interesPct = redondear(Math.min(meses, TASAS.mesesMaxInteres) * TASAS.interesMensualPct);
+    const interesPct = redondear(meses * TASAS.interesMensualPct);
+    const recargo = redondear(impuesto * recargoPct / 100);
+    const interes = redondear(impuesto * interesPct / 100);
+    const conAmnistia = !!limite && meses > TASAS.mesesAmnistia && iso(hoy) <= TASAS.amnistiaHasta;
     return {
         precio, valorTabla, base, fecha: usable, limite, meses, recargoPct, interesPct, impuesto,
         origen: valorTabla > precio ? 'tabla' : 'contrato',
-        limiteHabil: usable ? fechaDiasHabiles(usable) : null,
-        recargo: redondear(impuesto * recargoPct / 100),
-        interes: redondear(impuesto * interesPct / 100),
+        fechaDgii: usable ? fechaCalculadoraDgii(usable) : null,
+        recargo, interes, conAmnistia,
+        recargoAmnistia: conAmnistia ? redondear(impuesto * porcentajeRecargo(limite, hoy, TASAS.mesesAmnistia) / 100) : recargo,
+        interesAmnistia: conAmnistia ? redondear(impuesto * redondear(TASAS.mesesAmnistia * TASAS.interesMensualPct) / 100) : interes,
     };
 }
 
@@ -149,5 +154,6 @@ export function calcularTraspaso({ precio = 0, valorTabla = 0, fecha = null, dob
     const actos = anterior ? [anterior, actual] : [actual];
     const suma = (campo) => redondear(actos.reduce((t, a) => t + a[campo], 0));
     const impuesto = suma('impuesto'), recargo = suma('recargo'), interes = suma('interes');
-    return { actual, anterior, impuesto, recargo, interes, matricula: TASAS.matricula, total: redondear(impuesto + recargo + interes + TASAS.matricula) };
+    const totalAmnistia = actos.some((a) => a.conAmnistia) ? redondear(impuesto + suma('recargoAmnistia') + suma('interesAmnistia') + TASAS.matricula) : null;
+    return { actual, anterior, impuesto, recargo, interes, matricula: TASAS.matricula, total: redondear(impuesto + recargo + interes + TASAS.matricula), totalAmnistia };
 }
