@@ -12,15 +12,17 @@ import { fetchVINData } from './vin-service.js';
 import { GRUPOS_PAISES, TRATADOS, VOLANTE_DERECHA, esPreferencial, nombrePais, normalizarOrigen, tratadoDePais } from './tratados.js';
 
 const PDF_LIBS = [
-    'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
-    'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js',
+    { src: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', integrity: 'sha384-JcnsjUPPylna1s1fvi1u12X5qjY5OL56iySh75FdtrwhO/SWXgMjoVqcKyIIWOLk' },
+    { src: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js', integrity: 'sha384-GbQVk5KsTZEMJtvSbtmGpderuiERKpKVVFucxROOKnIXvtg03h3pORjyyGlPD6UO' },
 ];
 let pdfLibsPromise = null;
 
 function cargarLibreriasPDF() {
-    pdfLibsPromise ??= PDF_LIBS.reduce((previa, src) => previa.then(() => new Promise((resolve, reject) => {
+    pdfLibsPromise ??= PDF_LIBS.reduce((previa, { src, integrity }) => previa.then(() => new Promise((resolve, reject) => {
         const script = document.createElement('script');
         script.src = src;
+        script.integrity = integrity;
+        script.crossOrigin = 'anonymous';
         script.onload = resolve;
         script.onerror = () => reject(new Error('No se pudo cargar el generador de PDF.'));
         document.head.appendChild(script);
@@ -431,7 +433,7 @@ export function renderVehicles() {
                             <div class="field"><label class="label" for="motor-${v.id}">Motor</label><select id="motor-${v.id}" onchange="window.updateVehicleData(${v.id}, 'engineType', this.value)" class="input"><option value="gas" ${v.engineType === 'gas' ? 'selected' : ''}>Gasolina</option><option value="hybrid_electric" ${v.engineType === 'hybrid_electric' ? 'selected' : ''}>Híbrido o eléctrico</option></select></div>
                             <div class="field"><label class="label" for="co2-${v.id}">Emisiones de CO2</label><select id="co2-${v.id}" onchange="window.updateVehicleData(${v.id}, 'co2Pct', this.value)" class="input"><option value="0.00" ${v.co2Pct == 0 ? 'selected' : ''}>0% (menos de 120 g o exento)</option><option value="0.01" ${v.co2Pct == 0.01 ? 'selected' : ''}>1% (120-220 g)</option><option value="0.02" ${v.co2Pct == 0.02 ? 'selected' : ''}>2% (220-380 g)</option><option value="0.03" ${v.co2Pct == 0.03 ? 'selected' : ''}>3% (más de 380 g o sin dato)</option></select></div>
                         </div>
-                        <p class="help" style="margin-top:-6px">${esLimpio ? 'En híbridos y eléctricos, el CO2 se cobra sobre el 50% del CIF.' : 'Sin dato del fabricante se aplica 3%. Ciertos vehículos de carga están exentos.'}</p>
+                        <p class="help" style="margin-top:-6px">${esLimpio ? 'El CO2 se cobra sobre el 50% del CIF. La reducción requiere constancia del fabricante; los híbridos necesitan al menos 10 kW, 48 V y freno regenerativo. <a class="text-link" href="/guia-ley-103-13#quienes">Ver requisitos</a>' : 'Sin dato del fabricante se aplica 3%. Ciertos vehículos de carga están exentos.'}</p>
                     </div>
                     <div class="vehicle-result">
                         <h3>Impuestos de este vehículo</h3>
@@ -441,6 +443,7 @@ export function renderVehicles() {
                         <div class="result-row"><span>Servicio aduanero</span><span id="v-res-service-${v.id}">RD$ 0.00</span></div>
                         <div class="result-total"><span>Subtotal</span><span id="v-res-total-${v.id}">RD$ 0.00</span></div>
                         <div class="result-row" id="v-no-treaty-row-${v.id}" hidden><span>Sin tratado</span><span id="v-res-no-treaty-${v.id}">RD$ 0.00</span></div>
+                        <div class="result-row" id="v-no-103-row-${v.id}" hidden><span>Sin Ley 103-13</span><span id="v-res-no-103-${v.id}">RD$ 0.00</span></div>
                     </div>
                 </div>
             `;
@@ -508,7 +511,7 @@ export function calculateAll() {
         isAuto: isAuto
     };
 
-    let tSinTratado = 0, hayTratado = false;
+    let tSinTratado = 0, hayTratado = false, tNoCalifica = 0, hayLimpio = false;
     let tAra = 0, tItb = 0, tPla = 0, tSer = 0, tFob = 0, tCif = 0, tSeg = 0, tFle = 0, tOtr = 0;
 
     vehicles.forEach(v => {
@@ -524,6 +527,11 @@ export function calculateAll() {
         const resSinTratado = conTratado ? calcularImpuestosIndividual({ ...v, origen: 'otros' }, config) : res;
         tSinTratado += resSinTratado.total;
         hayTratado ||= conTratado;
+        const esLimpio = v.engineType === 'hybrid_electric';
+        const resNoCalifica = esLimpio ? calcularImpuestosIndividual({ ...v, origen: 'otros', engineType: 'gas' }, config) : resSinTratado;
+        tNoCalifica += resNoCalifica.total;
+        hayLimpio ||= esLimpio;
+        Object.assign(v.results, { conTratado, esLimpio, sinTratado: resSinTratado.total, noCalifica: resNoCalifica.total });
 
         const ue = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
         const ueh = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
@@ -539,6 +547,9 @@ export function calculateAll() {
         ue(`v-res-no-treaty-${v.id}`, formatDOP(resSinTratado.total));
         const filaSinTratado = document.getElementById(`v-no-treaty-row-${v.id}`);
         if (filaSinTratado) filaSinTratado.hidden = !conTratado;
+        ue(`v-res-no-103-${v.id}`, formatDOP(resNoCalifica.total));
+        const filaNo103 = document.getElementById(`v-no-103-row-${v.id}`);
+        if (filaNo103) filaNo103.hidden = !esLimpio;
 
         tAra += res.gravamen; tItb += res.itbis; tPla += res.placa; tSer += res.service;
         tFob += v.fob; tCif += res.cif;
@@ -568,6 +579,9 @@ export function calculateAll() {
     ug('g-total-sin-tratado', formatDOP(tSinTratado));
     const avisoSinTratado = document.getElementById('g-no-treaty');
     if (avisoSinTratado) avisoSinTratado.hidden = !hayTratado;
+    ug('g-total-no-103', formatDOP(tNoCalifica));
+    const avisoNo103 = document.getElementById('g-no-103');
+    if (avisoNo103) avisoNo103.hidden = !hayLimpio;
     ug('g-tax-arancel', formatDOP(tAra));
     ug('g-tax-itbis', formatDOP(tItb));
     ug('g-tax-placa', formatDOP(tPla));
@@ -604,7 +618,15 @@ export function exportToExcel() {
     }
 }
 
-export function shareWhatsApp() { window.open(`https://wa.me/?text=${encodeURIComponent('Resumen Cotización RD: ' + document.getElementById('nav-total').innerText)}`, '_blank'); }
+export function shareWhatsApp() {
+    const texto = (id) => document.getElementById(id)?.innerText || '';
+    const visible = (id) => document.getElementById(id) && !document.getElementById(id).hidden;
+    const lineas = [`Estimación de impuestos para importar a RD: ${texto('res-total-global')}`];
+    if (visible('g-no-treaty')) lineas.push(`Si no demuestra el origen: ${texto('g-total-sin-tratado')}`);
+    if (visible('g-no-103')) lineas.push(`Si no cumple el tratado ni la Ley 103-13: ${texto('g-total-no-103')}`);
+    lineas.push('El monto final lo determina la DGA.', 'https://ferrampalogistics.com/');
+    window.open(`https://wa.me/?text=${encodeURIComponent(lineas.join('\n'))}`, '_blank');
+}
 
 // ─── Theme Toggle ───────────────────────────────────────────────────────────
 export function toggleDarkMode() {

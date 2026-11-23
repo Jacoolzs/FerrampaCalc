@@ -61,7 +61,20 @@ export function generatePDF(vehicles, vId = null, tasa = 60) {
         headStyles: { fillColor: [51, 65, 85] }
     });
 
-    currentY = doc.lastAutoTable.finalY + 15;
+    currentY = doc.lastAutoTable.finalY + 7;
+    const totalEscenario = (campo) => items.reduce((acc, v) => acc + (v.results[campo] ?? v.results.subtotal), 0);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    if (items.some(v => v.results.conTratado)) {
+        doc.text(`Si no demuestra el origen del tratado: ${formatDOP(totalEscenario('sinTratado'))}`, 14, currentY);
+        currentY += 5;
+    }
+    if (items.some(v => v.results.esLimpio)) {
+        doc.text(`Si no cumple el tratado ni la Ley 103-13: ${formatDOP(totalEscenario('noCalifica'))}`, 14, currentY);
+        currentY += 5;
+    }
+    doc.setFont('helvetica', 'normal');
+    currentY += 7;
 
     // Detalle por Vehículo
     doc.setFontSize(14);
@@ -90,7 +103,7 @@ export function generatePDF(vehicles, vId = null, tasa = 60) {
     const finalY = doc.lastAutoTable.finalY + 10;
     doc.setFontSize(8);
     doc.setTextColor(150);
-    doc.text('Nota: Estos valores son referenciales basados en la tasa del día. La liquidación oficial es emitida por la DGA.', 14, finalY);
+    doc.text('Nota: Estos valores son estimados con la tasa indicada. La liquidación oficial es emitida por la DGA.', 14, finalY);
     doc.text('Generado por Ferrampa Logistics.', 14, finalY + 5);
 
     doc.save(`Cotizacion_Ferrampa_${vId ? 'Vehiculo' : 'General'}.pdf`);
