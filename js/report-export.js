@@ -14,7 +14,7 @@ export function generatePDF(vehicles, vId = null, tasa = 60) {
     const items = vId ? vehicles.filter(v => v.id === vId) : vehicles;
 
     // Encabezado
-    doc.setFillColor(29, 78, 216);
+    doc.setFillColor(56, 54, 239);
     doc.rect(0, 0, 210, 40, 'F');
     doc.setTextColor(255, 255, 255);
     doc.setFontSize(22);
@@ -38,7 +38,7 @@ export function generatePDF(vehicles, vId = null, tasa = 60) {
     const tTotal = tAra + tItb + tSer + tPla;
 
     let currentY = 50;
-    doc.setTextColor(30, 41, 59);
+    doc.setTextColor(26, 25, 33);
     doc.setFontSize(14);
     doc.text('RESUMEN EJECUTIVO', 14, currentY);
     
@@ -58,7 +58,7 @@ export function generatePDF(vehicles, vId = null, tasa = 60) {
         ],
         theme: 'grid',
         styles: { fontSize: 7.5, cellPadding: 3 },
-        headStyles: { fillColor: [51, 65, 85] }
+        headStyles: { fillColor: [52, 45, 45] }
     });
 
     currentY = doc.lastAutoTable.finalY + 7;
@@ -72,6 +72,11 @@ export function generatePDF(vehicles, vId = null, tasa = 60) {
     if (items.some(v => v.results.esLimpio)) {
         const etiquetaNo103 = items.some(v => v.results.conTratado) ? 'Si no cumple el tratado ni la Ley 103-13' : 'Si no cumple la Ley 103-13';
         doc.text(`${etiquetaNo103}: ${formatDOP(totalEscenario('noCalifica'))}`, 14, currentY);
+        currentY += 5;
+    }
+    const percepcion = items.reduce((acc, v) => acc + (v.results.percepcion || 0), 0);
+    if (percepcion > 0) {
+        doc.text(`Si la DGA aplica la percepción de ITBIS (Ley 30-26): ${formatDOP(totalEscenario('subtotal') + percepcion)}`, 14, currentY);
         currentY += 5;
     }
     doc.setFont('helvetica', 'normal');
@@ -97,7 +102,7 @@ export function generatePDF(vehicles, vId = null, tasa = 60) {
         body: detailData,
         theme: 'striped',
         styles: { fontSize: 8 },
-        headStyles: { fillColor: [29, 78, 216] }
+        headStyles: { fillColor: [56, 54, 239] }
     });
 
     // Pie de página legal
