@@ -2,6 +2,11 @@
 (function () {
     const root = document.documentElement;
 
+    // El salto a un #ancla al cargar debe ser inmediato: con desplazamiento suave, la fuente web mueve el destino y el título queda bajo el encabezado.
+    const activarScrollSuave = () => requestAnimationFrame(() => root.classList.add('smooth-scroll'));
+    if (document.readyState === 'complete') activarScrollSuave();
+    else window.addEventListener('load', activarScrollSuave, { once: true });
+
     const themeBtn = document.getElementById('theme-toggle');
     const syncTheme = () => themeBtn?.setAttribute('aria-pressed', String(root.classList.contains('dark')));
     themeBtn?.addEventListener('click', () => {
