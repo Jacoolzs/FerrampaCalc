@@ -1,3 +1,5 @@
+import { esPreferencial } from './tratados.js';
+
 /**
  * Lógica pura de cálculo de impuestos para un vehículo.
  */
@@ -14,7 +16,7 @@ export function calcularImpuestosIndividual(v, config) {
 
     // Arancel
     let fG = 0;
-    if (v.origen === 'cafta') {
+    if (esPreferencial(v.origen)) {
         fG = 0;
     } else if (config.entidad === 'dealer') {
         fG = (v.engineType === 'hybrid_electric') ? 0.05 : 0.10;
@@ -24,12 +26,14 @@ export function calcularImpuestosIndividual(v, config) {
 
     // Placa
     const pPctBase = (v.engineType === 'hybrid_electric') ? 0.085 : 0.17;
-    const totalPlacaPct = pPctBase + parseFloat(v.co2Pct || 0);
+    // DGII: en vehículos de la Ley 103-13, el 17% y el CO2 se calculan sobre el 50% del CIF.
+    const co2Efectivo = parseFloat(v.co2Pct || 0) * (v.engineType === 'hybrid_electric' ? 0.5 : 1);
+    const totalPlacaPct = pPctBase + co2Efectivo;
 
     // ITBIS
     const itbisRate = (v.engineType === 'hybrid_electric') ? 0.09 : 0.18;
 
-    const sDOP = 150 * tasa;
+    const sDOP = 100 * tasa; // Decreto 627-06: US$100 por unidad
     const gD = cifDOP * fG;
     const pD = cifDOP * totalPlacaPct;
     const iD = (cifDOP + gD) * itbisRate;

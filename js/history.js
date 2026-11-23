@@ -37,21 +37,18 @@ export function renderHistory() {
     if (!container) return;
     
     if (history.length === 0) {
-        container.innerHTML = '<p class="text-[10px] text-slate-400 italic text-center py-4">No hay cálculos recientes.</p>';
+        container.innerHTML = '<p class="text-slate-600 dark:text-slate-300">Aún no hay cálculos guardados.</p>';
         return;
     }
 
     container.innerHTML = history.map(item => `
-        <div class="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700 flex justify-between items-center group">
-            <div class="cursor-pointer flex-1" onclick="window.loadFromHistory(${item.id})">
-                <p class="text-[9px] font-bold text-slate-400 uppercase leading-none mb-1">${item.date}</p>
-                <div class="flex items-center gap-2">
-                    <span class="text-xs font-black text-slate-700 dark:text-slate-200">${formatDOP(item.total)}</span>
-                    <span class="text-[8px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded-full font-bold">${item.count} Veh.</span>
-                </div>
-            </div>
-            <button onclick="window.deleteHistoryItem(${item.id})" class="opacity-0 group-hover:opacity-100 p-1.5 text-slate-300 hover:text-red-500 transition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        <div class="history-item">
+            <button type="button" class="history-open" onclick="window.loadFromHistory(${item.id})" aria-label="Recuperar cálculo de ${formatDOP(item.total)} del ${item.date}">
+                <small>${item.date} · ${item.count} ${item.count === 1 ? 'vehículo' : 'vehículos'}</small>
+                <strong>${formatDOP(item.total)}</strong>
+            </button>
+            <button type="button" onclick="window.deleteHistoryItem(${item.id})" class="icon-btn icon-btn--danger" aria-label="Eliminar cálculo de ${formatDOP(item.total)}">
+                <svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
             </button>
         </div>
     `).join('');
