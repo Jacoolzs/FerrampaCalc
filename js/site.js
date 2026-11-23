@@ -25,6 +25,20 @@
         });
     }
 
+    // Enlace de Google para cambiar el consentimiento; solo aparece donde aplica el RGPD.
+    const privacyItem = document.getElementById('privacy-settings-item');
+    const privacyBtn = document.getElementById('privacy-settings');
+    if (privacyItem && privacyBtn) {
+        window.googlefc = window.googlefc || {};
+        window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
+        window.googlefc.callbackQueue.push({
+            CONSENT_API_READY: () => window.__tcfapi('addEventListener', 0, (tcdata, success) => {
+                privacyItem.hidden = !(success && tcdata && tcdata.gdprApplies);
+            }),
+        });
+        privacyBtn.addEventListener('click', () => window.googlefc.showRevocationMessage?.());
+    }
+
     const top = document.getElementById('back-top');
     if (top) {
         const smooth = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;

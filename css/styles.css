@@ -90,6 +90,8 @@ input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 .site-footer ul { display: grid; gap: 2px; }
 .site-footer a { display: inline-flex; align-items: center; min-height: 32px; color: #e2e8f0; }
 .site-footer a:hover { color: #7dd3fc; text-decoration: underline; }
+.footer-btn { display: inline-flex; align-items: center; min-height: 32px; padding: 0; background: none; border: 0; color: #e2e8f0; font: inherit; text-align: left; cursor: pointer; }
+.footer-btn:hover { color: #7dd3fc; text-decoration: underline; }
 .site-footer :focus-visible { outline-color: #7dd3fc; }
 .site-footer__legal { max-width: 1240px; margin: 0 auto; padding: 20px 16px; border-top: 1px solid #334155; font-size: 14px; color: #cbd5e1; }
 @media (min-width: 700px) { .site-footer__grid { grid-template-columns: repeat(2, 1fr); } }
@@ -291,7 +293,7 @@ nav[aria-label="Breadcrumb"] li { font-size: 14px; }
 }
 
 @media print {
-    .site-header, .site-footer, .mobile-total, .skip-link, .summary-actions, .icon-btn, .btn, .back-top, #cookie-consent-banner, .home-info, .calc-hero p, .trust-list { display: none !important; }
+    .site-header, .site-footer, .mobile-total, .skip-link, .summary-actions, .icon-btn, .btn, .back-top, .home-info, .calc-hero p, .trust-list { display: none !important; }
     body { background: #fff !important; color: #000 !important; padding: 0 !important; }
     .card { border: 1px solid #ccc; break-inside: avoid; }
     .calc-layout { display: block; }
