@@ -21,8 +21,8 @@
     <meta property="og:description" content="Manual de usuario completo: aprenda a calcular aranceles, ITBIS, DR-CAFTA y Ley 103-13 con la calculadora de importación vehicular de Ferrampa Logistics." />
     <meta property="og:url" content="https://ferrampalogistics.com/manual-usuario" />
     <meta property="og:image" content="https://ferrampalogistics.com/img/og-image.jpg" />
-    <meta property="og:image:width" content="1376" />
-    <meta property="og:image:height" content="768" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="670" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Manual de Usuario de la Calculadora | Ferrampa" />
     <meta name="twitter:description" content="Manual de usuario completo: aprenda a calcular aranceles, ITBIS, DR-CAFTA y Ley 103-13 con la calculadora de importación vehicular de Ferrampa Logistics." />
@@ -96,94 +96,25 @@
     <main id="contenido" tabindex="-1" class="max-w-5xl mx-auto px-4 mt-12 mb-24 text-left">
         <a href="/" class="text-blue-600 font-bold mb-12 inline-flex items-center gap-2 transition-transform">← Ir a la calculadora</a>
         
-        <h1 class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">Manual de Usuario</h1>
-        <p class="text-xl text-slate-600 mb-12 text-left">Domina todas las funciones de la calculadora para tus importaciones.</p>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-12 text-left">
-            <div class="space-y-6">
-                <div class="bg-blue-600 text-white p-8 rounded-xl">
-                    <h2 class="text-2xl font-bold mb-4 flex items-center gap-3">
-                        <span class="bg-white/20 w-8 h-8 rounded-lg flex items-center justify-center text-sm">01</span>
-                        Configuración Inicial
-                    </h2>
-                    <p class="text-base leading-relaxed mb-4 text-left">Defina el <span class="font-bold text-white">Tipo de Cliente</span>: Las Personas Físicas pagan un 20% de arancel, mientras que los Dealers certificados disfrutan de un 10%. Ajuste la <span class="font-bold text-white">Tasa del Dólar</span> según el mercado para obtener valores precisos en DOP.</p>
-                </div>
-
-                <div class="bg-white dark:bg-slate-800 p-8 rounded-xl border border-slate-200 dark:border-slate-700">
-                    <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-4 flex items-center gap-3">
-                        <span class="bg-slate-100 dark:bg-slate-700 w-8 h-8 rounded-lg flex items-center justify-center text-sm text-slate-600">02</span>
-                        Decodificación de VIN
-                    </h2>
-                    <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed text-left">Ingrese los 17 caracteres del VIN y presione <span class="text-blue-600 font-bold">Completar</span>. El sistema rellenará automáticamente Marca, Modelo, Año, Motor y País de origen, y sugiriendo el tratado según el país de fabricación.</p>
-                </div>
-            </div>
-
-            <div class="space-y-6 text-left">
-                <div class="bg-amber-50 dark:bg-amber-900/10 p-8 rounded-xl border border-amber-100 dark:border-amber-900/30">
-                    <h2 class="text-2xl font-bold text-amber-800 dark:text-amber-400 mb-4 flex items-center gap-3">
-                        <span class="bg-amber-200 dark:bg-amber-900 w-8 h-8 rounded-lg flex items-center justify-center text-sm text-amber-900">03</span>
-                        Modo Automático Inteligente
-                    </h2>
-                    <div class="space-y-4">
-                        <p class="text-base text-amber-900 dark:text-amber-100 leading-relaxed text-left">Al activarlo, el sistema fija el <span class="font-bold">Seguro (2%)</span> y el <span class="font-bold">Flete (15%)</span> basado en el valor FOB. Este modo activa y bloquea automáticamente los "Gastos Compartidos" para simplificar su gestión.</p>
-                    </div>
-                </div>
-
-                <div class="bg-slate-900 text-white p-8 rounded-xl">
-                    <h2 class="text-2xl font-bold mb-4 flex items-center gap-3">
-                        <span class="bg-white/10 w-8 h-8 rounded-lg flex items-center justify-center text-sm">04</span>
-                        Reportes Profesionales
-                    </h2>
-                    <p class="text-base leading-relaxed mb-4 text-left">El <span class="font-bold text-sky-300">Resumen General</span> muestra totales consolidados en DOP y USD. Al exportar a <span class="font-bold text-white">PDF</span>, obtendrá un reporte ejecutivo listo para trámites comerciales o proyecciones financieras.</p>
-                </div>
-            </div>
+        <h1 class="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-4">Manual de usuario</h1>
+        <p class="text-xl text-slate-600 dark:text-slate-300 mb-10">Cómo usar la calculadora para estimar los impuestos de su importación.</p>
+        <div class="how-grid" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))">
+            <article class="card"><span class="step-num" aria-hidden="true">1</span><h2 class="text-xl font-bold mt-3 mb-2">Datos de la importación</h2><p>Elija el tipo de importador y escriba la tasa de cambio. La tasa de dealer es de referencia. También puede usar la tasa automática, que es un valor de mercado.</p></article>
+            <article class="card"><span class="step-num" aria-hidden="true">2</span><h2 class="text-xl font-bold mt-3 mb-2">Seguro y flete</h2><p>“Estimar seguro y flete” usa 2% y 15% del FOB. Desactívelo si ya tiene cotizaciones reales. “Gastos compartidos” divide esos costos entre varios vehículos.</p></article>
+            <article class="card"><span class="step-num" aria-hidden="true">3</span><h2 class="text-xl font-bold mt-3 mb-2">Datos del vehículo</h2><p>Escriba el VIN y pulse Completar para sugerir país, motor y año, o llénelos a mano. Agregue el valor FOB y las emisiones de CO2. Verifique siempre el resultado.</p></article>
+            <article class="card"><span class="step-num" aria-hidden="true">4</span><h2 class="text-xl font-bold mt-3 mb-2">Tratado según el país</h2><p>El tratado se elige por país de fabricación. Si no puede demostrar el origen, desmarque la casilla o use el total “sin tratado” para presupuestar.</p></article>
+            <article class="card"><span class="step-num" aria-hidden="true">5</span><h2 class="text-xl font-bold mt-3 mb-2">Revise el resultado</h2><p>El resumen muestra impuestos, base de cálculo y total estimado. Puede compartirlo o descargar un PDF. Sus cálculos se guardan solo en este navegador.</p></article>
+            <article class="card"><span class="step-num" aria-hidden="true">6</span><h2 class="text-xl font-bold mt-3 mb-2">Antes de comprar</h2><p>Confirme que el vehículo tenga hasta 5 años, volante a la izquierda y un título que no sea de salvamento. Lea la <a class="text-link" href="/guia-importacion-2026">guía principal</a>.</p></article>
         </div>
-
-        <!-- Guía de Términos Integrada (EXACTAMENTE COMO EN FEATURE-PRUEBA) -->
-        <section class="mt-16 text-left">
-            <div class="bg-white dark:bg-slate-900 rounded-xl p-8 border border-slate-200 dark:border-slate-800">
-                <div class="flex items-center gap-3 mb-8 text-slate-800 dark:text-white">
-                    <div class="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-xl text-blue-600"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" cy="17" x2="12.01" cy="17"/></svg></div>
-                    <h2 class="text-xl font-bold">Guía de Términos y Variaciones</h2>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
-                    <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 mb-2">1. Valor FOB</h3><p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed">Precio neto de compra en origen. No incluye transporte marítimo ni seguros.</p></div>
-                    <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 mb-2">2. CIF (Base Imponible)</h3><p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed">Es la suma de <span class="font-bold text-slate-800 dark:text-slate-200">Costo + Seguro + Flete</span>. Aduanas usa este valor para aplicar todos los cargos.</p></div>
-                    <div><h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 mb-2">3. Gravamen Arancelario</h3><p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed text-left">• <span class="font-bold text-slate-800 dark:text-slate-200">0%:</span> Con tratado (DR-CAFTA, EPA o Reino Unido).<br>• <span class="font-bold text-slate-800 dark:text-slate-200">20%:</span> Persona Física sin tratado.<br>• <span class="font-bold text-green-700 dark:text-green-300">10%:</span> Dealer sin tratado.</p></div>
-                    
-                    <div>
-                        <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 mb-2">4. ITBIS Reducido</h3>
-                        <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed">9% para híbridos y eléctricos. 18% para motores de combustión tradicional.</p>
-                        <a href="https://dgii.gov.do/legislacion/reglamentos/Documents/2011/293-11.pdf" target="_blank" class="btn-law" rel="noopener noreferrer">Ver Ley ITBIS</a>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 mb-2">5. Impuesto Placa</h3>
-                        <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed text-left">Registro inicial (Primera Placa). 17% estándar. 8.5% para incentivos ecológicos.</p>
-                        <a href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/557-05.pdf" target="_blank" class="btn-law" rel="noopener noreferrer">Ver Ley Placa</a>
-                    </div>
-                    
-                    <div>
-                        <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 mb-2">6. Emisión CO2</h3>
-                        <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed text-left">Impuesto basado en contaminación ambiental. En híbridos y eléctricos se cobra sobre el 50% del CIF.</p>
-                        <a href="https://dgii.gov.do/legislacion/leyesTributarias/Documents/Codigo%20Tributario%20y%20Leyes%20que%20lo%20modifican%20y%20complementan/253-12.pdf" target="_blank" class="btn-law" rel="noopener noreferrer">Ver Ley CO2</a>
-                    </div>
-
-                    <div>
-                        <h3 class="text-sm font-bold text-blue-700 dark:text-blue-400 mb-2">7. Eléctricos / Híbridos</h3>
-                        <p class="text-base text-slate-600 dark:text-slate-300 leading-relaxed text-left">Incentivo de la Ley 103-13 para la movilidad sostenible en el país.</p>
-                        <a href="https://dgii.gov.do/vehiculosMotor/legislacion/Documents/Ley103-13.pdf" target="_blank" class="btn-law" rel="noopener noreferrer">Ver Ley 103-13</a>
-                    </div>
-                    
-                    <div class="bg-amber-50 dark:bg-amber-900/10 p-5 rounded-xl border border-amber-100 dark:border-amber-900/30 lg:col-span-2 text-left">
-                        <h3 class="text-xs font-bold text-amber-700 dark:text-amber-400 mb-2 text-left">Aviso legal</h3>
-                        <p class="text-base text-amber-900 dark:text-amber-100 leading-relaxed italic text-left">
-                            Esta cotización es referencial basada en datos del usuario y la API de la NHTSA. Los valores definitivos de liquidación son determinados exclusivamente por la Dirección General de Aduanas (DGA).
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <section class="card mt-8"><h2 class="text-2xl font-bold mb-4">Términos clave</h2><dl class="grid gap-4 md:grid-cols-2">
+            <div><dt class="font-bold">FOB</dt><dd class="text-slate-600 dark:text-slate-300">Precio del vehículo en origen, sin seguro ni flete.</dd></div>
+            <div><dt class="font-bold">CIF</dt><dd class="text-slate-600 dark:text-slate-300">FOB más seguro, flete y otros gastos. Es la base principal de los impuestos.</dd></div>
+            <div><dt class="font-bold">Arancel</dt><dd class="text-slate-600 dark:text-slate-300">20% general, 10% de referencia para dealers y 0% con tratado aplicable.</dd></div>
+            <div><dt class="font-bold">ITBIS</dt><dd class="text-slate-600 dark:text-slate-300">18% sobre CIF más arancel. En híbridos y eléctricos, 9% al importar.</dd></div>
+            <div><dt class="font-bold">Primera placa</dt><dd class="text-slate-600 dark:text-slate-300">17% del CIF. En híbridos y eléctricos se calcula sobre el 50% del CIF.</dd></div>
+            <div><dt class="font-bold">CO2</dt><dd class="text-slate-600 dark:text-slate-300">0% a 3% según emisiones. Sin dato del fabricante se aplica 3%.</dd></div>
+        </dl><p class="mt-5">Vea las fórmulas y fuentes en <a class="text-link" href="/tasas-vigentes">Tasas y metodología</a>.</p></section>
+        <p class="services-note">Esta cotización es una estimación. El monto definitivo lo determina la Dirección General de Aduanas al liquidar la importación.</p>
     </main>
 
     <!-- Footer -->
