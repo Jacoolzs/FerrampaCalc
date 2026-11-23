@@ -70,7 +70,8 @@ export function generatePDF(vehicles, vId = null, tasa = 60) {
         currentY += 5;
     }
     if (items.some(v => v.results.esLimpio)) {
-        doc.text(`Si no cumple el tratado ni la Ley 103-13: ${formatDOP(totalEscenario('noCalifica'))}`, 14, currentY);
+        const etiquetaNo103 = items.some(v => v.results.conTratado) ? 'Si no cumple el tratado ni la Ley 103-13' : 'Si no cumple la Ley 103-13';
+        doc.text(`${etiquetaNo103}: ${formatDOP(totalEscenario('noCalifica'))}`, 14, currentY);
         currentY += 5;
     }
     doc.setFont('helvetica', 'normal');

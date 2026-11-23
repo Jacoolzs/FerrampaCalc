@@ -433,7 +433,7 @@ export function renderVehicles() {
                             <div class="field"><label class="label" for="motor-${v.id}">Motor</label><select id="motor-${v.id}" onchange="window.updateVehicleData(${v.id}, 'engineType', this.value)" class="input"><option value="gas" ${v.engineType === 'gas' ? 'selected' : ''}>Gasolina</option><option value="hybrid_electric" ${v.engineType === 'hybrid_electric' ? 'selected' : ''}>Híbrido o eléctrico</option></select></div>
                             <div class="field"><label class="label" for="co2-${v.id}">Emisiones de CO2</label><select id="co2-${v.id}" onchange="window.updateVehicleData(${v.id}, 'co2Pct', this.value)" class="input"><option value="0.00" ${v.co2Pct == 0 ? 'selected' : ''}>0% (menos de 120 g o exento)</option><option value="0.01" ${v.co2Pct == 0.01 ? 'selected' : ''}>1% (120-220 g)</option><option value="0.02" ${v.co2Pct == 0.02 ? 'selected' : ''}>2% (220-380 g)</option><option value="0.03" ${v.co2Pct == 0.03 ? 'selected' : ''}>3% (más de 380 g o sin dato)</option></select></div>
                         </div>
-                        <p class="help" style="margin-top:-6px">${esLimpio ? 'El CO2 se cobra sobre el 50% del CIF. La reducción requiere constancia del fabricante; los híbridos necesitan al menos 10 kW, 48 V y freno regenerativo. <a class="text-link" href="/guia-ley-103-13#quienes">Ver requisitos</a>' : 'Sin dato del fabricante se aplica 3%. Ciertos vehículos de carga están exentos.'}</p>
+                        <p class="help" style="margin-top:-6px">${esLimpio ? 'El CO2 se cobra sobre el 50% del CIF. Si no tiene el dato del fabricante, elija 3%. La reducción requiere constancia del fabricante; los híbridos necesitan al menos 10 kW, 48 V y freno regenerativo. <a class="text-link" href="/guia-ley-103-13#quienes">Ver requisitos</a>' : 'Sin dato del fabricante se aplica 3%. Ciertos vehículos de carga están exentos.'}</p>
                     </div>
                     <div class="vehicle-result">
                         <h3>Impuestos de este vehículo</h3>
@@ -443,7 +443,7 @@ export function renderVehicles() {
                         <div class="result-row"><span>Servicio aduanero</span><span id="v-res-service-${v.id}">RD$ 0.00</span></div>
                         <div class="result-total"><span>Subtotal</span><span id="v-res-total-${v.id}">RD$ 0.00</span></div>
                         <div class="result-row" id="v-no-treaty-row-${v.id}" hidden><span>Sin tratado</span><span id="v-res-no-treaty-${v.id}">RD$ 0.00</span></div>
-                        <div class="result-row" id="v-no-103-row-${v.id}" hidden><span>Sin Ley 103-13</span><span id="v-res-no-103-${v.id}">RD$ 0.00</span></div>
+                        <div class="result-row" id="v-no-103-row-${v.id}" hidden><span>${tratadoDePais(v.pais) && v.aplicarTratado ? "Sin tratado ni Ley 103-13" : "Sin Ley 103-13"}</span><span id="v-res-no-103-${v.id}">RD$ 0.00</span></div>
                     </div>
                 </div>
             `;
@@ -582,6 +582,7 @@ export function calculateAll() {
     ug('g-total-no-103', formatDOP(tNoCalifica));
     const avisoNo103 = document.getElementById('g-no-103');
     if (avisoNo103) avisoNo103.hidden = !hayLimpio;
+    ug('g-no-103-label', hayTratado ? 'Si no cumple el tratado ni la Ley 103-13' : 'Si no cumple la Ley 103-13');
     ug('g-tax-arancel', formatDOP(tAra));
     ug('g-tax-itbis', formatDOP(tItb));
     ug('g-tax-placa', formatDOP(tPla));
@@ -623,7 +624,7 @@ export function shareWhatsApp() {
     const visible = (id) => document.getElementById(id) && !document.getElementById(id).hidden;
     const lineas = [`Estimación de impuestos para importar a RD: ${texto('res-total-global')}`];
     if (visible('g-no-treaty')) lineas.push(`Si no demuestra el origen: ${texto('g-total-sin-tratado')}`);
-    if (visible('g-no-103')) lineas.push(`Si no cumple el tratado ni la Ley 103-13: ${texto('g-total-no-103')}`);
+    if (visible('g-no-103')) lineas.push(`${texto('g-no-103-label')}: ${texto('g-total-no-103')}`);
     lineas.push('El monto final lo determina la DGA.', 'https://ferrampalogistics.com/');
     window.open(`https://wa.me/?text=${encodeURIComponent(lineas.join('\n'))}`, '_blank');
 }
