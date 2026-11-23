@@ -65,7 +65,7 @@ export function updateChart(data) {
         labels: ['Arancel', 'ITBIS', 'Placa', 'Servicio'],
         datasets: [{
             data: [data.arancel, data.itbis, data.placa, data.servicio],
-            backgroundColor: ['#3b82f6', '#64748b', '#60a5fa', '#94a3b8'],
+            backgroundColor: ['#3836ef', '#342d2d', '#8c8bf6', '#aaa4a2'],
             borderWidth: 0,
             hoverOffset: 4
         }]
